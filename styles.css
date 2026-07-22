@@ -1,0 +1,108 @@
+/* ============================================================
+   ESTILOS: THE AMAZING DIGITAL CIRCUS & PASTEL FUN
+   ============================================================ */
+
+/* Fondo general de la carpa digital */
+body, .gradio-container {
+    background: linear-gradient(135deg, #1d1135 0%, #2c1a4d 40%, #1a2b4c 100%) !important;
+    font-family: 'Fredoka', 'Quicksand', 'Segoe UI', sans-serif !important;
+    color: #ffffff !important;
+}
+
+/* Títulos principales vibrantes */
+h1 {
+    color: #ffe600 !important; /* Amarillo circo */
+    text-shadow: 4px 4px 0px #ff2a6d, 8px 8px 0px #05d9e8 !important;
+    font-size: 2.5rem !important;
+    text-align: center;
+    font-weight: 900 !important;
+    letter-spacing: 1px;
+}
+
+h2, h3 {
+    color: #05d9e8 !important; /* Azul neón / cian */
+    text-shadow: 2px 2px 0px #ff2a6d !important;
+}
+
+/* Tarjeta contenedora principal estilo carpa pastel */
+.circus-card {
+    background: rgba(35, 20, 60, 0.9) !important;
+    border: 4px solid #ffe600 !important;
+    border-radius: 25px !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 20px rgba(255, 230, 0, 0.3) !important;
+    padding: 30px !important;
+    backdrop-filter: blur(8px);
+}
+
+.circus-card h3, .circus-card label, .circus-card span {
+    color: #ffe600 !important;
+    font-weight: bold !important;
+}
+
+/* Botón principal de entrada (Pomni Style Uniforme y Elegante) */
+.circus-btn-main {
+    background: linear-gradient(90deg, #ff2a6d 0%, #ff2a6d 50%, #0056ff 50%, #0056ff 100%) !important;
+    border: 3px solid #ffe600 !important;
+    color: #ffffff !important;
+    font-weight: 900 !important;
+    font-size: 1.1rem !important;
+    border-radius: 50px !important;
+    box-shadow: 0 6px 0px #b3003b !important;
+    transition: all 0.2s ease !important;
+    cursor: pointer !important;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.circus-btn-main:hover {
+    transform: translateY(-3px) !important;
+    box-shadow: 0 9px 0px #b3003b, 0 0 15px #ffe600 !important;
+}
+
+.circus-btn-main:active {
+    transform: translateY(2px) !important;
+    box-shadow: 0 2px 0px #b3003b !important;
+}
+
+/* Grilla simétrica exacta de 4 columnas para los 16 botones de personajes */
+.grid-banners {
+    display: grid !important;
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 15px !important;
+}
+
+/* Botones individuales limpios con nombres (estilo vibrante) */
+.banner-btn {
+    height: 85px !important;
+    border-radius: 18px !important;
+    color: #ffffff !important;
+    font-weight: 800 !important;
+    font-size: 1rem !important;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.9) !important;
+    border: 3px solid #ffe600 !important;
+    background: linear-gradient(135deg, #ff2a6d 0%, #7a00cc 100%) !important;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4) !important;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease !important;
+}
+
+.banner-btn:hover {
+    transform: scale(1.04) translateY(-3px) !important;
+    border-color: #05d9e8 !important;
+    box-shadow: 0 0 20px #ff2a6d, 0 0 10px #05d9e8 !important;
+}
+
+/* Estilo para los inputs de texto limpios con placeholders */
+input[type="text"] {
+    background: #150a28 !important;
+    border: 3px solid #05d9e8 !important;
+    color: #ffffff !important;
+    border-radius: 15px !important;
+    padding: 12px !important;
+    font-size: 1rem !important;
+    font-weight: bold !important;
+}
+
+input[type="text"]:focus {
+    border-color: #ff2a6d !important;
+    box-shadow: 0 0 12px #ff2a6d !important;
+}

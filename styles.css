@@ -1,108 +1,60 @@
-/* ============================================================
-   ESTILOS: THE AMAZING DIGITAL CIRCUS & PASTEL FUN
-   ============================================================ */
+/* ==========================================================================
+   JUNG.IA - HOJA DE ESTILOS: CIRCO DIGITAL / CARPA RETRO (STREAMLIT)
+   ================================================================---------- */
 
-/* Fondo general de la carpa digital */
-body, .gradio-container {
-    background: linear-gradient(135deg, #1d1135 0%, #2c1a4d 40%, #1a2b4c 100%) !important;
-    font-family: 'Fredoka', 'Quicksand', 'Segoe UI', sans-serif !important;
-    color: #ffffff !important;
+:root {
+    --bg-color: #0b0c10;
+    --card-bg: #1f2833;
+    --text-primary: #c5c6c7;
+    --accent-cyan: #66fcf1;
+    --accent-teal: #45f3ff;
+    --accent-pink: #ff007f;
+    --accent-gold: #ffb703;
 }
 
-/* Títulos principales vibrantes */
-h1 {
-    color: #ffe600 !important; /* Amarillo circo */
-    text-shadow: 4px 4px 0px #ff2a6d, 8px 8px 0px #05d9e8 !important;
-    font-size: 2.5rem !important;
-    text-align: center;
-    font-weight: 900 !important;
+.stApp {
+    background-color: var(--bg-color) !important;
+    color: var(--text-primary) !important;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Títulos y Encabezados */
+h1, h2, h3 {
+    color: var(--accent-cyan) !important;
+    text-shadow: 0 0 10px rgba(102, 252, 241, 0.5);
+    font-weight: 800;
     letter-spacing: 1px;
 }
 
-h2, h3 {
-    color: #05d9e8 !important; /* Azul neón / cian */
-    text-shadow: 2px 2px 0px #ff2a6d !important;
-}
-
-/* Tarjeta contenedora principal estilo carpa pastel */
+/* Tarjetas y Contenedores Interactivos */
 .circus-card {
-    background: rgba(35, 20, 60, 0.9) !important;
-    border: 4px solid #ffe600 !important;
-    border-radius: 25px !important;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 20px rgba(255, 230, 0, 0.3) !important;
-    padding: 30px !important;
-    backdrop-filter: blur(8px);
+    background-color: var(--card-bg);
+    border: 2px solid var(--accent-teal);
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 0 15px rgba(69, 243, 255, 0.2);
 }
 
-.circus-card h3, .circus-card label, .circus-card span {
-    color: #ffe600 !important;
+/* Botones Principales Personalizados */
+.stButton>button {
+    background: linear-gradient(45deg, var(--accent-pink), #ff5e00) !important;
+    color: #ffffff !important;
     font-weight: bold !important;
+    border: none !important;
+    border-radius: 8px !important;
+    box-shadow: 0 0 15px rgba(255, 0, 127, 0.4);
+    transition: all 0.3s ease;
 }
 
-/* Botón principal de entrada (Pomni Style Uniforme y Elegante) */
-.circus-btn-main {
-    background: linear-gradient(90deg, #ff2a6d 0%, #ff2a6d 50%, #0056ff 50%, #0056ff 100%) !important;
-    border: 3px solid #ffe600 !important;
-    color: #ffffff !important;
-    font-weight: 900 !important;
-    font-size: 1.1rem !important;
-    border-radius: 50px !important;
-    box-shadow: 0 6px 0px #b3003b !important;
-    transition: all 0.2s ease !important;
-    cursor: pointer !important;
-    text-transform: uppercase;
-    letter-spacing: 1px;
+.stButton>button:hover {
+    transform: scale(1.03);
+    box-shadow: 0 0 25px rgba(255, 0, 127, 0.8);
 }
 
-.circus-btn-main:hover {
-    transform: translateY(-3px) !important;
-    box-shadow: 0 9px 0px #b3003b, 0 0 15px #ffe600 !important;
-}
-
-.circus-btn-main:active {
-    transform: translateY(2px) !important;
-    box-shadow: 0 2px 0px #b3003b !important;
-}
-
-/* Grilla simétrica exacta de 4 columnas para los 16 botones de personajes */
-.grid-banners {
-    display: grid !important;
-    grid-template-columns: repeat(4, 1fr) !important;
-    gap: 15px !important;
-}
-
-/* Botones individuales limpios con nombres (estilo vibrante) */
-.banner-btn {
-    height: 85px !important;
-    border-radius: 18px !important;
-    color: #ffffff !important;
-    font-weight: 800 !important;
-    font-size: 1rem !important;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.9) !important;
-    border: 3px solid #ffe600 !important;
-    background: linear-gradient(135deg, #ff2a6d 0%, #7a00cc 100%) !important;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4) !important;
-    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease !important;
-}
-
-.banner-btn:hover {
-    transform: scale(1.04) translateY(-3px) !important;
-    border-color: #05d9e8 !important;
-    box-shadow: 0 0 20px #ff2a6d, 0 0 10px #05d9e8 !important;
-}
-
-/* Estilo para los inputs de texto limpios con placeholders */
-input[type="text"] {
-    background: #150a28 !important;
-    border: 3px solid #05d9e8 !important;
-    color: #ffffff !important;
-    border-radius: 15px !important;
-    padding: 12px !important;
-    font-size: 1rem !important;
-    font-weight: bold !important;
-}
-
-input[type="text"]:focus {
-    border-color: #ff2a6d !important;
-    box-shadow: 0 0 12px #ff2a6d !important;
+/* Inputs de texto y Selectores */
+input, textarea, select {
+    background-color: #0b0c10 !important;
+    color: var(--accent-cyan) !important;
+    border: 1px solid var(--accent-teal) !important;
+    border-radius: 6px !important;
 }

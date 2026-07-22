@@ -811,44 +811,12 @@ def renderizar_fase_cognitiva(titulo_fase, f_val, f_desc, clave_fase, siguiente_
     key_lang = "ESP" if current_idioma == "ESP" else "ENG"
     pregunta_sugerida_actual = PREGUNTAS_SUGERIDAS[key_lang].get(clave_fase, "What is my selected character?")
     
-    # Opción 1
+    # Opción 1 (Conectada a la IA)
     if st.button(b1, key=f"{clave_fase}_b1", type="primary" if "opcion_1" in st.session_state[key_clics] else "secondary"):
         toggle_accion("opcion_1")
     if st.session_state.accion_activa == f"{clave_fase}_opcion_1":
-        personaje_actual = ev.get('personaje', 'Character')
-        
-        if current_idioma == "ESP":
-            if clave_fase == "funcion_dominante":
-                muletilla = "déjame adivinar 🔮"
-            elif clave_fase == "funcion_auxiliar":
-                muletilla = "estoy seguro 🧠"
-            elif clave_fase == "funcion_terciaria":
-                muletilla = "puedo anticipar 👁️"
-            elif clave_fase == "funcion_inferior":
-                muletilla = "revelando el misterio 🎭"
-            elif clave_fase == "loop":
-                muletilla = "analizando tu bucle 🔄"
-            else:
-                muletilla = "tu arquetipo señala 🌟"
-                
-            texto_op1 = f"🧠 Tu concepto es **{f_val}**, lo cual significa que *{f_desc}*. Y {muletilla} como **{personaje_actual}** valoras profundamente esta perspectiva en tu día a día como **{ev.get('mbti')}** ⚡."
-        else:
-            if clave_fase == "funcion_dominante":
-                muletilla = "let me guess 🔮"
-            elif clave_fase == "funcion_auxiliar":
-                muletilla = "I'm certain 🧠"
-            elif clave_fase == "funcion_terciaria":
-                muletilla = "I can foresee 👁️"
-            elif clave_fase == "funcion_inferior":
-                muletilla = "unveiling the mystery 🎭"
-            elif clave_fase == "loop":
-                muletilla = "analyzing your loop 🔄"
-            else:
-                muletilla = "your archetype reveals 🌟"
-                
-            texto_op1 = f"🧠 Your concept is **{f_val}**, meaning that *{f_desc}*. Plus, {muletilla} as **{personaje_actual}** you deeply value this perspective in your daily life as an **{ev.get('mbti')}** ⚡."
-
-        st.markdown(f"<div class='box-opcion-1'><b>[{txt['lbl_op1_sel']}]:</b><br>{texto_op1}</div>", unsafe_allow_html=True)
+        resp_ia_op1 = consultar_ia_orientada(usr, ev.get('mbti'), ev.get('area_ti'), f_val, f_desc, origen="ia")
+        st.markdown(f"<div class='box-opcion-1'><b>[{txt['lbl_op1_sel']}]:</b><br>{resp_ia_op1}</div>", unsafe_allow_html=True)
         
         col_ia1_1, col_ia1_2 = st.columns([3, 1])
         with col_ia1_1:
@@ -866,7 +834,7 @@ def renderizar_fase_cognitiva(titulo_fase, f_val, f_desc, clave_fase, siguiente_
             resp_libre = consultar_ia_orientada(usr, ev.get('mbti'), ev.get('area_ti'), f_val, f_desc, origen="libre", pregunta_usuario=texto_a_enviar)
             st.info(f"**Jung.AI:** {resp_libre}")
 
-    # Opción 2
+    # Opción 2 (Conectada a la IA)
     if st.button(b2, key=f"{clave_fase}_b2", type="primary" if "opcion_2" in st.session_state[key_clics] else "secondary"):
         toggle_accion("opcion_2")
     if st.session_state.accion_activa == f"{clave_fase}_opcion_2":
@@ -889,7 +857,7 @@ def renderizar_fase_cognitiva(titulo_fase, f_val, f_desc, clave_fase, siguiente_
             resp_libre = consultar_ia_orientada(usr, ev.get('mbti'), ev.get('area_ti'), f_val, f_desc, origen="libre", pregunta_usuario=texto_a_enviar)
             st.info(f"**Jung.AI:** {resp_libre}")
 
-    # Opción 3
+    # Opción 3 (Conectada a la IA)
     if st.button(b3, key=f"{clave_fase}_b3", type="primary" if "opcion_3" in st.session_state[key_clics] else "secondary"):
         toggle_accion("opcion_3")
     if st.session_state.accion_activa == f"{clave_fase}_opcion_3":

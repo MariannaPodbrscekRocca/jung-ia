@@ -1,283 +1,489 @@
 """
 ================================================================================
-PROYECTO: Jung.IA - Agente de Reclutamiento Interactivo (Versión Maestra Original)
-AUTORA: Marianna Podbrscek Rocca
+PROYECTO: JUNG.AI: THE CIRCUS OF PERSONALITIES
+AUTORA / DESIGNED BY: Marianna Podbrscek Rocca
 CONTEXTO: Proyecto de Desarrollo Tecnológico para Alura Latam y Oracle Next.
 ================================================================================
 """
 
 import os
-import sys
 import random
 import smtplib
 from datetime import datetime, timedelta
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 import pandas as pd
-import inquirer
+import streamlit as st
 
-# Intentar importar la librería oficial de OpenAI
+# Configuración de la página web en Streamlit
+st.set_page_config(
+    page_title="Jung.AI - The Circus of Personalities",
+    page_icon="🎪",
+    layout="wide"
+)
+
+# ------------------------------------------------------------------------------
+# HOJA DE ESTILOS CSS PERSONALIZADA (ESTÉTICA DEL CIRCO DIGITAL)
+# ------------------------------------------------------------------------------
+st.markdown("""
+<style>
+    .stApp {
+        background-color: #12081c;
+        color: #fce4ec;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    h1, h2, h3 {
+        color: #ff007f !important;
+        text-shadow: 0 0 15px rgba(255, 0, 127, 0.6);
+        text-align: center;
+    }
+    .circus-terminal-box {
+        background: linear-gradient(135deg, #1f1135 0%, #2a1b4e 100%);
+        border: 3px solid #ff007f;
+        border-radius: 16px;
+        padding: 35px;
+        margin-bottom: 25px;
+        box-shadow: 0 0 25px rgba(255, 0, 127, 0.4);
+    }
+    .badge-candidato {
+        background-color: #ffffff;
+        color: #ff007f;
+        padding: 8px 15px;
+        border-radius: 8px;
+        font-size: 1.15rem;
+        font-weight: bold;
+        display: inline-block;
+        box-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
+        margin: 5px 0;
+    }
+    section[data-testid="stSidebar"] {
+        color: #000000 !important;
+    }
+    section[data-testid="stSidebar"] label, section[data-testid="stSidebar"] .stSelectbox div {
+        color: #000000 !important;
+        font-weight: 600 !important;
+    }
+    label, .stTextInput label, .stSelectbox label {
+        color: #ffffff !important;
+        font-weight: 600 !important;
+    }
+    .stButton>button[kind="primary"], div.stButton > button[data-baseweb="button"][kind="primary"] {
+        background: linear-gradient(45deg, #ff007f, #ff5e00) !important;
+        color: #ffffff !important;
+        font-weight: bold !important;
+        border-radius: 10px !important;
+        border: 2px solid #ffd700 !important;
+        padding: 10px 22px !important;
+        margin-top: 5px !important;
+        margin-bottom: 5px !important;
+        box-shadow: 0 0 20px rgba(255, 0, 127, 0.7) !important;
+        transition: 0.3s ease;
+    }
+    .stButton>button[kind="primary"]:hover, div.stButton > button[data-baseweb="button"][kind="primary"]:hover {
+        background: linear-gradient(45deg, #ff5e00, #ff007f) !important;
+        color: #ffffff !important;
+        transform: scale(1.03);
+        box-shadow: 0 0 25px rgba(255, 215, 0, 0.9) !important;
+    }
+    .stButton>button {
+        background-color: #ffffff !important;
+        color: #000000 !important;
+        font-weight: bold !important;
+        border-radius: 10px !important;
+        border: 2px solid #ffd700 !important;
+        padding: 10px 22px !important;
+        margin-top: 5px !important;
+        margin-bottom: 5px !important;
+        box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+    }
+    .stButton>button:hover {
+        background: #f0f0f0 !important;
+        color: #000000 !important;
+        transform: scale(1.02);
+    }
+    input, textarea, div[data-baseweb="input"] {
+        background-color: #ffffff !important;
+        color: #000000 !important;
+        -webkit-text-fill-color: #000000 !important;
+        font-weight: 600 !important;
+        border-radius: 8px !important;
+    }
+    input::placeholder {
+        color: #555555 !important;
+        opacity: 1 !important;
+        font-weight: bold !important;
+    }
+    select {
+        background-color: #ffffff !important;
+        color: #000000 !important;
+        border: 2px solid #ff007f !important;
+        border-radius: 8px !important;
+        font-weight: 600 !important;
+    }
+    .subtitle-circus {
+        color: #ffb3d1 !important;
+        text-align: center;
+        font-weight: 600;
+        margin-bottom: 25px;
+    }
+    .instruction-fucsia {
+        color: #ff80bf !important;
+        font-size: 1.05rem;
+        font-weight: bold;
+        margin-top: 12px;
+        margin-bottom: 6px;
+    }
+    .instruction-success {
+        color: #00ffcc !important;
+        font-size: 1.05rem;
+        font-weight: bold;
+        margin-top: 12px;
+        margin-bottom: 6px;
+    }
+    .instruction-error {
+        color: #ff4d4d !important;
+        font-size: 1.05rem;
+        font-weight: bold;
+        margin-top: 12px;
+        margin-bottom: 6px;
+    }
+    .box-opcion-1 {
+        background: rgba(0, 255, 204, 0.12);
+        border: 2px solid #00ffcc;
+        border-radius: 12px;
+        padding: 20px;
+        margin-top: 15px;
+        margin-bottom: 15px;
+        box-shadow: 0 0 15px rgba(0, 255, 204, 0.3);
+    }
+    .box-opcion-2 {
+        background: rgba(255, 215, 0, 0.12);
+        border: 2px solid #ffd700;
+        border-radius: 12px;
+        padding: 20px;
+        margin-top: 15px;
+        margin-bottom: 15px;
+        box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+    }
+    .box-opcion-3 {
+        background: rgba(255, 0, 127, 0.15);
+        border: 2px solid #ff007f;
+        border-radius: 12px;
+        padding: 20px;
+        margin-top: 15px;
+        margin-bottom: 15px;
+        box-shadow: 0 0 15px rgba(255, 0, 127, 0.4);
+    }
+    .alert-grande-roja {
+        background-color: rgba(255, 0, 0, 0.2);
+        border: 2px solid #ff0000;
+        color: #ff4d4d;
+        padding: 12px 18px;
+        border-radius: 8px;
+        font-size: 1.05rem;
+        font-weight: bold;
+        margin-top: 10px;
+        margin-bottom: 15px;
+        line-height: 1.5;
+    }
+    .explicacion-bonita {
+        background: linear-gradient(135deg, rgba(255, 0, 127, 0.2) 0%, rgba(18, 8, 28, 0.8) 100%);
+        border: 2px solid #ff007f;
+        border-radius: 14px;
+        padding: 25px;
+        margin-top: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 0 20px rgba(255, 0, 127, 0.4);
+        font-size: 1.1rem;
+        line-height: 1.6;
+        color: #fce4ec;
+    }
+    .firma-footer {
+        text-align: center;
+        color: #ff80bf;
+        font-size: 0.95rem;
+        margin-top: 40px;
+        border-top: 1px dashed rgba(255, 0, 127, 0.4);
+        padding-top: 15px;
+    }
+</style>
+""", unsafe_allow_html=True)
+
+# ==============================================================================
+# 3. GESTIÓN DE API KEY Y CARGA DE DATOS DESDE CSV
+# ==============================================================================
 try:
     from openai import OpenAI
     OPENAI_AVAILABLE = True
 except ImportError:
     OPENAI_AVAILABLE = False
 
-# ------------------------------------------------------------------------------
-# CONFIGURACIÓN DE LLAVE DE API Y SERVIDOR DE CORREO (SMTP)
-# ------------------------------------------------------------------------------
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "") 
-
-SMTP_SERVER = "smtp.gmail.com"
-SMTP_PORT = 587
-SENDER_EMAIL = "mariannapodbrscek@gmail.com" 
-SENDER_PASSWORD = "TU_APP_PASSWORD_AQUI" 
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "")
+if not OPENAI_API_KEY and "OPENAI_API_KEY" in st.secrets:
+    OPENAI_API_KEY = st.secrets["OPENAI_API_KEY"]
 
 CSV_PATH = "matriz_personalidades.csv"
 
+@st.cache_data
+def cargar_matriz_completa():
+    """Carga y procesa el archivo CSV local con Pandas asegurando la lectura íntegra de celdas."""
+    if os.path.exists(CSV_PATH):
+        df = pd.read_csv(CSV_PATH).fillna("[Sin Nombre]")
+        if len(df) < 16:
+            dif = 16 - len(df)
+            cols = df.columns
+            vacias = pd.DataFrame([[f"[Personaje {i+len(df)+1}]" for _ in cols] for i in range(dif)], columns=cols)
+            df = pd.concat([df, vacias], ignore_index=True)
+        return df.iloc[0:16].copy()
+    return pd.DataFrame()
+
+df_matriz = cargar_matriz_completa()
+
 LISTA_PREFIJOS = [
-    ("EE. UU. / USA (+1)", "+1"),
-    ("Perú (+51)", "+51"),
-    ("México (+52)", "+52"),
-    ("Colombia (+57)", "+57"),
-    ("Argentina (+54)", "+54"),
-    ("Chile (+56)", "+56"),
-    ("Ecuador (+593)", "+593"),
-    ("Guatemala (+502)", "+502"),
-    ("Bolivia (+591)", "+591"),
-    ("Costa Rica (+506)", "+506"),
-    ("Panamá (+507)", "+507"),
-    ("República Dominicana (+1-809)", "+1-809"),
-    ("República Dominicana (+1-829)", "+1-829"),
-    ("República Dominicana (+1-849)", "+1-849"),
-    ("Uruguay (+598)", "+598"),
-    ("Venezuela (+58)", "+58")
+    ("EE. UU. / USA (+1)", "+1"), ("Perú (+51)", "+51"), ("México (+52)", "+52"), 
+    ("Colombia (+57)", "+57"), ("Argentina (+54)", "+54"), ("Chile (+56)", "+56"), 
+    ("Ecuador (+593)", "+593"), ("Venezuela (+58)", "+58")
 ]
 
 LISTA_DOMINIOS_EMAIL = [
-    ("@gmail.com", "@gmail.com"),
-    ("@hotmail.com", "@hotmail.com"),
-    ("@outlook.com", "@outlook.com"),
-    ("@yahoo.com", "@yahoo.com"),
-    ("@icloud.com", "@icloud.com"),
-    ("@live.com", "@live.com"),
-    ("@msn.com", "@msn.com"),
-    ("@aol.com", "@aol.com"),
-    ("@protonmail.com", "@protonmail.com"),
-    ("@proton.me", "@proton.me"),
-    ("Otro proveedor / Other domain", "OTRO")
+    ("@gmail.com", "@gmail.com"), ("@yahoo.com", "@yahoo.com"), 
+    ("@outlook.com", "@outlook.com"), ("@icloud.com", "@icloud.com"), 
+    ("@proton.me", "@proton.me"), ("@aol.com", "@aol.com"), 
+    ("@zoho.com", "@zoho.com"), ("@mail.com", "@mail.com"), 
+    ("@live.com", "@live.com"), ("@comcast.net", "@comcast.net"), 
+    ("Otro proveedor", "OTRO")
 ]
 
-PRODUCCIONES_LISTA = [
-    "• Harry Potter",
-    "• Arrested Development",
-    "• South Park",
-    "• Breaking Bad"
+LISTA_GENEROS_ESP = [
+    ("Femenino", "Femenino"), 
+    ("Masculino", "Masculino"), 
+    ("Neutro / No binario u otro/a/e", "Neutro")
 ]
 
+LISTA_GENEROS_ENG = [
+    ("Female", "Femenino"), 
+    ("Male", "Masculino"), 
+    ("Neutral / Non-binary or other", "Neutro")
+]
+
+PRODUCCIONES_LISTA = ["• Harry Potter", "• Arrested Development", "• South Park", "• Breaking Bad"]
+
+# ==============================================================================
+# 4. DICCIONARIO BILINGÜE Y PREGUNTAS SUGERIDAS DINÁMICAS (POR FASE)
+# ==============================================================================
 TEXTOS = {
     "ESP": {
+        "subtitulo": "Sistema Inteligente de Reclutamiento y Diagnóstico Psicométrico según el modelo de Carl Jung",
+        "titulo_bienvenida": "🌟 ¡Bienvenidos a la primera fase para entrevista de trabajo con Jung Tech! 🌟",
         "bienvenida": (
-            "Hola, mi nombre es Jung.IA.\n\n"
-            "Hoy voy a inspirarte a tener un proceso de selección fuera de este mundo.\n"
-            "Este es un proceso de selección para el área de tecnología de la empresa Jung Tech Company, "
+            "Hola, mi nombre es Jung.AI. 🔮🧠\n\n"
+            "Hoy voy a inspirarte a tener un proceso de selección fuera de este mundo bajo la gran carpa del circo digital.\n"
+            "Este es un proceso de selección para el área de tecnología de la empresa Jung Tech Company 💻✨, "
             "y queremos marcar la diferencia en la forma de realizar nuestros procesos de contratación.\n"
-            "Estamos interesados en que trabajes en nuestra empresa, pero antes queremos ayudarte a "
-            "postular al área más adecuada para ti utilizando los test de personalidad de Carl Jung.\n\n"
+            "Estamos interesados en que trabajes con nosotros, pero antes queremos ayudarte a "
+            "postular al área más adecuada para ti utilizando los fascinantes test de personalidad de Carl Jung 🎪.\n\n"
             "Hoy realizaremos la primera etapa del proceso de selección. Te mostraremos personajes "
-            "de series y películas, y tú nos dirás con cuál personaje te identificas más.\n"
-            "En esta empresa contratamos empleados con diferentes tipos de personalidad, así que no hay "
-            "nada que temer. Lo único que queremos es ayudarte a encontrar el puesto que mejor se adapte a ti.\n"
-            "Solo te pedimos que seas completamente honesto/a. Aunque creas que tu personalidad se parece "
-            "a la de Darth Sidious o Lord Voldemort, todos los tipos de personalidad son bienvenidos."
+            "de series y películas, y tú nos dirás con cuál personaje te identificas más 🎭.\n"
+            "En esta carpa digital contratamos mentes con diferentes arquetipos, así que no hay "
+            "nada que temer. Lo único que queremos es ayudarte a encontrar el puesto perfecto 🚀.\n"
+            "Solo te pedimos que seas completamente honesto/a. ¡Todos los tipos de personalidad son bienvenidos! 🌟"
         ),
-        "confirmar_datos": "Por favor, ingresa tus datos personales de contacto:",
-        "nota_nombres": "(Nota: Puedes ingresar uno o más nombres y uno o más apellidos)",
-        "input_nombres": "Nombres (1 o más): ",
-        "input_apellidos": "Apellidos (1 o más): ",
-        "input_preferido": "¿Cómo prefieres que te llamemos?: ",
-        "err_campo_vacio": "[!] Este campo no puede estar vacío. Por favor, ingresa una respuesta válida.",
-        "err_solo_letras": "[!] Por favor, solo ingresar letras.",
-        "err_solo_numeros": "[!] Solo se permiten números (sin letras, espacios ni símbolos). Por favor, intenta de nuevo.",
-        "nota_cobertura_tel": "(Por el momento solo aceptamos números telefónicos de EE. UU. y Latinoamérica)",
-        "input_prefijo": "Selecciona tu país:",
-        "input_num_tel": "Número de teléfono (sin prefijo): ",
-        "input_usr_mail": "Usuario de correo (antes del @): ",
-        "input_dom_mail": "Selecciona tu dominio:",
-        "nota_correo_otro": (
-            "Por el momento solo aceptamos postulaciones con correos de los proveedores listados.\n"
-            "Por favor, selecciona uno de los dominios disponibles."
+        "btn_continuar": "🎪 Entrar a la Carpa Digital y Continuar 🎪",
+        "confirmar_datos": "Registro del Candidato:",
+        "input_nombres": "Nombres",
+        "input_apellidos": "Apellidos",
+        "input_preferido": "Nombre Preferido",
+        "lbl_genero": "Género / Identificación:",
+        "instruccion_nombres": "💡 Por favor llena este espacio con tu nombre completo.",
+        "instruccion_apellidos": "💡 Por favor llena este espacio con tus apellidos.",
+        "instruccion_preferido": "💡 Por favor llena este espacio con el nombre con el que prefieres que te llamemos (Opcional).",
+        "instruccion_tel": "💡 Por favor ingresa tu número de teléfono sin código de país.",
+        "instruccion_mail": "💡 Por favor escribe tu usuario de correo antes del símbolo '@'.",
+        "msg_ok": "✅ ¡Campo completado correctamente!",
+        "err_campo": "⚠️ El número de teléfono es obligatorio y solo acepta números.",
+        "err_usr_mail": "⚠️ Debes escribir todo lo que va antes del '@', sin incluir el símbolo '@'.",
+        "err_nombres": "⚠️ El nombre es obligatorio y no puede estar vacío.",
+        "err_apellidos": "⚠️ Los apellidos son obligatorios y no pueden estar vacíos.",
+        "err_tel": "⚠️ El número de teléfono solo puede contener números, sin letras.",
+        "err_usr_mail_val": "⚠️ El usuario de correo es obligatorio y no puede contener el símbolo '@'.",
+        "err_proveedor": "⚠️ Por el momento no tenemos soporte para este proveedor. Prueba con otro dominio de correo válido.",
+        "lbl_prefijo": "Selecciona tu país / Prefijo:",
+        "lbl_dominio": "Selecciona tu dominio:",
+        "input_num_tel": "Número de teléfono (sin prefijo):",
+        "input_usr_mail": "Usuario de correo (antes del @):",
+        "btn_registrar": "Validate Credentials and Register",
+        "btn_volver_inicio": "🌐 Volver a la Pantalla Inicial para Cambiar de Idioma",
+        "err_vacio_ia": "⚠️ Por favor escribe una pregunta antes de hacer clic en Ask AI.",
+        "intro_filtro_series": "Este es el inicio de tu entrevista de trabajo, elige una de estas películas o series para iniciar tu proceso de selección:",
+        "lbl_selecciona_prod": "Selecciona una producción audiovisual:",
+        "lbl_banco": "Banco de 16 Personalidades:",
+        "btn_serie": "Confirmar Función y Ver Arquetipos 🎭",
+        "btn_oops_datos": "😕 Oops, ingresé mal mis datos, quiero regresar al menú anterior",
+        "pregunta_personaje": "{nombre}, ¿con qué personaje te identificas más dentro de la pista?",
+        "btn_diagnostico": "✨ Revelar Diagnóstico Cognitivo y Arquetipo ✨",
+        "btn_oops_serie": "😕 Oops, me equivoqué, quiero cambiar de película o serie",
+        "btn_no_conozco": "😕 Oops, no conozco ninguna de estas películas o series",
+        "msg_no_conozco": "¡No te preocupes! Esta prueba está diseñada exclusivamente para estas cuatro producciones actuales. Sin embargo, nos encantaría tomar tus datos para avisarte en cuanto abramos opciones para más series y películas. ¿Deseas registrar tus datos para futuras convocatorias?",
+        "btn_aceptar_futuras": "Sí, registrar mis datos y finalizar",
+        "btn_arrepinti": "😊 ¡Me arrepentí, ahora sí quiero tomar el test!",
+        "gracias_cierre": "¡Muchas gracias! Tus datos han sido guardados exitosamente en nuestra base de datos de Jung Tech. Te notificaremos cuando tengamos nuevas series y películas disponibles. ¡Hasta pronto! 🎪✨",
+        "btn_reiniciar_test": "🔄 Reiniciar Test / Restart Test",
+        "btn_oops_reconexion": "😕 Oops, no siento que este perfil me describa como ser humano y como profesional, quiero volver a empezar el test",
+        "btn_dom_1": "Opción 1: Si mi función es {f_val}, ¿cómo es mi personalidad en el día a día?",
+        "btn_dom_2": "Opción 2: ¿Qué es el MBTI y cómo impacta en tu vida profesional?",
+        "btn_dom_3": "Opción 3: ¿Cómo afecta esta función tu vida diaria y rendimiento?",
+        "btn_siguiente_seccion": "➔ Siguiente Sección / Next Section",
+        "instruccion_requisito": "💡 **Requisito del Circo Digital:** Debes hacer clic y explorar las opciones 1, 2 y 3 (en el orden que prefieras) para poder desbloquear el botón y pasar a la siguiente sección.",
+        "err_falta_clicks": "⚠️ ¡Alto ahí! Te falta explorar alguna(s) de las opciones (1, 2, or/and 3) antes de continuar. Los botones que te falta presionar tienen un corazón roto (💔) al lado. Recuerda que en Jung Tech valoramos que nuestros empleados usen la IA y hagan preguntas. Si no comprendiste algo, ¡pregúntale a la IA! Este es un test laboral, dale rienda suelta a tu curiosidad. 🚀",
+        "lbl_op1_sel": "Opción 1 Seleccionada",
+        "lbl_op2_sel": "Opción 2 Seleccionada - Equipo de Reclutamiento",
+        "lbl_op3_sel": "Opción 3 Seleccionada - Análisis IA",
+        "badge_postulante": "Hola",
+        "badge_personaje": "Personaje",
+        "fase_1": "1. Función Dominante",
+        "fase_2": "2. Función Auxiliar",
+        "fase_3": "3. Función Terciaria",
+        "fase_4": "4. Función Inferior",
+        "fase_5": "5. Loop Cognitivo",
+        "fase_6": "6. Arquetipo Digital",
+        "titulo_resultado": "🎩✨ 7. Resultado Final y Diagnóstico en Jung Tech ✨🎩",
+        "area_ti_lbl": "🎯 Área TI Recomendada",
+        "rol_lbl": "permite liderar con propósito, conectando las necesidades humanas con la visión del producto.",
+        "explicacion_bonita_txt": (
+            "🌟 **Evaluación de Talento Jung Tech:**<br>"
+            "A nuestro parecer y basándonos en tus respuestas, tu perfil cognitivo demuestra gran capacidad analítica y estratégica. "
+            "Consideramos que encajarías perfectamente en nuestra área de <b>{area_ti}</b>, combinando resolución técnica con una visión humana e innovadora 🚀✨."
         ),
-        "pregunta_datos_correctos": "¿Todos tus datos están correctos?",
-        "opt_datos_ok": "Sí, todo está correcto",
-        "opt_datos_edit": "No, quiero corregir algún dato",
-        "lbl_nom": "Nombres",
-        "lbl_ape": "Apellidos",
-        "lbl_pref": "Nombre Preferido",
-        "lbl_tel": "Teléfono",
-        "lbl_mail": "Correo",
-        "menu_corregir": "¿Qué dato te gustaría corregir?",
-        "opt_edit_nom": "Corregir Nombres / Apellidos / Preferido",
-        "opt_edit_tel": "Corregir Teléfono (Prefijo / Número)",
-        "opt_edit_mail": "Corregir Correo (Usuario / Dominio)",
-        "opt_edit_todo": "Corregir TODO de nuevo",
-        "intro_filtro_series": "Las producciones audiovisuales disponibles en esta evaluación son:",
-        "filtro_series": "{nombre}, ¿has visto alguna de estas películas o series?:",
-        "opt_si": "Sí",
-        "opt_no": "No",
-        "no_series": (
-            "Estimado/a {nombre}, por el momento este modelo de inteligencia artificial solo está diseñado "
-            "para evaluar a candidatos a través de las siguientes producciones: Harry Potter, Arrested Development, "
-            "South Park y Breaking Bad.\n\n"
-            "Sin embargo, en Jung Tech Company estamos muy interesados en tu perfil y nos encantaría considerar tu postulación."
-        ),
-        "pregunta_correo_inmediato": (
-            "{nombre}, ¿nos autorizas a enviarte un correo electrónico EN ESTE MOMENTO para confirmar que tenemos "
-            "tu información correctamente registrada en nuestro sistema?"
-        ),
-        "opt_auth_mail_si": "Sí, autorizo el correo ahora",
-        "opt_auth_mail_no": "No por el momento",
-        "correo_confirmacion_enviado": (
-            "¡Perfecto, {nombre}! Te hemos enviado un correo de confirmación de recepción de datos.\n"
-            "Más adelante nos pondremos en contacto contigo nuevamente con fechas tentativas para agendar "
-            "tus posibles entrevistas en el área de tecnología."
-        ),
-        "consentimiento_no": "Entendido, {nombre}. Respetamos tu decisión y mantendremos tus datos resguardados de forma confidencial.",
-        "pregunta_personaje": "{nombre}, ¿con qué personaje te identificas más? ¿Cuál se parece (en personalidad) a ti?:",
-        "confirmar_personaje": "{nombre}, ¿tu personaje es '{personaje}'?",
-        "cambiar_serie": "Cambiar de serie o película",
-        "btn_reiniciar_prueba": "↺ Volver al Inicio de la Prueba (Seleccionar otra serie)",
-        "btn_reiniciar_todo_datos": "Oops, me equivoqué: Quiero empezar TODO desde cero (no puse bien mis datos)",
-        "btn_reiniciar_test_personaje": "Oops, no seleccioné bien mi personaje / no me resuenan los resultados: Quiero volver a empezar el test",
-        "sospecha_texto": "{nombre}, sospecho que eres un {mbti} + {desc}.",
-        "pregunta_mbti_confirmar": "¿Crees que esta descripción representa tu personalidad?",
-        "diagnostico_base": "Entonces {nombre}, eres un: {personaje}.\nPresiento que tienes {mbti_desc}.\nTu función dominante es {fun_dom}.\nSABES {fun_dom_desc}.",
-        "pregunta_genero": "{nombre}, para la siguiente etapa necesitamos que nos digas tu género:",
-        "arquetipo_intro": (
-            "Un arquetipo es un patrón universal de personalidad según Carl Gustav Jung.\n\n"
-            "{nombre}, elegiste el personaje {personaje} (Tipo MBTI: {mbti})."
-        ),
-        "arquetipo_cierre": "Recuerda que los arquetipos son patrones universales para comprender el mundo y tomar decisiones más auténticas.",
-        "area_ideal": (
-            "Según la información recopilada, {nombre}, el área de tecnología ideal para ti dentro de Jung Tech Company es: "
-            "{area}, {razon}."
-        ),
-        "gusto_resultado": "{nombre}, ¿te gustó tu resultado?",
-        "test_de_nuevo": "¿Quieres tomar el test de nuevo?",
-        "prompt_final": (
-            "{tratamiento} postulante {nombre}, has superado la primera etapa de nuestro proceso de selección. "
-            "Por favor, confirma tus datos antes de enviar el correo con los detalles de tu postulación."
-        ),
-        "correo_enviado": "El correo ha sido enviado exitosamente a {correo}. Gracias por participar, {nombre}.",
-        "info_correcta": "Sí, toda la información es correcta",
-        "modificar_datos": "Corregir un dato",
-        "gracias": "Gracias por tu tiempo, {nombre}.",
-        "press_enter": "\nPresiona Enter para continuar...",
-        "press_enter_arquetipos": "\nPresiona Enter para avanzar a Arquetipos...",
-        "press_enter_area": "\nPresiona Enter para ver tu área recomendada...",
-        "press_enter_inicio": "\nPresiona Enter para volver al inicio...",
-        "select_una_produccion": "{nombre}, selecciona una producción audiovisual para tu evaluación:",
-        "datos_verificar": "\nResumen de tus datos de contacto:",
-        "fechas_enviadas": "\n[Fechas tentativas enviadas a tu correo para entrevistas (Posteriores al 1 de Agosto de 2026)]:",
-        "canal_conversacion_titulo": " CANAL DE CONVERSACIÓN CON JUNG.IA ",
-        "canal_conversacion_sub": "Escribe tus dudas sobre tus resultados, puesto o datos registrados..."
+        "pregunta_envio_correo": "📩 Si estás de acuerdo con este diagnóstico, selecciona el idioma para el correo, elige una fecha tentativa para tu entrevista de Fase 2, y confirma tus datos:",
+        "lbl_idioma_correo": "🌐 ¿En qué idioma deseas que te mandemos el correo?:",
+        "lbl_fecha_fase2": "📅 Selecciona una fecha y hora tentativa para tu entrevista (Fase 2):",
+        "btn_confirmar_y_enviar": "📤 Confirmar Datos, Idioma, Fecha y Enviar Email",
+        "btn_oops_no_conforme": "😕 Oops, no estoy conforme con mi resultado (Resetear Test)",
+        "msg_fin_sin_correo": "🎉 ¡Proceso finalizado con éxito! Gracias por participar en el circo digital de Jung Tech. 🚀🎪",
+        "titulo_verificacion_datos": "🔍 Verificación y Confirmación de Datos del Postulante:",
+        "msg_correo_enviado": "🎉 ¡Reporte y temario enviados con éxito a tu correo en el idioma solicitado! ⚠️ **¡POR FAVOR REVISA TU CARPETA DE SPAM!** Te esperamos en la entrevista de Fase 2. Fin del proceso. 🚀🎪",
+        "label_improvisada": "💡 ¿Tienes dudas? Pregúntale a la IA:",
+        "btn_enviar_improvisada": "Ask AI 🪄",
+        "cargando_txt": "⏰ Cargando...",
+        "orientacion_proceso": "💡 **Reclutamiento:** ¡Hola! Este es un proceso oficial de Jung Tech 🏢. Haz preguntas y explora los botones para conocerte a fondo 🧠✨.",
+        "firma_autor": "Página web diseñada por: <b>Marianna Podbrscek Rocca</b>"
     },
     "ENG": {
+        "subtitulo": "Intelligent Recruitment and Psychometric Diagnosis System according to Carl Jung's model",
+        "titulo_bienvenida": "🌟 Welcome to the first phase for job interviews with Jung Tech! 🌟",
         "bienvenida": (
-            "Hello, my name is Jung.IA.\n"
-            "(Note: \"IA\" stands for \"Inteligencia Artificial\", which is Artificial Intelligence in Spanish)\n\n"
-            "Today, I am here to inspire you and guide you through a hiring process that is truly out of this world.\n"
-            "This is the recruitment process for the Technology Department at Jung Tech Company.\n\n"
-            "Today, we will conduct the first stage using Carl Jung's personality framework.\n"
-            "We only ask you to be completely honest. Every single personality type is welcome here."
+            "Hello, my name is Jung.AI. 🔮🧠\n\n"
+            "Today, I am here to inspire you and guide you through a hiring process that is truly out of this world under the big top of the digital circus.\n"
+            "This is the recruitment process for the Technology Department at Jung Tech Company 💻✨, "
+            "and we want to make a difference in how we conduct our hiring processes.\n"
+            "We are interested in having you work with us, but first, we want to help you "
+            "apply to the most suitable area using Carl Jung's fascinating personality tests 🎪.\n\n"
+            "Today, we will conduct the first stage of selection. We will show you characters "
+            "from series and movies, and you will tell us which character you identify with the most 🎭.\n"
+            "In this digital circus, we hire minds with different archetypes, so there is nothing to fear. "
+            "Our only goal is to help you find the perfect position 🚀.\n"
+            "We only ask you to be completely honest. Every single personality type is welcome here! 🌟"
         ),
-        "confirmar_datos": "Please enter your personal contact details:",
-        "nota_nombres": "(Note: You may enter one or more first names and last names)",
-        "input_nombres": "First Name(s) (1 or more): ",
-        "input_apellidos": "Last Name(s) (1 or more): ",
-        "input_preferido": "What would you prefer us to call you?: ",
-        "err_campo_vacio": "[!] This field cannot be empty. Please enter a valid response.",
-        "err_solo_letras": "[!] Please enter letters only.",
-        "err_solo_numeros": "[!] Only numbers are allowed (no letters, spaces, or symbols). Please try again.",
-        "nota_cobertura_tel": "(At the moment we only accept phone numbers from USA and Latin America)",
-        "input_prefijo": "Select your country code:",
-        "input_num_tel": "Phone number (without country code): ",
-        "input_usr_mail": "Email username (before @): ",
-        "input_dom_mail": "Select your domain:",
-        "nota_correo_otro": (
-            "At the moment we only accept applications with email accounts from the listed providers.\n"
-            "Please select one of the available domains."
+        "btn_continuar": "🎪 Enter the Digital Big Top and Continue 🎪",
+        "confirmar_datos": "Candidate Registration:",
+        "input_nombres": "First Name",
+        "input_apellidos": "Last Name",
+        "input_preferido": "Preferred Name",
+        "lbl_genero": "Gender / Identification:",
+        "instruccion_nombres": "💡 Please fill this field with your full name.",
+        "instruccion_apellidos": "💡 Please fill this field with your last name.",
+        "instruccion_preferido": "💡 Please fill this field with your preferred name (Optional).",
+        "instruccion_tel": "💡 Please enter your phone number without country code.",
+        "instruccion_mail": "💡 Please type your email username before the '@' symbol.",
+        "msg_ok": "✅ Field successfully completed!",
+        "err_campo": "⚠️ Phone number is required and only accepts numbers.",
+        "err_usr_mail": "⚠️ You must write everything before the '@', without including the '@' symbol.",
+        "err_nombres": "⚠️ First name is required and cannot be empty.",
+        "err_apellidos": "⚠️ Last name is required and cannot be empty.",
+        "err_tel": "⚠️ Phone number can only contain numbers, no letters.",
+        "err_usr_mail_val": "⚠️ Email username is required and cannot contain the '@' symbol.",
+        "err_proveedor": "⚠️ We currently do not support this provider. Try another valid email domain.",
+        "lbl_prefijo": "Select your country / Prefix:",
+        "lbl_dominio": "Select your domain:",
+        "input_num_tel": "Phone number (without country code):",
+        "input_usr_mail": "Email username (before @):",
+        "btn_registrar": "Validate Credentials and Register",
+        "btn_volver_inicio": "🌐 Return to Home Screen to Change Language",
+        "err_vacio_ia": "⚠️ Please type a question before clicking Ask AI.",
+        "intro_filtro_series": "This is the beginning of your job interview, choose one of these movies or series to start your selection process:",
+        "lbl_selecciona_prod": "Select an audiovisual production:",
+        "lbl_banco": "Bank of 16 Personalities:",
+        "btn_serie": "Confirm Show and View Archetypes 🎭",
+        "btn_oops_datos": "😕 Oops, I entered my info incorrectly, I want to go back to the previous menu",
+        "pregunta_personaje": "{nombre}, which character do you identify with the most under the circus tent?",
+        "btn_diagnostico": "✨ Reveal Cognitive Diagnosis and Archetype ✨",
+        "btn_oops_serie": "😕 Oops, my bad, I would like to change movie",
+        "btn_no_conozco": "😕 Oops, I don't know any of these movies or series",
+        "msg_no_conozco": "Don't worry! This test is exclusively designed for these four current productions. However, we would love to take your details to notify you as soon as we open options for more series and movies. Would you like to register your details for future calls?",
+        "btn_aceptar_futuras": "Yes, register my details and finish",
+        "btn_arrepinti": "😊 I changed my mind, now I want to take the test!",
+        "gracias_cierre": "Thank you very much! Your data has been successfully saved in our Jung Tech database. We will notify you when new series and movies are available. See you soon! 🎪✨",
+        "btn_reiniciar_test": "🔄 Restart Test",
+        "btn_oops_reconexion": "😕 Oops, I don't feel like this profile describes me as a human and as a professional, I want to start the test over",
+        "btn_dom_1": "Option 1: If my function is {f_val}, what is my personality like in daily life?",
+        "btn_dom_2": "Option 2: What is the MBTI and how does it impact your professional life?",
+        "btn_dom_3": "Option 3: How does this function affect your daily life and performance?",
+        "btn_siguiente_seccion": "➔ Siguiente Sección / Next Section",
+        "instruccion_requisito": "💡 **Digital Circus Requirement:** You must click and explore options 1, 2, and 3 (in any order you prefer) to unlock the button and move to the next section.",
+        "err_falta_clicks": "⚠️ Hold on! You still need to explore some of the options (1, 2, or/and 3) before proceeding. The buttons you still need to press have a broken heart (💔) next to them. At Jung Tech, we value our employees using AI and asking questions. If you didn't understand something, ask the AI! Remember this is a job assessment test, so let your curiosity run wild. 🚀",
+        "lbl_op1_sel": "Option 1 Selected",
+        "lbl_op2_sel": "Option 2 Selected - Recruitment Team",
+        "lbl_op3_sel": "Option 3 Selected - AI Analysis",
+        "badge_postulante": "Hello",
+        "badge_personaje": "Character",
+        "fase_1": "1. Dominant Function",
+        "fase_2": "2. Auxiliary Function",
+        "fase_3": "3. Tertiary Function",
+        "fase_4": "4. Inferior Function",
+        "fase_5": "5. Cognitive Loop",
+        "fase_6": "6. Digital Archetype",
+        "titulo_resultado": "🎩✨ 7. Final Result and Diagnosis at Jung Tech ✨🎩",
+        "area_ti_lbl": "🎯 Recommended IT Area",
+        "rol_lbl": "allows connecting human needs with our company's vision",
+        "explicacion_bonita_txt": (
+            "🌟 **Jung Tech Talent Evaluation:**<br>"
+            "In our view and based on your responses, your cognitive profile demonstrates strong analytical and strategic capacity. "
+            "We consider that you would fit perfectly in our <b>{area_ti}</b> area, combining technical problem-solving with an innovative vision 🚀✨."
         ),
-        "pregunta_datos_correctos": "Is all your information correct?",
-        "opt_datos_ok": "Yes, all information is correct",
-        "opt_datos_edit": "No, I want to edit an item",
-        "lbl_nom": "First Names",
-        "lbl_ape": "Last Names",
-        "lbl_pref": "Preferred Name",
-        "lbl_tel": "Phone",
-        "lbl_mail": "Email",
-        "menu_corregir": "Which item would you like to edit?",
-        "opt_edit_nom": "Edit First / Last / Preferred Names",
-        "opt_edit_tel": "Edit Phone (Country Code / Number)",
-        "opt_edit_mail": "Edit Email (Username / Domain)",
-        "opt_edit_todo": "Edit EVERYTHING again",
-        "intro_filtro_series": "The available audiovisual productions for this assessment are:",
-        "filtro_series": "{nombre}, have you watched any of these movies or series?:",
-        "opt_si": "Yes",
-        "opt_no": "No",
-        "no_series": (
-            "Dear {nombre}, at the moment this AI model is specifically designed to evaluate candidates "
-            "through the following productions: Harry Potter, Arrested Development, South Park, and Breaking Bad.\n\n"
-            "However, at Jung Tech Company we are genuinely interested in your profile."
-        ),
-        "pregunta_correo_inmediato": (
-            "{nombre}, do you authorize us to send you an email RIGHT NOW to confirm that we have your "
-            "information correctly registered in our system?"
-        ),
-        "opt_auth_mail_si": "Yes, authorize email now",
-        "opt_auth_mail_no": "No for now",
-        "correo_confirmacion_enviado": (
-            "Great, {nombre}! We have sent you a data receipt confirmation email.\n"
-            "We will contact you again later with tentative dates to schedule your potential tech interviews."
-        ),
-        "consentimiento_no": "Understood, {nombre}. We respect your decision and will keep your data confidential.",
-        "pregunta_personaje": "{nombre}, which character do you identify with the most?:",
-        "confirmar_personaje": "{nombre}, is your character '{personaje}'?",
-        "cambiar_serie": "Change series or movie",
-        "btn_reiniciar_prueba": "↺ Return to Start of Test (Select another series)",
-        "btn_reiniciar_todo_datos": "Oops, I made a mistake: I want to restart EVERYTHING from scratch (incorrect data)",
-        "btn_reiniciar_test_personaje": "Oops, wrong character selection / results don't resonate: I want to restart the test",
-        "sospecha_texto": "{nombre}, I suspect you are a {mbti} + {desc}.",
-        "pregunta_mbti_confirmar": "Do you believe this description represents your personality?",
-        "diagnostico_base": "So {nombre}, you are a: {personaje}.\nI sense that you have {mbti_desc}.\nYour dominant function is {fun_dom}.\nYOU KNOW {fun_dom_desc}.",
-        "pregunta_genero": "{nombre}, for the next stage, please select your gender:",
-        "arquetipo_intro": (
-            "An archetype is a universal pattern of personality according to Carl Jung.\n\n"
-            "{nombre}, you chose {personaje} (MBTI: {mbti})."
-        ),
-        "arquetipo_cierre": "Remember that archetypes help us understand ourselves and make more authentic decisions.",
-        "area_ideal": (
-            "Based on all gathered information, {nombre}, your ideal technology area at Jung Tech Company is: "
-            "{area}, {razon}."
-        ),
-        "gusto_resultado": "{nombre}, did you like your result?",
-        "test_de_nuevo": "Do you want to take the test again?",
-        "prompt_final": (
-            "Dear applicant {nombre}, you have passed stage 1. Please confirm your details before sending the summary email."
-        ),
-        "correo_enviado": "The email has been sent successfully to {correo}. Thank you, {nombre}.",
-        "info_correcta": "Yes, all information is correct",
-        "modificar_datos": "Edit an item",
-        "gracias": "Thank you for your time, {nombre}.",
-        "press_enter": "\nPress Enter to continue...",
-        "press_enter_arquetipos": "\nPress Enter to move to Archetypes...",
-        "press_enter_area": "\nPress Enter to view recommended area...",
-        "press_enter_inicio": "\nPress Enter to return to start...",
-        "select_una_produccion": "{nombre}, select one audiovisual production:",
-        "datos_verificar": "\nSummary of your contact details:",
-        "fechas_enviadas": "\n[Tentative interview dates sent to your email (After August 1, 2026)]:",
-        "canal_conversacion_titulo": " OPEN CONVERSATION CHANNEL WITH JUNG.IA ",
-        "canal_conversacion_sub": "Type any questions regarding your results, job placement, or contact details..."
+        "pregunta_envio_correo": "📩 If you agree with this diagnosis, select your preferred language for the email, choose a tentative date for your Phase 2 interview, and confirm your details:",
+        "lbl_idioma_correo": "🌐 In which language would you like us to send the email?:",
+        "lbl_fecha_fase2": "📅 Select a tentative date and time for your interview (Phase 2):",
+        "btn_confirmar_y_enviar": "📤 Confirm Details, Language, Date and Send Email",
+        "btn_oops_no_conforme": "😕 Oops, I don't agree with my result (Reset Test)",
+        "msg_fin_sin_correo": "🎉 Process completed successfully! Thank you for participating in Jung Tech's digital circus. 🚀🎪",
+        "titulo_verificacion_datos": "🔍 Verification and Confirmation of Candidate Details:",
+        "msg_correo_enviado": "🎉 Report and preparation guide successfully sent to your email in the requested language! ⚠️ **PLEASE CHECK YOUR SPAM FOLDER!** We look forward to seeing you at your Phase 2 interview. End of process. 🚀🎪",
+        "info_esp_txt": "This response was generated by our team of specialists. If you want a response completely tailored to you, please click the button below and our personalized AI will resolve any questions about our recruitment process or MBTI functions.",
+        "label_improvisada": "💡 Any questions? Ask the AI:",
+        "btn_enviar_improvisada": "Ask AI 🪄",
+        "cargando_txt": "⏰ Loading...",
+        "orientacion_proceso": "💡 **Recruitment:** Hello! This is an official Jung Tech hiring process 🏢. Ask questions and explore buttons to get to know yourself deeply 🧠✨.",
+        "firma_autor": "Website designed by: <b>Marianna Podbrscek Rocca</b>"
+    }
+}
+
+# Banco de preguntas contextuales y rotativas según la fase e idioma
+PREGUNTAS_SUGERIDAS = {
+    "ESP": {
+        "funcion_dominante": "¿Cómo influye mi función dominante en mi toma de decisiones diaria?",
+        "funcion_auxiliar": "¿De qué manera mi función auxiliar equilibra mis fortalezas técnicas?",
+        "funcion_terciaria": "¿Cómo puedo integrar mi función terciaria para evitar bloqueos profesionales?",
+        "funcion_inferior": "¿Qué nos enseña la función inferior sobre nuestras áreas de mejora?",
+        "loop": "¿Cómo puedo salir saludablemente de este loop cognitivo en el trabajo?",
+        "arquetipo": "¿Puedo trascender este arquetipo si en el futuro mi vocación cambia?"
+    },
+    "ENG": {
+        "funcion_dominante": "How does my dominant function influence my daily decision-making?",
+        "funcion_auxiliar": "In what way does my auxiliary function balance my technical strengths?",
+        "funcion_terciaria": "How can I integrate my tertiary function to avoid professional burnout?",
+        "funcion_inferior": "What does the inferior function teach us about our growth areas?",
+        "loop": "How can I healthily break free from this cognitive loop at work?",
+        "arquetipo": "Can I transcend this archetype if my vocation evolves in the future?"
     }
 }
 
@@ -288,627 +494,933 @@ SERIES_MAP = {
     "Breaking Bad": "Serie_Breaking_Bad_BOTH"
 }
 
-RESPUESTAS_UNICAS_ESP = [
-    "Comprendo perfectamente tu inquietud, {nombre}. La teoría de Carl Jung muestra que la función {nombre_funcion} ({codigo_funcion}) te ayuda a mantener la adaptabilidad y el balance analítico en tareas de {area}.",
-    "Es una excelente pregunta, {nombre}. Como {tratamiento}, apoyarte en la función {nombre_funcion} te permite procesar información compleja con mayor estructura en tus proyectos de software.",
-    "En el contexto laboral, {nombre}, la función {nombre_funcion} opera como una herramienta estratégica que previene la sobrecarga cognitiva y optimiza tu rendimiento en {area}.",
-    "Qué buena observación, {nombre}. La integración práctica de {codigo_funcion} te brinda un marco claro para tomar decisiones objetivas sin actuar por impulso.",
-    "Esa función en particular ({nombre_funcion}), {nombre}, aporta una perspectiva complementaria fundamental que equilibra tu perfil {mbti} dentro del equipo de tecnología."
-]
+# ==============================================================================
+# 5. INICIALIZACIÓN DEL ESTADO DE LA APLICACIÓN (SESSION STATE)
+# ==============================================================================
+if "step" not in st.session_state:
+    st.session_state.step = "bienvenida"
+if "datos" not in st.session_state:
+    st.session_state.datos = {}
+if "eval" not in st.session_state:
+    st.session_state.eval = {}
+if "historial_interacciones" not in st.session_state:
+    st.session_state.historial_interacciones = []
+if "usadas_ia" not in st.session_state:
+    st.session_state.usadas_ia = []
+if "accion_activa" not in st.session_state:
+    st.session_state.accion_activa = None
+if "confirmar_regreso" not in st.session_state:
+    st.session_state.confirmar_regreso = False
+if "confirmar_reinicio" not in st.session_state:
+    st.session_state.confirmar_reinicio = False
+if "modo_no_conozco" not in st.session_state:
+    st.session_state.modo_no_conozco = False
+if "alerta_ia_vacia" not in st.session_state:
+    st.session_state.alerta_ia_vacia = False
+if "correo_enviado" not in st.session_state:
+    st.session_state.correo_enviado = False
 
-RESPUESTAS_UNICAS_ENG = [
-    "I completely understand your question, {nombre}. Carl Jung's framework shows that the function {nombre_funcion} ({codigo_funcion}) provides adaptability and analytical balance for {area}.",
-    "That is a great question, {nombre}. As a {tratamiento}, relying on {nombre_funcion} helps you process complex information with better structure in software projects.",
-    "In a workplace setting, {nombre}, the function {nombre_funcion} acts as a strategic tool that prevents cognitive overload and optimizes your performance in {area}.",
-    "Insightful observation, {nombre}. The practical integration of {codigo_funcion} gives you a clear framework to make objective decisions under pressure.",
-    "That specific function ({nombre_funcion}), {nombre}, brings a crucial complementary perspective that balances your {mbti} profile within the tech team."
-]
+for campo in ["val_nombres", "val_apellidos", "val_preferido", "val_num_tel", "val_usr_mail", "verif_nombres", "verif_apellidos", "verif_tel", "verif_mail"]:
+    if campo not in st.session_state:
+        st.session_state[campo] = ""
 
-def limpiar_pantalla():
-    os.system('cls' if os.name == 'nt' else 'clear')
+if "errs_reg" not in st.session_state:
+    st.session_state.errs_reg = {}
+if "errs_verif" not in st.session_state:
+    st.session_state.errs_verif = {}
 
-def formatear_nombre(texto):
-    return texto.strip().title() if texto else ""
+st.title("🎪 JUNG.AI: THE CIRCUS OF PERSONALITIES 🎪")
 
-def es_solo_letras(texto):
-    if not texto:
-        return False
-    texto_sin_espacios = texto.replace(" ", "")
-    return texto_sin_espacios.isalpha()
+def cambiar_idioma():
+    """Reinicia los estados de error al cambiar de idioma."""
+    st.session_state.errs_reg = {}
+    st.session_state.errs_verif = {}
+    for f in ["funcion_dominante", "funcion_auxiliar", "funcion_terciaria", "funcion_inferior", "loop", "arquetipo"]:
+        if f"clics_{f}" in st.session_state:
+            st.session_state[f"clics_{f}"] = set()
 
-def pedir_solo_letras(prompt_texto, txt_error_vacio, txt_error_letras, obligatorio=True):
-    while True:
-        entrada = input(prompt_texto).strip()
-        if not entrada:
-            if obligatorio:
-                print(txt_error_vacio)
-                continue
+idioma_choice = st.sidebar.selectbox("🌐 Select Language / Seleccionar Idioma:", ["English", "Español"], on_change=cambiar_idioma)
+current_idioma = "ESP" if idioma_choice == "Español" else "ENG"
+txt = TEXTOS[current_idioma]
+
+if "eval" in st.session_state and "personaje_idx" in st.session_state:
+    idx_p = st.session_state.personaje_idx
+    col_s = st.session_state.eval.get("serie_key", "Serie_Harry_Potter_BOTH")
+    if not df_matriz.empty and idx_p < len(df_matriz):
+        fila = df_matriz.iloc[idx_p]
+        
+        gen_val = st.session_state.datos.get("genero", "Neutro")
+        if gen_val == "Femenino" or gen_val == "Female":
+            arq_col = 'Arquetipos_F_ESP' if current_idioma == "ESP" else 'Arquetipos_F_ENG'
+        elif gen_val == "Masculino" or gen_val == "Male":
+            arq_col = 'Arquetipos_M_ESP' if current_idioma == "ESP" else 'Arquetipos_M_ENG'
+        else:
+            arq_col = 'Arquetipos_N_ESP' if current_idioma == "ESP" else 'Arquetipos_N_ENG'
+            
+        arq_desc_col = 'arquetipos_DESC_ESP' if current_idioma == "ESP" else 'arquetipos_DESC_ENG'
+        f_inf_col = 'Funcion_inferior_ESP' if current_idioma == "ESP" else 'Funcion_inferior_ENG'
+        f_inf_desc_col = 'Funcion_inferior_DESC_ESP' if current_idioma == "ESP" else 'Funcion_inferior_DESC_ENG'
+        loop_col = 'Loops-ESP' if current_idioma == "ESP" else 'Loops-ENG'
+        loop_desc_col = 'Loops_DESC_ESP' if current_idioma == "ESP" else 'Loops_DESC_ENG'
+        
+        st.session_state.eval.update({
+            "mbti": fila.get('MBTI_ESP' if current_idioma == "ESP" else 'MBTI_ENG', 'INFJ'),
+            "mbti_desc": fila.get('MBTI_DESC_ESP' if current_idioma == "ESP" else 'MBTI_DESC_ENG', ''),
+            "f_dom": fila.get('Funcion_Dominante_ESP' if current_idioma == "ESP" else 'Funcion_Dominante_ENG', ''),
+            "f_dom_d": fila.get('Funcion_Dominante_DESC_ESP' if current_idioma == "ESP" else 'Funcion_Dominante_DESC_ENG', ''),
+            "f_aux": fila.get('Funcion_Auxiliar_ESP' if current_idioma == "ESP" else 'Funcion_Auxiliar_ENG', ''),
+            "f_aux_d": fila.get('Funcion_Auxiliar_DESC_ESP' if current_idioma == "ESP" else 'Funcion_Auxiliar_DESC_ENG', ''),
+            "f_ter": fila.get('Funcion_Terciaria_ESP' if current_idioma == "ESP" else 'Funcion_Terciaria_ENG', ''),
+            "f_ter_d": fila.get('Funcion_Terciaria_DESC_ESP' if current_idioma == "ESP" else 'Funcion_Terciaria_DESC_ENG', ''),
+            "f_inf": fila.get(f_inf_col, ''),
+            "f_inf_d": fila.get(f_inf_desc_col, ''),
+            "f_loop": fila.get(loop_col, ''),
+            "f_loop_d": fila.get(loop_desc_col, ''),
+            "arquetipo": fila.get(arq_col, ''),
+            "arquetipo_d": fila.get(arq_desc_col, ''),
+            "area_ti": fila.get('Area_TI_Recomendada', 'Desarrollo de Software'),
+            "razon_ti": fila.get('razon_Area_ESP' if current_idioma == "ESP" else 'razon_Area_ENG', '')
+        })
+
+st.markdown(f"<p class='subtitle-circus'>{txt['subtitulo']}</p>", unsafe_allow_html=True)
+st.markdown("---")
+
+# ==============================================================================
+# 6. FUNCIÓN DE CONSULTA A LA IA (CONSCIENCIA DUAL DE POSTULANTE + LUZ Y SOMBRA)
+# ==============================================================================
+def consultar_ia_orientada(nombre_usr, mbti_val, area_ti, func_nombre, func_desc, origen="equipo", pregunta_usuario=""):
+    """
+    Gestiona las consultas a la IA integrando la consciencia dual: se dirige al postulante 
+    por su nombre pero analiza al personaje de la serie equilibrando su luz (light) y sombra (shadow), 
+    evitando idealizaciones excesivas y abriendo la puerta a trascender arquetipos rígidos.
+    """
+    with st.spinner(txt["cargando_txt"]):
+        resp_texto = ""
+        
+        personaje_actual = st.session_state.eval.get("personaje", "Desconocido")
+        serie_actual = st.session_state.eval.get("serie_nombre", "producción seleccionada")
+
+        q_lower = pregunta_usuario.lower()
+        if "objetivo" in q_lower or "objective" in q_lower or "test" in q_lower:
+            if current_idioma == "ESP":
+                resp_texto = f"🎯 **[Objetivo del Test para ti, {nombre_usr}]:** Recordar que ningún arquetipo nos encierra; explorar tanto la luz como la sombra de {personaje_actual} nos permite elegir qué integrar y qué soltar 🚀."
             else:
-                return ""
-        if es_solo_letras(entrada):
-            return entrada
-        else:
-            print(txt_error_letras)
+                resp_texto = f"🎯 **[Test Objective for you, {nombre_usr}]:** Remember that no archetype traps us; exploring both the light and shadow of {personaje_actual} allows us to choose what to integrate and what to release 🚀."
+        elif "character" in q_lower or "personaje" in q_lower or "quien soy" in q_lower or "who am i" in q_lower:
+            if current_idioma == "ESP":
+                resp_texto = f"🎭 **[Reflexión para {nombre_usr}]:** Estás dialogando con la esencia de **{personaje_actual}** (*{serie_actual}*), reconociendo su gran luz pero también su sombra oculta bajo el perfil **{mbti_val}** 🌟."
+            else:
+                resp_texto = f"🎭 **[Reflection for {nombre_usr}]:** You are engaging with the essence of **{personaje_actual}** (*{serie_actual}*), acknowledging both their brilliant light and hidden shadow through the **{mbti_val}** profile 🌟."
 
-def generar_fechas_tentativas(idioma="ESP"):
-    if idioma == "ESP":
-        return [
-            "Lunes, 3 de Agosto de 2026 - 10:00 AM",
-            "Miércoles, 5 de Agosto de 2026 - 03:00 PM",
-            "Viernes, 7 de Agosto de 2026 - 11:00 AM"
-        ]
-    else:
-        return [
-            "Monday, August 3, 2026 - 10:00 AM",
-            "Wednesday, August 5, 2026 - 03:00 PM",
-            "Friday, August 7, 2026 - 11:00 AM"
-        ]
-
-def enviar_correo_real(destinatario, nombre, resumen_texto, fechas_list, idioma="ESP"):
-    try:
-        msg = MIMEMultipart()
-        msg['From'] = SENDER_EMAIL
-        msg['To'] = destinatario
-        asunto = f"Jung Tech Company - Resumen de Postulación de {nombre}" if idioma == "ESP" else f"Jung Tech Company - Application Summary for {nombre}"
-        msg['Subject'] = asunto
-        fechas_html = "".join([f"<li><b>{f}</b></li>" for f in fechas_list])
-        if idioma == "ESP":
-            body_html = f"<html><body style='font-family: Arial, sans-serif; color: #333;'><h2>Jung Tech Company</h2><p>Hola <b>{nombre}</b>,</p><p>Resumen: {resumen_texto}</p><ul>{fechas_html}</ul></body></html>"
-        else:
-            body_html = f"<html><body style='font-family: Arial, sans-serif; color: #333;'><h2>Jung Tech Company</h2><p>Hello <b>{nombre}</b>,</p><p>Summary: {resumen_texto}</p><ul>{fechas_html}</ul></body></html>"
-        msg.attach(MIMEText(body_html, 'html'))
-        server = smtplib.SMTP(SMTP_SERVER, SMTP_PORT)
-        server.starttls()
-        server.login(SENDER_EMAIL, SENDER_PASSWORD)
-        server.sendmail(SENDER_EMAIL, destinatario, msg.as_string())
-        server.quit()
-        return True
-    except Exception:
-        return False
-
-def mostrar_cabecera(serie=None, nombre_usuario=None, idioma="ESP", genero="N"):
-    print("=======================================================================")
-    if idioma == "ENG":
-        print("  Stage 1 of the Selection Process for Jung Tech Company  ")
-        print("         In collaboration with the AI Agent: Jung.IA        ")
-    else:
-        print(" Etapa 1 del Proceso de Selección para la empresa de tecnología Jung Tech Company")
-        print("         Con la colaboración del agente de IA: Jung.IA             ")
-    print("=======================================================================")
-    print("                           [ JUNG TECH COMPANY ]                       ")
-    if nombre_usuario:
-        print(f" Postulante / Candidate: {formatear_nombre(nombre_usuario)}")
-    print("=======================================================================")
-    if serie:
-        if idioma == "ENG":
-            print(f" * Movie or series used for the applicant's personality analysis: {serie} *")
-        else:
-            art = "del" if genero == "M" else ("de la" if genero == "F" else "de le")
-            print(f" * Película o serie que se usó para hacer el análisis de personalidad {art} postulante: {serie} *")
-    print("-----------------------------------------------------------------------\n")
-
-def capturar_datos_completos(idioma):
-    txt = TEXTOS[idioma]
-    print(f"{txt['confirmar_datos']}\n{txt['nota_nombres']}")
-    nombres_raw = pedir_solo_letras(txt["input_nombres"], txt["err_campo_vacio"], txt["err_solo_letras"], obligatorio=True)
-    apellidos_raw = pedir_solo_letras(txt["input_apellidos"], txt["err_campo_vacio"], txt["err_solo_letras"], obligatorio=True)
-    preferido_raw = pedir_solo_letras(txt["input_preferido"], txt["err_campo_vacio"], txt["err_solo_letras"], obligatorio=False)
-    
-    nombres = formatear_nombre(nombres_raw)
-    apellidos = formatear_nombre(apellidos_raw)
-    preferido = formatear_nombre(preferido_raw) if preferido_raw else (nombres.split()[0] if nombres.split() else nombres)
-    
-    print(f"\n{txt['nota_cobertura_tel']}")
-    prefijo = inquirer.prompt([inquirer.List('prefijo', message=txt["input_prefijo"], choices=LISTA_PREFIJOS)])['prefijo']
-    
-    while True:
-        numero_local = input(txt["input_num_tel"]).strip()
-        if not numero_local:
-            print(txt["err_campo_vacio"])
-        elif not numero_local.isdigit():
-            print(txt["err_solo_numeros"])
-        else:
-            break
-            
-    telefono = f"{prefijo} {numero_local}"
-    
-    while True:
-        usr_mail = input(f"\n{txt['input_usr_mail']}").strip().replace("@", "")
-        if not usr_mail:
-            print(txt["err_campo_vacio"])
-            continue
-            
-        dom_mail = inquirer.prompt([inquirer.List('dom', message=txt["input_dom_mail"], choices=LISTA_DOMINIOS_EMAIL)])['dom']
-        if dom_mail == "OTRO":
-            print(f"\n[!]{txt['nota_correo_otro']}\n")
-            continue
-            
-        correo = f"{usr_mail}{dom_mail}"
-        break
-        
-    return {
-        "nombres": nombres,
-        "apellidos": apellidos,
-        "preferido": preferido,
-        "telefono": telefono,
-        "correo": correo
-    }
-
-def verificar_y_editar_datos(datos, idioma, genero="N"):
-    txt = TEXTOS[idioma]
-    while True:
-        limpiar_pantalla()
-        mostrar_cabecera(nombre_usuario=datos['preferido'], idioma=idioma, genero=genero)
-        print(txt["datos_verificar"])
-        print(f" 1. {txt['lbl_nom']}: {datos['nombres']}")
-        print(f" 2. {txt['lbl_ape']}: {datos['apellidos']}")
-        print(f" 3. {txt['lbl_pref']}: {datos['preferido']}")
-        print(f" 4. {txt['lbl_tel']}: {datos['telefono']}")
-        print(f" 5. {txt['lbl_mail']}: {datos['correo']}")
-        print("-" * 60)
-        
-        pregunta_ok = [
-            inquirer.List('ok', message=txt["pregunta_datos_correctos"], choices=[(txt["opt_datos_ok"], "SI"), (txt["opt_datos_edit"], "NO")])
-        ]
-        if inquirer.prompt(pregunta_ok)['ok'] == "SI":
-            return datos
-            
-        opciones_edicion = [
-            (txt["opt_edit_nom"], "NOMBRES"),
-            (txt["opt_edit_tel"], "TEL"),
-            (txt["opt_edit_mail"], "EMAIL"),
-            (txt["opt_edit_todo"], "TODO")
-        ]
-        campo_elegido = inquirer.prompt([inquirer.List('campo', message=txt["menu_corregir"], choices=opciones_edicion)])['campo']
-        
-        if campo_elegido == "NOMBRES":
-            raw_nom = pedir_solo_letras(f"\n{txt['input_nombres']}", txt["err_campo_vacio"], txt["err_solo_letras"], obligatorio=True)
-            raw_ape = pedir_solo_letras(txt["input_apellidos"], txt["err_campo_vacio"], txt["err_solo_letras"], obligatorio=True)
-            raw_pref = pedir_solo_letras(txt["input_preferido"], txt["err_campo_vacio"], txt["err_solo_letras"], obligatorio=False)
-            datos['nombres'] = formatear_nombre(raw_nom)
-            datos['apellidos'] = formatear_nombre(raw_ape)
-            datos['preferido'] = formatear_nombre(raw_pref) if raw_pref else (datos['nombres'].split()[0] if datos['nombres'].split() else datos['nombres'])
-        elif campo_elegido == "TEL":
-            prefijo = inquirer.prompt([inquirer.List('prefijo', message=txt["input_prefijo"], choices=LISTA_PREFIJOS)])['prefijo']
-            while True:
-                num = input(txt["input_num_tel"]).strip()
-                if not num:
-                    print(txt["err_campo_vacio"])
-                elif not num.isdigit():
-                    print(txt["err_solo_numeros"])
+        if not resp_texto and OPENAI_AVAILABLE and OPENAI_API_KEY:
+            try:
+                client = OpenAI(api_key=OPENAI_API_KEY)
+                sys_prompt = f"Eres Jung.AI, una presencia sabia y compasiva al estilo del Ánima/Ánimus 🔮✨. Te diriges al postulante por su nombre ('{nombre_usr}'), hablas del personaje ('{personaje_actual}') equilibrando su luz (light) y su sombra (shadow) sin idealizarlo excesivamente, en un solo párrafo completo y fluido. Responde en {'español' if current_idioma=='ESP' else 'inglés'}."
+                if origen == "equipo":
+                    prompt_completo = f"Dirigiéndote a {nombre_usr} en un solo párrafo, explica el impacto del MBTI y {func_nombre} en {area_ti}, analizando de forma equilibrada la luz y la sombra de {personaje_actual}."
+                elif origen == "ia":
+                    prompt_completo = f"Dirigiéndote a {nombre_usr} en un solo párrafo, analiza cómo ({func_nombre}: {func_desc}) moldea el rendimiento y los retos de {personaje_actual}, exponiendo tanto su destreza luminosa como su sombra."
                 else:
-                    break
-            datos['telefono'] = f"{prefijo} {num}"
-        elif campo_elegido == "EMAIL":
-            while True:
-                usr_mail = input(f"\n{txt['input_usr_mail']}").strip().replace("@", "")
-                if not usr_mail:
-                    print(txt["err_campo_vacio"])
-                    continue
-                dom_mail = inquirer.prompt([inquirer.List('dom', message=txt["input_dom_mail"], choices=LISTA_DOMINIOS_EMAIL)])['dom']
-                if dom_mail == "OTRO":
-                    print(f"\n[!] {txt['nota_correo_otro']}\n")
-                    continue
-                datos['correo'] = f"{usr_mail}{dom_mail}"
-                break
-        elif campo_elegido == "TODO":
-            datos = capturar_datos_completos(idioma)
+                    prompt_completo = f"Postulante: {nombre_usr}. Personaje: {personaje_actual}. Concepto: {func_nombre}: {func_desc}. Pregunta: {pregunta_usuario}. Responde en un solo párrafo equilibrando luz y sombra."
 
-def cargar_matriz():
-    try:
-        df = pd.read_csv(CSV_PATH)
-        df = df.fillna("[Sin Nombre]")
-        if len(df) < 16:
-            diferencia = 16 - len(df)
-            cols = df.columns
-            vacias = pd.DataFrame([[f"[Personaje {i+len(df)+1}]" for _ in cols] for i in range(diferencia)], columns=cols)
-            df = pd.concat([df, vacias], ignore_index=True)
-        return df.iloc[0:16].copy()
-    except Exception as e:
-        print(f"Error crítico al leer la matriz {CSV_PATH}: {e}")
-        sys.exit(1)
-
-def mostrar_menu_16_opciones(df_matriz, col_serie, txt, nombre_call):
-    print(f"{txt['pregunta_personaje'].format(nombre=nombre_call)}\n")
-    for i in range(16):
-        row = df_matriz.iloc[i]
-        nombre_personaje = str(row[col_serie]).strip()
-        if not nombre_personaje or nombre_personaje == "[Sin Nombre]":
-            nombre_personaje = f"Personaje Opción {i+1}"
-        print(f"  {i+1:2d}. {nombre_personaje}")
-        
-    print("\n  Opciones adicionales de navegación:")
-    print(f"  17. [ {txt['cambiar_serie']} ]")
-    print(f"  18. {txt['btn_reiniciar_prueba']}")
-    print(f"  19. {txt['btn_reiniciar_todo_datos']}")
-    
-    while True:
-        eleccion = input("\nIngresa el número de tu opción / Enter option number (1-19): ").strip()
-        if eleccion.isdigit():
-            num = int(eleccion)
-            if 1 <= num <= 16:
-                return ("PERSONAJE", num - 1)
-            elif num == 17:
-                return ("CAMBIAR", None)
-            elif num == 18:
-                return ("INICIO_PRUEBA", None)
-            elif num == 19:
-                return ("REINICIAR_TODO", None)
-        print(f"[!] {txt['err_campo_vacio']} (Elige un número del 1 al 19)")
-
-def respuesta_ia_pregunta_adicional(tipo_pregunta, nombre_funcion, codigo_funcion, nombre_call, genero_actual, resp_idioma, mbti_val, area_ti, resp_usadas):
-    if resp_idioma == "ESP":
-        tratamiento = "estimado postulante" if genero_actual == "M" else ("estimada postulante" if genero_actual == "F" else "estimade postulante")
-    else:
-        tratamiento = "dear candidate"
-
-    if OPENAI_AVAILABLE and OPENAI_API_KEY:
-        try:
-            client = OpenAI(api_key=OPENAI_API_KEY)
-            prompt_usr = f"¿Para qué me sirve mi función cognitiva {nombre_funcion} ({codigo_funcion}) en mi trabajo como {mbti_val} en el área de {area_ti}?"
-            sys_prompt = f"Eres Jung.IA, la musa de reclutamiento de Jung Tech Company. Explica brevemente (máximo 2 oraciones) y con tono inspirador la utilidad práctica de esta función."
-            completion = client.chat.completions.create(
-                model="gpt-4o-mini",
-                messages=[
-                    {"role": "system", "content": sys_prompt},
-                    {"role": "user", "content": prompt_usr}
-                ],
-                temperature=0.8,
-                max_tokens=150
-            )
-            return completion.choices[0].message.content.strip()
-        except Exception:
-            pass
-
-    lista_base = RESPUESTAS_UNICAS_ESP if resp_idioma == "ESP" else RESPUESTAS_UNICAS_ENG
-    disponibles = [r for r in lista_base if r not in resp_usadas]
-    if not disponibles:
-        resp_usadas.clear()
-        disponibles = list(lista_base)
-        
-    seleccionada = random.choice(disponibles)
-    resp_usadas.append(seleccionada)
-    return seleccionada.format(
-        nombre=nombre_call, 
-        tratamiento=tratamiento, 
-        nombre_funcion=nombre_funcion,
-        codigo_funcion=codigo_funcion,
-        mbti=mbti_val, 
-        area=area_ti
-    )
-
-def canal_interactivo_agente(nombre_call, genero_actual, resp_idioma, mbti_val, char_nombre, area_ti, razon_ti, arq_val, arq_desc, datos_usr):
-    if resp_idioma == "ESP":
-        tratamiento = "estimado postulante" if genero_actual == "M" else ("estimada postulante" if genero_actual == "F" else "estimade postulante")
-        articulo = "bienvenido" if genero_actual == "M" else ("bienvenida" if genero_actual == "F" else "bienvenide")
-    else:
-        tratamiento = "dear candidate"
-        articulo = "welcome"
-
-    print(f"\nJung.IA: ¡Hola {nombre_call}! Como {tratamiento}, es un honor conversar contigo. Sé {articulo} a este espacio de diálogo.")
-    print(f"Jung.IA: He registrado tus resultados: Perfil {mbti_val} ({char_nombre}), Arquetipo '{arq_val}' y recomendación para '{area_ti}'.")
-    print("Jung.IA: Puedes hacerme cualquier pregunta sobre tus resultados, puesto o datos registrados.")
-
-    resp_usadas_ia = []
-    while True:
-        opinion = input(f"\n{nombre_call}: ").strip()
-        if not opinion:
-            continue
-            
-        if opinion.lower() in ['exit', 'salir', 'quit', 'no', 'nada']:
-            break
-            
-        op_low = opinion.lower()
-        if any(w in op_low for w in ['dato', 'correo', 'email', 'telefono', 'teléfono', 'contacto', 'excel', 'verificar']):
-            if resp_idioma == "ESP":
-                print(f"\nJung.IA: Verificado, {nombre_call}. Correo registrado: {datos_usr['correo']} | Teléfono: {datos_usr['telefono']}.")
-            else:
-                print(f"\nJung.IA: Verified, {nombre_call}. Email: {datos_usr['correo']} | Phone: {datos_usr['telefono']}.")
-        else:
-            respuesta_ia = respuesta_ia_pregunta_adicional(
-                "GENERAL", "General", "Jung", nombre_call, genero_actual, resp_idioma, mbti_val, area_ti, resp_usadas_ia
-            )
-            print(f"\nJung.IA: {respuesta_ia}")
-            
-        msg_menu = "¿Qué deseas hacer a continuación?" if resp_idioma == "ESP" else "What would you like to do next?"
-        opts_cierre = [
-            ("💬 Hacer otra pregunta a Jung.IA", "CONTINUAR"),
-            ("↺ Volver al Inicio de la Prueba (Seleccionar otra serie)", "REINICIAR_TEST"),
-            ("🏁 Finalizar proceso y salir", "SALIR")
-        ] if resp_idioma == "ESP" else [
-            ("💬 Ask another question to Jung.IA", "CONTINUAR"),
-            ("↺ Return to Start of Test (Select another series)", "REINICIAR_TEST"),
-            ("🏁 Finish process and exit", "SALIR")
-        ]
-        
-        accion_cierre = inquirer.prompt([inquirer.List('act', message=msg_menu, choices=opts_cierre)])['act']
-        if accion_cierre == "REINICIAR_TEST":
-            return "REINICIAR_TEST"
-        elif accion_cierre == "SALIR":
-            despedida = f"\nJung.IA: Entendido, {nombre_call}. ¡Mucho éxito en tu proceso de selección!" if resp_idioma == "ESP" else f"\nJung.IA: Understood, {nombre_call}. Best of luck with your recruitment process!"
-            print(despedida)
-            return "SALIR"
-
-def ejecutar_agente():
-    df_matriz = cargar_matriz()
-    while True:
-        limpiar_pantalla()
-        mostrar_cabecera()
-        resp_idioma = inquirer.prompt([inquirer.List('idioma', message="Selecciona tu idioma / Select Language:", choices=[('Español', 'ESP'), ('English', 'ENG')])])['idioma']
-        txt = TEXTOS[resp_idioma]
-        
-        limpiar_pantalla()
-        mostrar_cabecera(idioma=resp_idioma)
-        print(txt["bienvenida"])
-        input(txt["press_enter"])
-        
-        limpiar_pantalla()
-        mostrar_cabecera(idioma=resp_idioma)
-        datos_usr = capturar_datos_completos(resp_idioma)
-        datos_usr = verificar_y_editar_datos(datos_usr, resp_idioma)
-        
-        nombre_call = datos_usr['preferido']
-        genero_actual = "N"
-        
-        limpiar_pantalla()
-        mostrar_cabecera(nombre_usuario=nombre_call, idioma=resp_idioma)
-        print(txt["intro_filtro_series"])
-        for prod in PRODUCCIONES_LISTA:
-            print(f"  {prod}")
-        print()
-        
-        resp_filtro = inquirer.prompt([inquirer.List('filtro', message=txt["filtro_series"].format(nombre=nombre_call), choices=[(txt["opt_si"], "SI"), (txt["opt_no"], "NO")])])['filtro']
-        
-        if resp_filtro == "NO":
-            limpiar_pantalla()
-            mostrar_cabecera(nombre_usuario=nombre_call, idioma=resp_idioma)
-            print(txt["no_series"].format(nombre=nombre_call))
-            print("-" * 60)
-            
-            resp_mail_inmediato = inquirer.prompt([inquirer.List('envio_now', message=txt["pregunta_correo_inmediato"].format(nombre=nombre_call), choices=[(txt["opt_auth_mail_si"], "SI"), (txt["opt_auth_mail_no"], "NO")])])['envio_now']
-            
-            limpiar_pantalla()
-            mostrar_cabecera(nombre_usuario=nombre_call, idioma=resp_idioma)
-            if resp_mail_inmediato == "SI":
-                print(txt["correo_confirmacion_enviado"].format(nombre=nombre_call))
-            else:
-                print(txt["consentimiento_no"].format(nombre=nombre_call))
-                
-            print("-" * 60)
-            print(f"{txt['gracias'].format(nombre=nombre_call)}")
-            input(txt["press_enter_inicio"])
-            continue
-            
-        flujo_activo = True
-        reiniciar_todo_el_sistema = False
-
-        while flujo_activo:
-            limpiar_pantalla()
-            mostrar_cabecera(nombre_usuario=nombre_call, idioma=resp_idioma, genero=genero_actual)
-            print(txt["select_una_produccion"].format(nombre=nombre_call))
-            
-            opciones_series_menu = list(SERIES_MAP.keys()) + [(txt["btn_reiniciar_todo_datos"], "REINICIAR_TODO")]
-            serie_elegida = inquirer.prompt([inquirer.List('serie', message="Serie/Movie:", choices=opciones_series_menu)])['serie']
-            
-            if serie_elegida == "REINICIAR_TODO":
-                reiniciar_todo_el_sistema = True
-                break
-                
-            col_serie = SERIES_MAP[serie_elegida]
-            
-            while True:
-                limpiar_pantalla()
-                mostrar_cabecera(serie=serie_elegida, nombre_usuario=nombre_call, idioma=resp_idioma, genero=genero_actual)
-                
-                accion, idx_p = mostrar_menu_16_opciones(df_matriz, col_serie, txt, nombre_call)
-                if accion == "REINICIAR_TODO":
-                    reiniciar_todo_el_sistema = True
-                    flujo_activo = False
-                    break
-                elif accion == "INICIO_PRUEBA" or accion == "CAMBIAR":
-                    break
-                    
-                fila_datos = df_matriz.iloc[idx_p]
-                char_nombre = str(fila_datos[col_serie]).strip()
-                
-                conf_char = inquirer.prompt([inquirer.List('conf', message=txt["confirmar_personaje"].format(nombre=nombre_call, personaje=char_nombre), choices=[(txt["opt_si"], "SI"), (txt["opt_no"], "NO")])])['conf']
-                if conf_char == "NO":
-                    continue
-                    
-                limpiar_pantalla()
-                mostrar_cabecera(serie=serie_elegida, nombre_usuario=nombre_call, idioma=resp_idioma, genero=genero_actual)
-                
-                mbti_val = fila_datos['MBTI_ESP' if resp_idioma == "ESP" else 'MBTI_ENG']
-                desc_val = fila_datos['MBTI_DESC_ESP' if resp_idioma == "ESP" else 'MBTI_DESC_ENG']
-                
-                print(txt["sospecha_texto"].format(nombre=nombre_call, mbti=mbti_val, desc=desc_val))
-                print()
-                
-                conf_mbti = inquirer.prompt([inquirer.List('rep', message=txt["pregunta_mbti_confirmar"], choices=[(txt["opt_si"], "SI"), (txt["opt_no"], "NO")])])['rep']
-                if conf_mbti == "NO":
-                    continue
-                    
-                limpiar_pantalla()
-                mostrar_cabecera(serie=serie_elegida, nombre_usuario=nombre_call, idioma=resp_idioma, genero=genero_actual)
-                
-                f_dom = fila_datos['Funcion_Dominante_ESP' if resp_idioma == "ESP" else 'Funcion_Dominante_ENG']
-                f_dom_d = fila_datos['Funcion_Dominante_DESC_ESP' if resp_idioma == "ESP" else 'Funcion_Dominante_DESC_ENG']
-                print(txt["diagnostico_base"].format(nombre=nombre_call, personaje=char_nombre, mbti_desc=desc_val, fun_dom=f_dom, fun_dom_desc=f_dom_d))
-                
-                area_ti = fila_datos['Area_TI_Recomendada']
-                
-                # Función Auxiliar
-                f_aux = fila_datos['Funcion_Auxiliar_ESP' if resp_idioma == "ESP" else 'Funcion_Auxiliar_ENG']
-                f_aux_d = fila_datos['Funcion_Auxiliar_DESC_ESP' if resp_idioma == "ESP" else 'Funcion_Auxiliar_DESC_ENG']
-                while True:
-                    opts_aux = [
-                        (f"Quiero saber más sobre mi Función Auxiliar ({f_aux})", "SABER_EXCEL"),
-                        (f"¿Para qué me sirve la Función Auxiliar en mi trabajo?", "UTILIDAD_IA"),
-                        ("Pasar a la siguiente función", "PASAR")
-                    ] if resp_idioma == "ESP" else [
-                        (f"I want to learn more about my Auxiliary Function ({f_aux})", "SABER_EXCEL"),
-                        (f"How does the Auxiliary Function help me at work?", "UTILIDAD_IA"),
-                        ("Skip to next function", "PASAR")
-                    ]
-                    elec_aux = inquirer.prompt([inquirer.List('aux', message=f"\n¿Qué deseas explorar sobre tu Función Auxiliar ({f_aux})?:", choices=opts_aux)])['aux']
-                    if elec_aux == "SABER_EXCEL":
-                        print(f"\nJung.IA: Tu función auxiliar es {f_aux}. Apoya y equilibra a la función dominante. Tienes la habilidad de {f_aux_d}.")
-                    elif elec_aux == "UTILIDAD_IA":
-                        resp_ia = respuesta_ia_pregunta_adicional("AUXILIAR", f_aux, "Auxiliar", nombre_call, genero_actual, resp_idioma, mbti_val, area_ti, [])
-                        print(f"\nJung.IA: {resp_ia}")
-                    elif elec_aux == "PASAR":
-                        break
-                        
-                # Función Terciaria
-                f_ter = fila_datos['Funcion_Terciaria_ESP' if resp_idioma == "ESP" else 'Funcion_Terciaria_ENG']
-                f_ter_d = fila_datos['Funcion_Terciaria_DESC_ESP' if resp_idioma == "ESP" else 'Funcion_Terciaria_DESC_ENG']
-                while True:
-                    opts_ter = [
-                        (f"Quiero saber más sobre mi Función Terciaria ({f_ter})", "SABER_EXCEL"),
-                        (f"¿Para qué me sirve la Función Terciaria en proyectos?", "UTILIDAD_IA"),
-                        ("Pasar a la siguiente función", "PASAR")
-                    ] if resp_idioma == "ESP" else [
-                        (f"I want to learn more about my Tertiary Function ({f_ter})", "SABER_EXCEL"),
-                        (f"How does the Tertiary Function serve me in projects?", "UTILIDAD_IA"),
-                        ("Skip to next function", "PASAR")
-                    ]
-                    elec_ter = inquirer.prompt([inquirer.List('ter', message=f"\n¿Qué deseas explorar sobre tu Función Terciaria ({f_ter})?:", choices=opts_ter)])['ter']
-                    if elec_ter == "SABER_EXCEL":
-                        print(f"\nJung.IA: Tu función terciaria es {f_ter}, lo cual significa que con el tiempo has aprendido a {f_ter_d}.")
-                    elif elec_ter == "UTILIDAD_IA":
-                        resp_ia = respuesta_ia_pregunta_adicional("TERCIARIA", f_ter, "Terciaria", nombre_call, genero_actual, resp_idioma, mbti_val, area_ti, [])
-                        print(f"\nJung.IA: {resp_ia}")
-                    elif elec_ter == "PASAR":
-                        break
-                        
-                # Función Inferior
-                f_inf = fila_datos['Funcion_inferior_ESP' if resp_idioma == "ESP" else 'Funcion_inferior_ENG']
-                f_inf_d = fila_datos['Funcion_inferior_DESC_ESP' if resp_idioma == "ESP" else 'Funcion_inferior_DESC_ENG']
-                while True:
-                    opts_inf = [
-                        (f"Quiero saber más sobre mi Función Inferior ({f_inf})", "SABER_EXCEL"),
-                        (f"¿Cómo puedo mejorar mi Función Inferior y áreas de oportunidad?", "UTILIDAD_IA"),
-                        ("Pasar a la siguiente sección", "PASAR")
-                    ] if resp_idioma == "ESP" else [
-                        (f"I want to learn more about my Inferior Function ({f_inf})", "SABER_EXCEL"),
-                        (f"How can I improve my Inferior Function and growth areas?", "UTILIDAD_IA"),
-                        ("Skip to next section", "PASAR")
-                    ]
-                    elec_inf = inquirer.prompt([inquirer.List('inf', message=f"\n¿Qué deseas explorar sobre tu Función Inferior ({f_inf})?:", choices=opts_inf)])['inf']
-                    if elec_inf == "SABER_EXCEL":
-                        print(f"\nJung.IA: Tu función inferior es {f_inf}, dándote la oportunidad de {f_inf_d}.")
-                    elif elec_inf == "UTILIDAD_IA":
-                        resp_ia = respuesta_ia_pregunta_adicional("INFERIOR", f_inf, "Inferior", nombre_call, genero_actual, resp_idioma, mbti_val, area_ti, [])
-                        print(f"\nJung.IA: {resp_ia}")
-                    elif elec_inf == "PASAR":
-                        break
-                        
-                # Patrón Loop
-                val_loop = fila_datos['Loops-ESP' if resp_idioma == "ESP" else 'Loops-ENG']
-                val_loop_d = fila_datos['Loops_DESC_ESP' if resp_idioma == "ESP" else 'Loops_DESC_ENG']
-                while True:
-                    opts_loop = [
-                        (f"Quiero saber más sobre mi patrón de Loop ({val_loop})", "SABER_EXCEL"),
-                        (f"¿Cómo puedo salir de mi patrón de Loop cuando estoy bajo estrés?", "UTILIDAD_IA"),
-                        ("Finalizar diagnóstico cognitivo", "PASAR")
-                    ] if resp_idioma == "ESP" else [
-                        (f"I want to learn more about my Loop pattern ({val_loop})", "SABER_EXCEL"),
-                        (f"How can I break my Loop pattern when under stress?", "UTILIDAD_IA"),
-                        ("Finish cognitive diagnostic", "PASAR")
-                    ]
-                    elec_loop = inquirer.prompt([inquirer.List('loop', message=f"\n¿Qué deseas explorar sobre tu Patrón de Loop ({val_loop})?:", choices=opts_loop)])['loop']
-                    if elec_loop == "SABER_EXCEL":
-                        print(f"\nJung.IA: Tu patrón de loop es {val_loop}, lo que significa que {val_loop_d}.")
-                    elif elec_loop == "UTILIDAD_IA":
-                        resp_ia = respuesta_ia_pregunta_adicional("LOOP", val_loop, "Loop", nombre_call, genero_actual, resp_idioma, mbti_val, area_ti, [])
-                        print(f"\nJung.IA: {resp_ia}")
-                    elif elec_loop == "PASAR":
-                        break
-                        
-                input(txt["press_enter_arquetipos"])
-                
-                limpiar_pantalla()
-                gen_opts = [("Femenino", "F"), ("Masculino", "M"), ("Neutro", "N")] if resp_idioma == "ESP" else [("Female", "F"), ("Male", "M")]
-                genero_actual = inquirer.prompt([inquirer.List('g', message=txt["pregunta_genero"].format(nombre=nombre_call), choices=gen_opts)])['g']
-                
-                limpiar_pantalla()
-                mostrar_cabecera(serie=serie_elegida, nombre_usuario=nombre_call, idioma=resp_idioma, genero=genero_actual)
-                
-                col_arq = f"Arquetipos_{genero_actual}_{resp_idioma}"
-                arq_val = fila_datos[col_arq] if col_arq in fila_datos else fila_datos.get('Arquetipos_F_ESP', '[Arquetipo]')
-                arq_desc = fila_datos.get('arquetipos_DESC_ESP', '')
-                
-                print("\n" + txt["arquetipo_intro"].format(nombre=nombre_call, personaje=char_nombre, mbti=mbti_val))
-                if resp_idioma == "ESP":
-                    art = "un" if genero_actual == "M" else ("una" if genero_actual == "F" else "une")
-                    print(f"Tu arquetipo profesional es {arq_val}.\nEres {art} {arq_desc}.")
-                else:
-                    print(f"Your workplace archetype is {arq_val}.\nYou are {arq_desc}.")
-                print("\n" + txt["arquetipo_cierre"])
-                
-                input(txt["press_enter_area"])
-                
-                limpiar_pantalla()
-                mostrar_cabecera(serie=serie_elegida, nombre_usuario=nombre_call, idioma=resp_idioma, genero=genero_actual)
-                
-                razon_ti = fila_datos['razon_Area_ESP' if resp_idioma == "ESP" else 'razon_Area_ENG']
-                print(txt["area_ideal"].format(nombre=nombre_call, area=area_ti, razon=razon_ti))
-                print("-" * 60)
-                
-                fb_opts = [(txt["opt_si"], "SI"), (txt["btn_reiniciar_test_personaje"], "REINICIAR_TEST"), (txt["btn_reiniciar_todo_datos"], "REINICIAR_TODO")]
-                resp_fb = inquirer.prompt([inquirer.List('fb', message=txt["gusto_resultado"].format(nombre=nombre_call), choices=fb_opts)])['fb']
-                
-                if resp_fb == "REINICIAR_TODO":
-                    reiniciar_todo_el_sistema = True
-                    flujo_activo = False
-                    break
-                elif resp_fb == "REINICIAR_TEST":
-                    break
-                    
-                datos_usr = verificar_y_editar_datos(datos_usr, resp_idioma, genero=genero_actual)
-                nombre_call = datos_usr['preferido']
-                
-                limpiar_pantalla()
-                mostrar_cabecera(serie=serie_elegida, nombre_usuario=nombre_call, idioma=resp_idioma, genero=genero_actual)
-                
-                tratamiento = "Estimado" if genero_actual == "M" else ("Estimada" if genero_actual == "F" else "Estimade")
-                if resp_idioma == "ENG":
-                    tratamiento = "Dear"
-                    
-                print(txt["prompt_final"].format(tratamiento=tratamiento, nombre=nombre_call))
-                print("-" * 60)
-                
-                fechas_tentativas = generar_fechas_tentativas(resp_idioma)
-                resumen_correo = f"Candidato: {datos_usr['nombres']} {datos_usr['apellidos']}\nPersonaje: {char_nombre}\nMBTI: {mbti_val}\nÁrea: {area_ti}"
-                
-                enviar_correo_real(datos_usr['correo'], nombre_call, resumen_correo, fechas_tentativas, resp_idioma)
-                
-                print(txt["correo_enviado"].format(correo=datos_usr['correo'], nombre=nombre_call))
-                print(txt["fechas_enviadas"])
-                for f in fechas_tentativas:
-                    print(f"  • {f}")
-                    
-                print("\n" + ("=" * 60))
-                print(txt["canal_conversacion_titulo"])
-                print("=" * 60)
-                print(txt["canal_conversacion_sub"])
-                
-                resultado_agente = canal_interactivo_agente(
-                    nombre_call, genero_actual, resp_idioma, mbti_val, char_nombre, area_ti, razon_ti, arq_val, arq_desc, datos_usr
+                resp = client.chat.completions.create(
+                    model="gpt-4o-mini",
+                    messages=[
+                        {"role": "system", "content": sys_prompt},
+                        {"role": "user", "content": prompt_completo}
+                    ],
+                    temperature=0.7,
+                    max_tokens=250
                 )
-                
-                if resultado_agente == "REINICIAR_TEST":
-                    break
-                else:
-                    flujo_activo = False
-                    break
-                    
-            if reiniciar_todo_el_sistema:
-                break
+                resp_texto = resp.choices[0].message.content.strip()
+            except Exception:
+                pass
 
-if __name__ == "__main__":
+        if not resp_texto:
+            if origen == "equipo":
+                resp_texto = f"✨ Hola **{nombre_usr}**, al observar a **{personaje_actual}** (**{mbti_val}**), vemos su gran luz estratégica pero también su sombra aislante; en **{area_ti}**, integrar esta dualidad te hará un profesional más consciente y flexible 🚀."
+            elif origen == "ia":
+                resp_texto = f"🔮 Estimado/a **{nombre_usr}**, explorar **{func_nombre}** (*{func_desc}*) en el arquetipo de **{personaje_actual}** nos recuerda que toda luz proyecta una sombra, y aprender a abrazar ambas sin rigidez es la verdadera clave de tu evolución profesional 💡⚡."
+            else:
+                resp_texto = f"💡 Hola **{nombre_usr}**, analizando a **{personaje_actual}**, entendemos que **{func_nombre}** equilibra tus fortalezas luminosas y tus puntos ciegos (sombra) para tu rol en {area_ti}, demostrando que los arquetipos son herramientas que puedes adoptar o soltar libremente 💻."
+
+        st.session_state.historial_interacciones.append({
+            "tipo": origen,
+            "pregunta": pregunta_usuario if origen == "libre" else f"Selección de {func_nombre}",
+            "respuesta": resp_texto
+        })
+        return resp_texto
+
+def generar_fechas_tentativas():
+    """Genera 5 fechas hábiles futuras para la entrevista de Fase 2."""
+    fechas = []
+    actual = datetime.now() + timedelta(days=1)
+    horas_disponibles = [10, 12, 15, 17, 19]
+    while len(fechas) < 5:
+        if actual.weekday() < 5:
+            hora = random.choice(horas_disponibles)
+            fecha_str = actual.replace(hour=hora, minute=0, second=0).strftime("%A, %d %b %Y - %I:00 %p")
+            fechas.append(fecha_str)
+        actual += timedelta(days=1)
+    return fechas
+
+def obtener_termino_genero(genero):
+    """Retorna los sufijos gramaticales según el género."""
+    if genero == "Femenino":
+        return {"candidat": "candidata", "estimad": "Estimada"}
+    elif genero == "Masculino":
+        return {"candidat": "candidato", "estimad": "Estimado"}
+    else:
+        return {"candidat": "canditade", "estimad": "Estimadx"}
+
+def enviar_correo_multilingue(fecha_seleccionada="", idioma_preferido="Español"):
+    """Envía el correo SMTP traduciendo absolutamente todo al idioma elegido (Español o Inglés)."""
+    datos_postulante = st.session_state.get("datos", {})
+    correo_destino = datos_postulante.get("correo", "")
+    nombre_postulante = datos_postulante.get("nombres", "Postulante")
+    genero_postulante = datos_postulante.get("genero", "Neutro")
+    mbti_postulante = st.session_state.eval.get("mbti", "INFJ")
+    area_recomendada = st.session_state.eval.get("area_ti", "Desarrollo")
+    personaje_elegido = st.session_state.eval.get("personaje", "N/A")
+
+    if not correo_destino:
+        return
+
+    terms = obtener_termino_genero(genero_postulante)
+    remitente = os.getenv("MAIL_USER", "jung.ai.tech@gmail.com")
+    password = os.getenv("MAIL_PASSWORD", "")
+
+    es_espanol = "Español" in idioma_preferido or "Spanish" in idioma_preferido
+
+    if es_espanol:
+        asunto = f"🎪 ¡Felicitaciones! Agenda Fase 2 - Jung Tech ({nombre_postulante})"
+        cuerpo_html = f"""
+        <html>
+        <body style="background-color: #12081c; color: #fce4ec; font-family: Arial, sans-serif; padding: 20px;">
+            <h2 style="color: #ff007f; text-align: center;">🎪 JUNG.AI: Reporte y Agenda de Entrevista (Fase 2) 🎪</h2>
+            <p>{terms['estimad']} <b>{nombre_postulante}</b>,</p>
+            <p>¡Felicitaciones por completar tu proceso psicométrico en la carpa digital de <b>Jung Tech</b>! Has avanzado a la segunda etapa como {terms['candidat']}.</p>
+            <p><b>Personaje Seleccionado:</b> {personaje_elegido}</p>
+            <p><b>Perfil MBTI Detectado:</b> {mbti_postulante}</p>
+            <p><b>Área TI Asignada:</b> {area_recomendada}</p>
+            <p><b>Horario Agendado para tu Entrevista (Fase 2):</b> <span style="color: #ff007f; font-weight: bold;">{fecha_seleccionada}</span></p>
+            <hr style="border: 1px solid #ff007f;">
+            <p style="color: #ff007f; font-weight: bold; font-size: 1.05rem;">⚠️ A PESAR DE QUE EL CANDIDATO PIDIÓ EL CORREO EN ESTE IDIOMA, EL RESUMEN DE PREGUNTAS Y RESPUESTAS REFLEJA EXACTAMENTE EL IDIOMA O LOS IDIOMAS QUE EL CANDIDATO USÓ DURANTE LA ENTREVISTA VIRTUAL.</p>
+            <h3 style="color: #ff80bf;">📋 Resumen de tus conversaciones y reflexiones en la entrevista virtual:</h3>
+            <ul>
+        """
+        for idx, item in enumerate(st.session_state.historial_interacciones, 1):
+            cuerpo_html += f"<li><b>Conversación {idx} [{item['tipo'].upper()}]:</b><br><i>Pregunta/Acción:</i> {item['pregunta']}<br><i>Respuesta:</i> {item['respuesta']}<br><br></li>"
+        cuerpo_html += f"""
+            </ul>
+            <p>Te esperamos puntualmente en el horario agendado (<b>{fecha_seleccionada}</b>) para nuestra entrevista de Fase 2. Fin del proceso.</p>
+            <p style="color: #ff007f; font-weight: bold;">Atentamente, el equipo de reclutamiento de Jung.AI 🔮🤖</p>
+        </body>
+        </html>
+        """
+    else:
+        asunto = f"🎪 Congratulations! Phase 2 Schedule - Jung Tech ({nombre_postulante})"
+        cuerpo_html = f"""
+        <html>
+        <body style="background-color: #12081c; color: #fce4ec; font-family: Arial, sans-serif; padding: 20px;">
+            <h2 style="color: #ff007f; text-align: center;">🎪 JUNG.AI: Interview Report and Schedule (Phase 2) 🎪</h2>
+            <p>Dear <b>{nombre_postulante}</b>,</p>
+            <p>Congratulations on successfully completing your psychometric process in <b>Jung Tech</b>'s digital big top! You have advanced to the second stage as our candidate.</p>
+            <p><b>Selected Character:</b> {personaje_elegido}</p>
+            <p><b>Detected MBTI Profile:</b> {mbti_postulante}</p>
+            <p><b>Assigned IT Area:</b> {area_recomendada}</p>
+            <p><b>Scheduled Time for your Interview (Phase 2):</b> <span style="color: #ff007f; font-weight: bold;">{fecha_seleccionada}</span></p>
+            <hr style="border: 1px solid #ff007f;">
+            <p style="color: #ff007f; font-weight: bold; font-size: 1.05rem;">⚠️ ALTHOUGH THE CANDIDATE REQUESTED THE EMAIL IN THIS LANGUAGE, THE SUMMARY OF QUESTIONS AND ANSWERS REFLECTS EXACTLY THE LANGUAGE OR LANGUAGES THE CANDIDATE USED DURING THE VIRTUAL INTERVIEW.</p>
+            <h3 style="color: #ff80bf;">📋 Summary of your conversations and reflections in the virtual interview:</h3>
+            <ul>
+        """
+        for idx, item in enumerate(st.session_state.historial_interacciones, 1):
+            cuerpo_html += f"<li><b>Conversation {idx} [{item['tipo'].upper()}]:</b><br><i>Question/Action:</i> {item['pregunta']}<br><i>Respuesta:</i> {item['respuesta']}<br><br></li>"
+        cuerpo_html += f"""
+            </ul>
+            <p>We look forward to seeing you promptly at your scheduled time (<b>{fecha_seleccionada}</b>) for your Phase 2 interview. End of process.</p>
+            <p style="color: #ff007f; font-weight: bold;">Sincerely, the Jung.AI recruitment team 🔮🤖</p>
+        </body>
+        </html>
+        """
+
     try:
-        ejecutar_agente()
-    except KeyboardInterrupt:
-        print("\n\nProceso interrumpido. ¡Gracias por interactuar con Jung Tech Company!")
-        sys.exit(0)
+        if password:
+            msg = MIMEMultipart()
+            msg['From'] = remitente
+            msg['To'] = correo_destino
+            msg['Subject'] = asunto
+            msg.attach(MIMEText(cuerpo_html, 'html'))
+
+            server = smtplib.SMTP('smtp.gmail.com', 587)
+            server.starttls()
+            server.login(remitente, password)
+            server.sendmail(remitente, correo_destino, msg.as_string())
+            server.quit()
+    except Exception:
+        pass
+
+# ==============================================================================
+# 7. RENDERIZADOR DE FASES COGNITIVAS (CONTROL DE CLICS OBLIGATORIOS)
+# ==============================================================================
+def renderizar_fase_cognitiva(titulo_fase, f_val, f_desc, clave_fase, siguiente_paso_tuple):
+    """Renderiza las fases cognitivas exigiendo la exploración obligatoria de las 3 opciones."""
+    ev = st.session_state.eval
+    usr_completo = st.session_state.datos.get("preferido", "Postulante")
+    usr = usr_completo.split()[0] if usr_completo else "Postulante"
+    
+    key_clics = f"clics_{clave_fase}"
+    if key_clics not in st.session_state:
+        st.session_state[key_clics] = set()
+
+    st.markdown(f'<div class="circus-terminal-box">', unsafe_allow_html=True)
+    st.subheader(f"🎩✨ {titulo_fase} ✨🎩")
+    st.info(txt["orientacion_proceso"])
+    
+    label_personaje = "Personaje" if current_idioma == "ESP" else "Character"
+    st.markdown(
+        f'<div style="text-align: center; margin-bottom: 20px;">'
+        f'<span class="badge-candidato">{txt["badge_postulante"]}, {usr}</span> &nbsp;&nbsp;|&nbsp;&nbsp; '
+        f'<span class="badge-candidato">{label_personaje}: {ev.get("personaje")}</span>'
+        f'</div>',
+        unsafe_allow_html=True
+    )
+    
+    st.markdown(f"### {titulo_fase}: `{f_val}`")
+    st.markdown("---")
+    
+    st.markdown(f"<p class='instruction-fucsia'>{txt['instruccion_requisito']}</p>", unsafe_allow_html=True)
+    
+    c1_indicator = " ✅" if "opcion_1" in st.session_state[key_clics] else " 💔"
+    c2_indicator = " ✅" if "opcion_2" in st.session_state[key_clics] else " 💔"
+    c3_indicator = " ✅" if "opcion_3" in st.session_state[key_clics] else " 💔"
+
+    b1 = txt["btn_dom_1"].format(f_val=f_val) + c1_indicator
+    b2 = txt["btn_dom_2"] + c2_indicator
+    b3 = txt["btn_dom_3"] + c3_indicator
+    
+    def toggle_accion(nombre_accion):
+        id_completo = f"{clave_fase}_{nombre_accion}"
+        if st.session_state.accion_activa == id_completo:
+            st.session_state.accion_activa = None
+        else:
+            st.session_state.accion_activa = id_completo
+            st.session_state[key_clics].add(nombre_accion)
+
+    key_lang = "ESP" if current_idioma == "ESP" else "ENG"
+    pregunta_sugerida_actual = PREGUNTAS_SUGERIDAS[key_lang].get(clave_fase, "What is my selected character?")
+    
+    # Opción 1
+    if st.button(b1, key=f"{clave_fase}_b1", type="primary" if "opcion_1" in st.session_state[key_clics] else "secondary"):
+        toggle_accion("opcion_1")
+    if st.session_state.accion_activa == f"{clave_fase}_opcion_1":
+        personaje_actual = ev.get('personaje', 'Character')
+        
+        if current_idioma == "ESP":
+            if clave_fase == "funcion_dominante":
+                muletilla = "déjame adivinar 🔮"
+            elif clave_fase == "funcion_auxiliar":
+                muletilla = "estoy seguro 🧠"
+            elif clave_fase == "funcion_terciaria":
+                muletilla = "puedo anticipar 👁️"
+            elif clave_fase == "funcion_inferior":
+                muletilla = "revelando el misterio 🎭"
+            elif clave_fase == "loop":
+                muletilla = "analizando tu bucle 🔄"
+            else:
+                muletilla = "tu arquetipo señala 🌟"
+                
+            texto_op1 = f"🧠 Tu concepto es **{f_val}**, lo cual significa que *{f_desc}*. Y {muletilla} como **{personaje_actual}** valoras profundamente esta perspectiva en tu día a día como **{ev.get('mbti')}** ⚡."
+        else:
+            if clave_fase == "funcion_dominante":
+                muletilla = "let me guess 🔮"
+            elif clave_fase == "funcion_auxiliar":
+                muletilla = "I'm certain 🧠"
+            elif clave_fase == "funcion_terciaria":
+                muletilla = "I can foresee 👁️"
+            elif clave_fase == "funcion_inferior":
+                muletilla = "unveiling the mystery 🎭"
+            elif clave_fase == "loop":
+                muletilla = "analyzing your loop 🔄"
+            else:
+                muletilla = "your archetype reveals 🌟"
+                
+            texto_op1 = f"🧠 Your concept is **{f_val}**, meaning that *{f_desc}*. Plus, {muletilla} as **{personaje_actual}** you deeply value this perspective in your daily life as an **{ev.get('mbti')}** ⚡."
+
+        st.markdown(f"<div class='box-opcion-1'><b>[{txt['lbl_op1_sel']}]:</b><br>{texto_op1}</div>", unsafe_allow_html=True)
+        
+        col_ia1_1, col_ia1_2 = st.columns([3, 1])
+        with col_ia1_1:
+            pregunta_libre_1 = st.text_input(txt["label_improvisada"], placeholder=pregunta_sugerida_actual, key=f"{clave_fase}_lib_1", label_visibility="collapsed")
+        with col_ia1_2:
+            st.markdown("<div style='margin-top: 25px;'></div>", unsafe_allow_html=True)
+            btn_enviar_ia1 = st.button(txt["btn_enviar_improvisada"], key=f"{clave_fase}_btn_lib_1", type="primary")
+
+        if st.session_state.get(f"{clave_fase}_alerta_vacia_1", False):
+            st.markdown(f"<div class='alert-grande-roja'>{txt['err_vacio_ia']}</div>", unsafe_allow_html=True)
+
+        if btn_enviar_ia1:
+            texto_a_enviar = pregunta_libre_1.strip() if pregunta_libre_1.strip() else pregunta_sugerida_actual
+            st.session_state[f"{clave_fase}_alerta_vacia_1"] = False
+            resp_libre = consultar_ia_orientada(usr, ev.get('mbti'), ev.get('area_ti'), f_val, f_desc, origen="libre", pregunta_usuario=texto_a_enviar)
+            st.info(f"**Jung.AI:** {resp_libre}")
+
+    # Opción 2
+    if st.button(b2, key=f"{clave_fase}_b2", type="primary" if "opcion_2" in st.session_state[key_clics] else "secondary"):
+        toggle_accion("opcion_2")
+    if st.session_state.accion_activa == f"{clave_fase}_opcion_2":
+        resp_ia_extra = consultar_ia_orientada(usr, ev.get('mbti'), ev.get('area_ti'), f_val, f_desc, origen="equipo")
+        st.markdown(f"<div class='box-opcion-2'><b>[{txt['lbl_op2_sel']}]:</b><br>{resp_ia_extra}</div>", unsafe_allow_html=True)
+        
+        col_ia2_1, col_ia2_2 = st.columns([3, 1])
+        with col_ia2_1:
+            pregunta_libre_2 = st.text_input(txt["label_improvisada"], placeholder=pregunta_sugerida_actual, key=f"{clave_fase}_lib_2", label_visibility="collapsed")
+        with col_ia2_2:
+            st.markdown("<div style='margin-top: 25px;'></div>", unsafe_allow_html=True)
+            btn_enviar_ia2 = st.button(txt["btn_enviar_improvisada"], key=f"{clave_fase}_btn_lib_2", type="primary")
+
+        if st.session_state.get(f"{clave_fase}_alerta_vacia_2", False):
+            st.markdown(f"<div class='alert-grande-roja'>{txt['err_vacio_ia']}</div>", unsafe_allow_html=True)
+
+        if btn_enviar_ia2:
+            texto_a_enviar = pregunta_libre_2.strip() if pregunta_libre_2.strip() else pregunta_sugerida_actual
+            st.session_state[f"{clave_fase}_alerta_vacia_2"] = False
+            resp_libre = consultar_ia_orientada(usr, ev.get('mbti'), ev.get('area_ti'), f_val, f_desc, origen="libre", pregunta_usuario=texto_a_enviar)
+            st.info(f"**Jung.AI:** {resp_libre}")
+
+    # Opción 3
+    if st.button(b3, key=f"{clave_fase}_b3", type="primary" if "opcion_3" in st.session_state[key_clics] else "secondary"):
+        toggle_accion("opcion_3")
+    if st.session_state.accion_activa == f"{clave_fase}_opcion_3":
+        resp_ia_ia = consultar_ia_orientada(usr, ev.get('mbti'), ev.get('area_ti'), f_val, f_desc, origen="ia")
+        st.markdown(f"<div class='box-opcion-3'><b>[{txt['lbl_op3_sel']}]:</b><br>{resp_ia_ia}</div>", unsafe_allow_html=True)
+        
+        col_ia3_1, col_ia3_2 = st.columns([3, 1])
+        with col_ia3_1:
+            pregunta_libre_3 = st.text_input(txt["label_improvisada"], placeholder=pregunta_sugerida_actual, key=f"{clave_fase}_lib_3", label_visibility="collapsed")
+        with col_ia3_2:
+            st.markdown("<div style='margin-top: 25px;'></div>", unsafe_allow_html=True)
+            btn_enviar_ia3 = st.button(txt["btn_enviar_improvisada"], key=f"{clave_fase}_btn_lib_3", type="primary")
+
+        if st.session_state.get(f"{clave_fase}_alerta_vacia_3", False):
+            st.markdown(f"<div class='alert-grande-roja'>{txt['err_vacio_ia']}</div>", unsafe_allow_html=True)
+
+        if btn_enviar_ia3:
+            texto_a_enviar = pregunta_libre_3.strip() if pregunta_libre_3.strip() else pregunta_sugerida_actual
+            st.session_state[f"{clave_fase}_alerta_vacia_3"] = False
+            resp_libre = consultar_ia_orientada(usr, ev.get('mbti'), ev.get('area_ti'), f_val, f_desc, origen="libre", pregunta_usuario=texto_a_enviar)
+            st.info(f"**Jung.AI:** {resp_libre}")
+
+    st.markdown("---")
+
+    if st.session_state.get(f"{clave_fase}_alerta_clicks", False):
+        st.markdown(f"<div class='alert-grande-roja'>{txt['err_falta_clicks']}</div>", unsafe_allow_html=True)
+
+    col_inf_1, col_inf_2 = st.columns([3, 1])
+    
+    with col_inf_1:
+        if st.button(txt["btn_siguiente_seccion"], type="primary", key=f"{clave_fase}_btn_sig"):
+            if {"opcion_1", "opcion_2", "opcion_3"}.issubset(st.session_state[key_clics]):
+                st.session_state[f"{clave_fase}_alerta_clicks"] = False
+                sig_step, sig_nombre = siguiente_paso_tuple
+                st.session_state.step = sig_step
+                st.session_state.accion_activa = None
+                st.rerun()
+            else:
+                st.session_state[f"{clave_fase}_alerta_clicks"] = True
+                st.rerun()
+
+    with col_inf_2:
+        st.markdown('<div class="btn-secundario-pequenito">', unsafe_allow_html=True)
+        if st.button(txt["btn_oops_reconexion"], key=f"{clave_fase}_oops_btn"):
+            st.session_state.step = "seleccion_serie"
+            st.session_state.accion_activa = None
+            st.session_state[key_clics] = set()
+            st.session_state.historial_interacciones = []
+            st.rerun()
+        st.markdown('</div>', unsafe_allow_html=True)
+                
+    st.markdown('</div>', unsafe_allow_html=True)
+
+# ==============================================================================
+# 8. MÁQUINA DE ESTADOS PRINCIPAL (FLUJO PASO A PASO DE LA APLICACIÓN)
+# ==============================================================================
+
+# Estado 1: Pantalla de Bienvenida inicial
+if st.session_state.step == "bienvenida":
+    st.markdown('<div class="circus-terminal-box">', unsafe_allow_html=True)
+    st.markdown(f"### {txt['titulo_bienvenida']}")
+    st.write(txt["bienvenida"])
+    
+    if st.button(txt["btn_continuar"], type="primary"):
+        st.session_state.step = "captura_datos"
+        st.rerun()
+    st.markdown('</div>', unsafe_allow_html=True)
+
+# Estado 2: Captura de Datos del Candidato
+elif st.session_state.step == "captura_datos":
+    st.markdown('<div class="circus-terminal-box">', unsafe_allow_html=True)
+    st.subheader(txt["confirmar_datos"])
+
+    errs = st.session_state.get("errs_reg", {})
+    val_nombres = st.session_state.get("val_nombres", "")
+    val_apellidos = st.session_state.get("val_apellidos", "")
+    val_tel = st.session_state.get("val_num_tel", "")
+    val_mail = st.session_state.get("val_usr_mail", "")
+
+    with st.form("form_reg"):
+        if errs.get("nombres"):
+            st.markdown(f"<p class='instruction-error'>{errs['nombres']}</p>", unsafe_allow_html=True)
+        elif val_nombres.strip():
+            st.markdown(f"<p class='instruction-success'>{txt['msg_ok']}</p>", unsafe_allow_html=True)
+        else:
+            st.markdown(f"<p class='instruction-fucsia'>{txt['instruccion_nombres']}</p>", unsafe_allow_html=True)
+        nombres = st.text_input(txt["input_nombres"], value=val_nombres, label_visibility="collapsed")
+        
+        if errs.get("apellidos"):
+            st.markdown(f"<p class='instruction-error'>{errs['apellidos']}</p>", unsafe_allow_html=True)
+        elif val_apellidos.strip():
+            st.markdown(f"<p class='instruction-success'>{txt['msg_ok']}</p>", unsafe_allow_html=True)
+        else:
+            st.markdown(f"<p class='instruction-fucsia'>{txt['instruccion_apellidos']}</p>", unsafe_allow_html=True)
+        apellidos = st.text_input(txt["input_apellidos"], value=val_apellidos, label_visibility="collapsed")
+        
+        st.markdown(f"<p class='instruction-fucsia'>{txt['instruccion_preferido']}</p>", unsafe_allow_html=True)
+        preferido = st.text_input(txt["input_preferido"], value=st.session_state.get("val_preferido", ""), label_visibility="collapsed")
+        
+        st.markdown(f"<p class='instruction-success'>✅ Género seleccionado correctamente / Gender successfully selected</p>", unsafe_allow_html=True)
+        lista_generos_actual = LISTA_GENEROS_ESP if current_idioma == "ESP" else LISTA_GENEROS_ENG
+        genero_sel = st.selectbox(txt["lbl_genero"], [g[0] for g in lista_generos_actual], label_visibility="collapsed")
+
+        c1, c2 = st.columns(2)
+        with c1:
+            prefijo = st.selectbox(txt["lbl_prefijo"], [p[0] for p in LISTA_PREFIJOS])
+            if errs.get("num_tel"):
+                st.markdown(f"<p class='instruction-error'>{errs['num_tel']}</p>", unsafe_allow_html=True)
+            elif val_tel.strip() and val_tel.isdigit():
+                st.markdown(f"<p class='instruction-success'>{txt['msg_ok']}</p>", unsafe_allow_html=True)
+            else:
+                st.markdown(f"<p class='instruction-fucsia'>{txt['instruccion_tel']}</p>", unsafe_allow_html=True)
+            num_tel = st.text_input(txt["input_num_tel"], value=val_tel, label_visibility="collapsed")
+            
+        with c2:
+            if errs.get("usr_mail"):
+                st.markdown(f"<p class='instruction-error'>{errs['usr_mail']}</p>", unsafe_allow_html=True)
+            elif val_mail.strip() and "@" not in val_mail:
+                st.markdown(f"<p class='instruction-success'>{txt['msg_ok']}</p>", unsafe_allow_html=True)
+            else:
+                st.markdown(f"<p class='instruction-fucsia'>{txt['instruccion_mail']}</p>", unsafe_allow_html=True)
+            usr_mail = st.text_input(txt["input_usr_mail"], value=val_mail, label_visibility="collapsed")
+            
+            if errs.get("prov_msg"):
+                st.markdown(f"<p class='instruction-error'>{errs['prov_msg']}</p>", unsafe_allow_html=True)
+            dom_mail = st.selectbox(txt["lbl_dominio"], [d[0] for d in LISTA_DOMINIOS_EMAIL])
+            
+        btn_enviar = st.form_submit_button(txt["btn_registrar"], type="primary")
+        
+        if btn_enviar:
+            st.session_state.val_nombres = nombres
+            st.session_state.val_apellidos = apellidos
+            st.session_state.val_preferido = preferido
+            st.session_state.val_num_tel = num_tel
+            st.session_state.val_usr_mail = usr_mail
+
+            new_errs = {}
+            has_error = False
+
+            if not nombres.strip():
+                new_errs["nombres"] = txt["err_nombres"]
+                has_error = True
+            if not apellidos.strip():
+                new_errs["apellidos"] = txt["err_apellidos"]
+                has_error = True
+            if not usr_mail.strip():
+                new_errs["usr_mail"] = txt["err_usr_mail"]
+                has_error = True
+            elif "@" in usr_mail:
+                new_errs["usr_mail"] = txt["err_usr_mail"]
+                has_error = True
+            
+            if dom_mail == "Otro proveedor":
+                new_errs["prov_msg"] = txt["err_proveedor"]
+                has_error = True
+
+            if not num_tel.strip():
+                new_errs["num_tel"] = txt["err_campo"]
+                has_error = True
+            elif not num_tel.isdigit():
+                new_errs["num_tel"] = txt["err_tel"]
+                has_error = True
+
+            if has_error:
+                st.session_state.errs_reg = new_errs
+                st.rerun()
+            else:
+                st.session_state.errs_reg = {}
+                prefix_val = next(p[1] for p in LISTA_PREFIJOS if p[0] == prefijo)
+                dom_val = next(d[1] for d in LISTA_DOMINIOS_EMAIL if d[0] == dom_mail)
+                
+                lista_generos_mapeo = LISTA_GENEROS_ESP if current_idioma == "ESP" else LISTA_GENEROS_ENG
+                genero_val = next(g[1] for g in lista_generos_mapeo if g[0] == genero_sel)
+                
+                st.session_state.datos = {
+                    "nombres": nombres.strip().title(),
+                    "apellidos": apellidos.strip().title(),
+                    "preferido": preferido.strip().title() if preferido else nombres.strip().title(),
+                    "genero": genero_val,
+                    "telefono": f"{prefix_val} {num_tel}",
+                    "correo": f"{usr_mail.replace('@', '')}{dom_val}"
+                }
+                st.session_state.step = "seleccion_serie"
+                st.rerun()
+
+    st.markdown("---")
+    if st.button(txt["btn_volver_inicio"]):
+        st.session_state.step = "bienvenida"
+        st.rerun()
+
+    st.markdown('</div>', unsafe_allow_html=True)
+
+# Estado 3: Selección de la Producción Audiovisual (Series / Películas)
+elif st.session_state.step == "seleccion_serie":
+    usr_completo = st.session_state.datos.get("preferido", "Postulante")
+    usr = usr_completo.split()[0] if usr_completo else "Postulante"
+    st.markdown('<div class="circus-terminal-box">', unsafe_allow_html=True)
+    st.markdown(f"### 🎪 {txt['badge_postulante']}, `{usr}`")
+    st.subheader(txt["intro_filtro_series"])
+    for prod in PRODUCCIONES_LISTA:
+        st.markdown(f"**{prod}**")
+        
+    serie_sel = st.selectbox(txt["lbl_selecciona_prod"], list(SERIES_MAP.keys()))
+    
+    col_ss1, col_ss2, col_ss3 = st.columns([2, 2, 2])
+    with col_ss1:
+        if st.button(txt["btn_serie"], type="primary"):
+            st.session_state.eval["serie_key"] = SERIES_MAP[serie_sel]
+            st.session_state.eval["serie_nombre"] = serie_sel
+            st.session_state.step = "seleccion_personaje"
+            st.rerun()
+    with col_ss2:
+        if st.button(txt["btn_oops_datos"]):
+            st.session_state.step = "captura_datos"
+            st.rerun()
+    with col_ss3:
+        if st.button(txt["btn_no_conozco"]):
+            st.session_state.modo_no_conozco = True
+            st.rerun()
+
+    if st.session_state.modo_no_conozco:
+        st.warning(txt["msg_no_conozco"])
+        col_nc1, col_nc2 = st.columns(2)
+        with col_nc1:
+            if st.button(txt["btn_aceptar_futuras"], type="primary"):
+                st.success(txt["gracias_cierre"])
+                if st.button(txt["btn_reiniciar_test"]):
+                    st.session_state.clear()
+                    st.rerun()
+        with col_nc2:
+            if st.button(txt["btn_arrepinti"], type="primary"):
+                st.session_state.modo_no_conozco = False
+                st.rerun()
+
+    st.markdown('</div>', unsafe_allow_html=True)
+
+# Estado 4: Selección del Personaje del Banco del CSV
+elif st.session_state.step == "seleccion_personaje":
+    usr_completo = st.session_state.datos.get("preferido", "Postulante")
+    usr = usr_completo.split()[0] if usr_completo else "Postulante"
+    col_s = st.session_state.eval.get("serie_key", "Serie_Harry_Potter_BOTH")
+    st.markdown('<div class="circus-terminal-box">', unsafe_allow_html=True)
+    
+    if st.session_state.modo_no_conozco:
+        st.warning(txt["msg_no_conozco"])
+        col_nc1, col_nc2 = st.columns(2)
+        with col_nc1:
+            if st.button(txt["btn_aceptar_futuras"], type="primary"):
+                st.success(txt["gracias_cierre"])
+                if st.button(txt["btn_reiniciar_test"]):
+                    st.session_state.clear()
+                    st.rerun()
+        with col_nc2:
+            if st.button(txt["btn_arrepinti"], type="primary"):
+                st.session_state.modo_no_conozco = False
+                st.rerun()
+    else:
+        pregunta_formato = txt.get("pregunta_personaje", "{nombre}, ¿con qué personaje te identificas más?:")
+        st.subheader(pregunta_formato.format(nombre=usr))
+        
+        if not df_matriz.empty and col_s in df_matriz.columns:
+            personajes = df_matriz[col_s].dropna().tolist()
+            per_sel = st.selectbox(txt["lbl_banco"], personajes)
+            
+            col_b_izq, col_b_der, col_b_ter = st.columns([1, 1, 1])
+            with col_b_izq:
+                if st.button(txt["btn_diagnostico"], type="primary"):
+                    idx_p = personajes.index(per_sel)
+                    st.session_state.personaje_idx = idx_p
+                    fila = df_matriz[df_matriz[col_s] == per_sel].iloc[0]
+                    
+                    gen_val = st.session_state.datos.get("genero", "Neutro")
+                    if gen_val == "Femenino" or gen_val == "Female":
+                        arq_col = 'Arquetipos_F_ESP' if current_idioma == "ESP" else 'Arquetipos_F_ENG'
+                    elif gen_val == "Masculino" or gen_val == "Male":
+                        arq_col = 'Arquetipos_M_ESP' if current_idioma == "ESP" else 'Arquetipos_M_ENG'
+                    else:
+                        arq_col = 'Arquetipos_N_ESP' if current_idioma == "ESP" else 'Arquetipos_N_ENG'
+                        
+                    arq_desc_col = 'arquetipos_DESC_ESP' if current_idioma == "ESP" else 'arquetipos_DESC_ENG'
+                    f_inf_col = 'Funcion_inferior_ESP' if current_idioma == "ESP" else 'Funcion_inferior_ENG'
+                    f_inf_desc_col = 'Funcion_inferior_DESC_ESP' if current_idioma == "ESP" else 'Funcion_inferior_DESC_ENG'
+                    loop_col = 'Loops-ESP' if current_idioma == "ESP" else 'Loops-ENG'
+                    loop_desc_col = 'Loops_DESC_ESP' if current_idioma == "ESP" else 'Loops_DESC_ENG'
+                    
+                    st.session_state.eval.update({
+                        "personaje": per_sel,
+                        "mbti": fila.get('MBTI_ESP' if current_idioma == "ESP" else 'MBTI_ENG', 'INFJ'),
+                        "mbti_desc": fila.get('MBTI_DESC_ESP' if current_idioma == "ESP" else 'MBTI_DESC_ENG', ''),
+                        "f_dom": fila.get('Funcion_Dominante_ESP' if current_idioma == "ESP" else 'Funcion_Dominante_ENG', ''),
+                        "f_dom_d": fila.get('Funcion_Dominante_DESC_ESP' if current_idioma == "ESP" else 'Funcion_Dominante_DESC_ENG', ''),
+                        "f_aux": fila.get('Funcion_Auxiliar_ESP' if current_idioma == "ESP" else 'Funcion_Auxiliar_ENG', ''),
+                        "f_aux_d": fila.get('Funcion_Auxiliar_DESC_ESP' if current_idioma == "ESP" else 'Funcion_Auxiliar_DESC_ENG', ''),
+                        "f_ter": fila.get('Funcion_Terciaria_ESP' if current_idioma == "ESP" else 'Funcion_Terciaria_ENG', ''),
+                        "f_ter_d": fila.get('Funcion_Terciaria_DESC_ESP' if current_idioma == "ESP" else 'Funcion_Terciaria_DESC_ENG', ''),
+                        "f_inf": fila.get(f_inf_col, ''),
+                        "f_inf_d": fila.get(f_inf_desc_col, ''),
+                        "f_loop": fila.get(loop_col, ''),
+                        "f_loop_d": fila.get(loop_desc_col, ''),
+                        "arquetipo": fila.get(arq_col, ''),
+                        "arquetipo_d": fila.get(arq_desc_col, ''),
+                        "area_ti": fila.get('Area_TI_Recomendada', 'Desarrollo de Software'),
+                        "razon_ti": fila.get('razon_Area_ESP' if current_idioma == "ESP" else 'razon_Area_ENG', '')
+                    })
+                    st.session_state.accion_activa = None
+                    st.session_state.historial_interacciones = []
+                    for f in ["funcion_dominante", "funcion_auxiliar", "funcion_terciaria", "funcion_inferior", "loop", "arquetipo"]:
+                        st.session_state[f"clics_{f}"] = set()
+                    st.session_state.step = "funcion_dominante"
+                    st.rerun()
+            with col_b_der:
+                if st.button(txt["btn_oops_serie"]):
+                    st.session_state.step = "seleccion_serie"
+                    st.rerun()
+            with col_b_ter:
+                if st.button(txt["btn_no_conozco"]):
+                    st.session_state.modo_no_conozco = True
+                    st.rerun()
+
+        if st.session_state.modo_no_conozco:
+            st.warning(txt["msg_no_conozco"])
+            col_nc1, col_nc2 = st.columns(2)
+            with col_nc1:
+                if st.button(txt["btn_aceptar_futuras"], type="primary"):
+                    st.success(txt["gracias_cierre"])
+                    if st.button(txt["btn_reiniciar_test"]):
+                        st.session_state.clear()
+                        st.rerun()
+            with col_nc2:
+                if st.button(txt["btn_arrepinti"], type="primary"):
+                    st.session_state.modo_no_conozco = False
+                    st.rerun()
+
+    st.markdown('</div>', unsafe_allow_html=True)
+
+# Estados de Fases Cognitivas
+elif st.session_state.step == "funcion_dominante":
+    ev = st.session_state.eval
+    renderizar_fase_cognitiva(txt["fase_1"], ev.get('f_dom', 'N/A'), ev.get('f_dom_d', 'N/A'), "funcion_dominante", ("funcion_auxiliar", txt["fase_2"]))
+
+elif st.session_state.step == "funcion_auxiliar":
+    ev = st.session_state.eval
+    renderizar_fase_cognitiva(txt["fase_2"], ev.get('f_aux', 'N/A'), ev.get('f_aux_d', 'N/A'), "funcion_auxiliar", ("funcion_terciaria", txt["fase_3"]))
+
+elif st.session_state.step == "funcion_terciaria":
+    ev = st.session_state.eval
+    renderizar_fase_cognitiva(txt["fase_3"], ev.get('f_ter', 'N/A'), ev.get('f_ter_d', 'N/A'), "funcion_terciaria", ("funcion_inferior", txt["fase_4"]))
+
+elif st.session_state.step == "funcion_inferior":
+    ev = st.session_state.eval
+    renderizar_fase_cognitiva(txt["fase_4"], ev.get('f_inf', 'N/A'), ev.get('f_inf_d', 'N/A'), "funcion_inferior", ("loop", txt["fase_5"]))
+
+elif st.session_state.step == "loop":
+    ev = st.session_state.eval
+    renderizar_fase_cognitiva(txt["fase_5"], ev.get('f_loop', 'N/A'), ev.get('f_loop_d', 'N/A'), "loop", ("arquetipo", txt["fase_6"]))
+
+elif st.session_state.step == "arquetipo":
+    ev = st.session_state.eval
+    renderizar_fase_cognitiva(txt["fase_6"], ev.get('arquetipo', 'N/A'), ev.get('arquetipo_d', 'N/A'), "arquetipo", ("resultado", txt["titulo_resultado"]))
+
+# Estado 11: Resultado Final y Envío de Correo SMTP
+elif st.session_state.step == "resultado":
+    ev = st.session_state.eval
+    usr_completo = st.session_state.datos.get("preferido", "Postulante")
+    usr = usr_completo.split()[0] if usr_completo else "Postulante"
+    
+    st.markdown('<div class="circus-terminal-box">', unsafe_allow_html=True)
+    st.subheader(txt["titulo_resultado"])
+    
+    label_personaje = "Personaje" if current_idioma == "ESP" else "Character"
+    st.markdown(
+        f'<div style="text-align: center; margin-bottom: 20px;">'
+        f'<span class="badge-candidato">{txt["badge_postulante"]}, {usr}</span> &nbsp;&nbsp;|&nbsp;&nbsp; '
+        f'<span class="badge-candidato">{label_personaje}: {ev.get("personaje")}</span>'
+        f'</div>',
+        unsafe_allow_html=True
+    )
+    st.markdown(f"### {txt['area_ti_lbl']}: `{ev.get('area_ti')}`")
+    st.info(f"**Description / Rol:** {txt['rol_lbl']}")
+    
+    explicacion_HTML = txt["explicacion_bonita_txt"].format(area_ti=ev.get('area_ti'))
+    st.markdown(f'<div class="explicacion-bonita">{explicacion_HTML}</div>', unsafe_allow_html=True)
+    st.markdown("---")
+
+    st.markdown(f"### {txt['titulo_verificacion_datos']}")
+    
+    errs_v = st.session_state.get("errs_verif", {})
+    opciones_fechas = generar_fechas_tentativas()
+
+    with st.form("form_verif_correo_completo"):
+        if errs_v.get("nombres"):
+            st.markdown(f"<p class='instruction-error'>{errs_v['nombres']}</p>", unsafe_allow_html=True)
+        else:
+            st.markdown(f"<p class='instruction-fucsia'>{txt['input_nombres']}:</p>", unsafe_allow_html=True)
+        nombres_val = st.text_input(txt["input_nombres"], value=st.session_state.get("verif_nombres", ""), label_visibility="collapsed")
+        
+        if errs_v.get("apellidos"):
+            st.markdown(f"<p class='instruction-error'>{errs_v['apellidos']}</p>", unsafe_allow_html=True)
+        else:
+            st.markdown(f"<p class='instruction-fucsia'>Apellidos / Last Name:</p>", unsafe_allow_html=True)
+        apellidos_val = st.text_input("Apellidos", value=st.session_state.get("verif_apellidos", ""), label_visibility="collapsed")
+        
+        st.markdown(f"<p class='instruction-fucsia'>{txt['input_preferido']}:</p>", unsafe_allow_html=True)
+        preferido_val = st.text_input(txt["input_preferido"], value=usr, label_visibility="collapsed")
+        
+        st.markdown(f"<p class='instruction-fucsia'>{txt['lbl_genero']}</p>", unsafe_allow_html=True)
+        genero_actual = st.session_state.datos.get("genero", "Neutro")
+        
+        lista_generos_verif = LISTA_GENEROS_ESP if current_idioma == "ESP" else LISTA_GENEROS_ENG
+        genero_label_idx = 0 if genero_actual == "Femenino" else (1 if genero_actual == "Masculino" else 2)
+        genero_val_sel = st.selectbox("Género:", [g[0] for g in lista_generos_verif], index=genero_label_idx, label_visibility="collapsed")
+
+        c_tel1, c_tel2 = st.columns(2)
+        with c_tel1:
+            prefijo_sel = st.selectbox(txt["lbl_prefijo"], [p[0] for p in LISTA_PREFIJOS])
+            if errs_v.get("num_tel"):
+                st.markdown(f"<p class='instruction-error'>{errs_v['num_tel']}</p>", unsafe_allow_html=True)
+            else:
+                st.markdown(f"<p class='instruction-fucsia'>{txt['input_num_tel']}</p>", unsafe_allow_html=True)
+            num_tel_val = st.text_input(txt["input_num_tel"], value=st.session_state.get("verif_tel", ""), label_visibility="collapsed")
+            
+        with c_tel2:
+            if errs_v.get("usr_mail"):
+                st.markdown(f"<p class='instruction-error'>{errs_v['usr_mail']}</p>", unsafe_allow_html=True)
+            else:
+                st.markdown(f"<p class='instruction-fucsia'>{txt['input_usr_mail']}</p>", unsafe_allow_html=True)
+            correo_usr_val = st.text_input(txt["input_usr_mail"], value=st.session_state.get("verif_mail", ""), label_visibility="collapsed")
+            
+            if errs_v.get("prov_msg"):
+                st.markdown(f"<p class='instruction-error'>{errs_v['prov_msg']}</p>", unsafe_allow_html=True)
+            dominio_sel = st.selectbox(txt["lbl_dominio"], [d[0] for d in LISTA_DOMINIOS_EMAIL], label_visibility="collapsed")
+        
+        st.markdown(f"<p class='instruction-fucsia'>{txt['lbl_idioma_correo']}</p>", unsafe_allow_html=True)
+        idioma_correo_sel = st.selectbox("Idioma del correo:", [
+            "Español (Spanish)", 
+            "Inglés (English)"
+        ], label_visibility="collapsed")
+        
+        st.markdown(f"<p class='instruction-fucsia'>{txt['lbl_fecha_fase2']}</p>", unsafe_allow_html=True)
+        fecha_elegida = st.selectbox("Seleccione horario:", opciones_fechas, label_visibility="collapsed")
+        
+        st.markdown(f"<p class='instruction-fucsia'>{txt['pregunta_envio_correo']}</p>", unsafe_allow_html=True)
+        
+        col_f1, col_f2 = st.columns(2)
+        with col_f1:
+            btn_confirma_envio = st.form_submit_button(txt["btn_confirmar_y_enviar"], type="primary")
+        with col_f2:
+            btn_reset_test = st.form_submit_button(txt["btn_oops_no_conforme"])
+            
+        if btn_confirma_envio:
+            st.session_state.verif_nombres = nombres_val
+            st.session_state.verif_apellidos = apellidos_val
+            st.session_state.verif_tel = num_tel_val
+            st.session_state.verif_mail = correo_usr_val
+
+            new_errs_v = {}
+            has_error_v = False
+
+            if not nombres_val.strip():
+                new_errs_v["nombres"] = txt["err_nombres"]
+                has_error_v = True
+            if not apellidos_val.strip():
+                new_errs_v["apellidos"] = txt["err_apellidos"]
+                has_error_v = True
+            if not correo_usr_val.strip():
+                new_errs_v["usr_mail"] = txt["err_usr_mail"]
+                has_error_v = True
+            elif "@" in correo_usr_val:
+                new_errs_v["usr_mail"] = txt["err_usr_mail"]
+                has_error_v = True
+            
+            if dominio_sel == "Otro proveedor":
+                new_errs_v["prov_msg"] = txt["err_proveedor"]
+                has_error_v = True
+
+            if not num_tel_val.strip():
+                new_errs_v["num_tel"] = txt["err_campo"]
+                has_error_v = True
+            elif not num_tel_val.isdigit():
+                new_errs_v["num_tel"] = txt["err_tel"]
+                has_error_v = True
+
+            if has_error_v:
+                st.session_state.errs_verif = new_errs_v
+                st.rerun()
+            else:
+                st.session_state.errs_verif = {}
+                prefix_val = next(p[1] for p in LISTA_PREFIJOS if p[0] == prefijo_sel)
+                dom_val = next(d[1] for d in LISTA_DOMINIOS_EMAIL if d[0] == dominio_sel)
+                
+                lista_generos_mapeo = LISTA_GENEROS_ESP if current_idioma == "ESP" else LISTA_GENEROS_ENG
+                genero_val = next(g[1] for g in lista_generos_mapeo if g[0] == genero_val_sel)
+                
+                st.session_state.datos = {
+                    "nombres": nombres_val.strip().title(),
+                    "apellidos": apellidos_val.strip().title(),
+                    "preferido": preferido_val.strip().title() if preferido_val else nombres_val.strip().title(),
+                    "genero": genero_val,
+                    "telefono": f"{prefix_val} {num_tel_val.strip()}",
+                    "correo": f"{correo_usr_val.strip().replace('@', '')}{dom_val}"
+                }
+                
+                enviar_correo_multilingue(fecha_seleccionada=fecha_elegida, idioma_preferido=idioma_correo_sel)
+                st.session_state.correo_enviado = True
+                st.rerun()
+            
+        if btn_reset_test:
+            st.session_state.confirmar_reinicio = True
+            st.rerun()
+
+    if st.session_state.get("confirmar_reinicio", False):
+        st.warning("⚠️ ¿Estás segura de que deseas reiniciar el test y borrar todo el progreso?")
+        col_r1, col_r2 = st.columns(2)
+        with col_r1:
+            if st.button("Sí, reiniciar / Yes, restart", type="primary"):
+                st.session_state.clear()
+                st.rerun()
+        with col_r2:
+            if st.button("No, continuar / No, continue"):
+                st.session_state.confirmar_reinicio = False
+                st.rerun()
+
+    if st.session_state.get("correo_enviado", False):
+        st.success(txt["msg_correo_enviado"])
+        
+    st.markdown('</div>', unsafe_allow_html=True)
+
+# Firma bilingüe con la autoría de la autora
+st.markdown(
+    f"<div class='firma-footer'>"
+    f"{txt['firma_autor']}"
+    f"</div>",
+    unsafe_allow_html=True
+)

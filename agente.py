@@ -543,9 +543,6 @@ idioma_choice = st.sidebar.selectbox("🌐 Select Language / Seleccionar Idioma:
 current_idioma = "ESP" if idioma_choice == "Español" else "ENG"
 txt = TEXTOS[current_idioma]
 
-# LÍNEA DE DEBUGGING TEMPORAL EN BARRA LATERAL
-st.sidebar.write("¿API Key detectada?", bool(OPENAI_API_KEY))
-
 if "eval" in st.session_state and "personaje_idx" in st.session_state:
     idx_p = st.session_state.personaje_idx
     col_s = st.session_state.eval.get("serie_key", "Serie_Harry_Potter_BOTH")
@@ -593,7 +590,7 @@ st.markdown("---")
 # ==============================================================================
 def consultar_ia_orientada(nombre_usr, mbti_val, area_ti, func_nombre, func_desc, origen="equipo", pregunta_usuario=""):
     """
-    Gestiona las consultas a la IA con depuración visual estricta en pantalla.
+    Gestiona las consultas a la IA integrando la consciencia dual con el cliente OpenAI oficial.
     """
     with st.spinner(txt["cargando_txt"]):
         resp_texto = ""
@@ -613,10 +610,9 @@ def consultar_ia_orientada(nombre_usr, mbti_val, area_ti, func_nombre, func_desc
             else:
                 resp_texto = f"🎭 **[Reflection for {nombre_usr}]:** You are engaging with the essence of **{personaje_actual}** (*{serie_actual}*), acknowledging both their brilliant light and hidden shadow through the **{mbti_val}** profile 🌟."
 
-        # VERIFICACIÓN ESTRICTA DE LLAMADA REAL A OPENAI
         if not resp_texto:
             if not OPENAI_AVAILABLE:
-                st.error("❌ Error crítico: La librería 'openai' no está disponible en este entorno.")
+                st.error("❌ Error crítico: La librería 'openai' no está instalada o disponible en este entorno.")
             elif not OPENAI_API_KEY:
                 st.error("❌ Error crítico: OPENAI_API_KEY está vacía o no se leyó de los secrets.")
             else:
@@ -682,7 +678,7 @@ def obtener_termino_genero(genero):
         return {"candidat": "canditade", "estimad": "Estimadx"}
 
 def enviar_correo_multilingue(fecha_seleccionada="", idioma_preferido="Español"):
-    """Envía el correo SMTP traduciendo absolutamente todo al idioma elegido (Español o Inglés)."""
+    """Envía el correo SMTP y muestra errores detallados en pantalla si falla."""
     datos_postulante = st.session_state.get("datos", {})
     correo_destino = datos_postulante.get("correo", "")
     nombre_postulante = datos_postulante.get("nombres", "Postulante")
@@ -692,11 +688,22 @@ def enviar_correo_multilingue(fecha_seleccionada="", idioma_preferido="Español"
     personaje_elegido = st.session_state.eval.get("personaje", "N/A")
 
     if not correo_destino:
+        st.error("⚠️ Error: No hay dirección de correo destino registrada.")
         return
 
     terms = obtener_termino_genero(genero_postulante)
-    remitente = os.getenv("MAIL_USER", "jung.ai.tech@gmail.com")
+    
+    remitente = os.getenv("MAIL_USER", "")
+    if not remitente and "MAIL_USER" in st.secrets:
+        remitente = st.secrets["MAIL_USER"]
+
     password = os.getenv("MAIL_PASSWORD", "")
+    if not password and "MAIL_PASSWORD" in st.secrets:
+        password = st.secrets["MAIL_PASSWORD"]
+
+    if not remitente or not password:
+        st.error("⚠️ Error de configuración: MAIL_USER o MAIL_PASSWORD no están definidos en los Secrets.")
+        return
 
     es_espanol = "Español" in idioma_preferido or "Spanish" in idioma_preferido
 
@@ -713,7 +720,6 @@ def enviar_correo_multilingue(fecha_seleccionada="", idioma_preferido="Español"
             <p><b>Área TI Asignada:</b> {area_recomendada}</p>
             <p><b>Horario Agendado para tu Entrevista (Fase 2):</b> <span style="color: #ff007f; font-weight: bold;">{fecha_seleccionada}</span></p>
             <hr style="border: 1px solid #ff007f;">
-            <p style="color: #ff007f; font-weight: bold; font-size: 1.05rem;">⚠️ A PESAR DE QUE EL CANDIDATO PIDIÓ EL CORREO EN ESTE IDIOMA, EL RESUMEN DE PREGUNTAS Y RESPUESTAS REFLEJA EXACTAMENTE EL IDIOMA O LOS IDIOMAS QUE EL CANDIDATO USÓ DURANTE LA ENTREVISTA VIRTUAL.</p>
             <h3 style="color: #ff80bf;">📋 Resumen de tus conversaciones y reflexiones en la entrevista virtual:</h3>
             <ul>
         """
@@ -739,7 +745,6 @@ def enviar_correo_multilingue(fecha_seleccionada="", idioma_preferido="Español"
             <p><b>Assigned IT Area:</b> {area_recomendada}</p>
             <p><b>Scheduled Time for your Interview (Phase 2):</b> <span style="color: #ff007f; font-weight: bold;">{fecha_seleccionada}</span></p>
             <hr style="border: 1px solid #ff007f;">
-            <p style="color: #ff007f; font-weight: bold; font-size: 1.05rem;">⚠️ ALTHOUGH THE CANDIDATE REQUESTED THE EMAIL IN THIS LANGUAGE, THE SUMMARY OF QUESTIONS AND ANSWERS REFLECTS EXACTLY THE LANGUAGE OR LANGUAGES THE CANDIDATE USED DURING THE VIRTUAL INTERVIEW.</p>
             <h3 style="color: #ff80bf;">📋 Summary of your conversations and reflections in the virtual interview:</h3>
             <ul>
         """
@@ -754,20 +759,21 @@ def enviar_correo_multilingue(fecha_seleccionada="", idioma_preferido="Español"
         """
 
     try:
-        if password:
-            msg = MIMEMultipart()
-            msg['From'] = remitente
-            msg['To'] = correo_destino
-            msg['Subject'] = asunto
-            msg.attach(MIMEText(cuerpo_html, 'html'))
+        msg = MIMEMultipart()
+        msg['From'] = remitente
+        msg['To'] = correo_destino
+        msg['Subject'] = asunto
+        msg.attach(MIMEText(cuerpo_html, 'html'))
 
-            server = smtplib.SMTP('smtp.gmail.com', 587)
-            server.starttls()
-            server.login(remitente, password)
-            server.sendmail(remitente, correo_destino, msg.as_string())
-            server.quit()
-    except Exception:
-        pass
+        server = smtplib.SMTP('smtp.gmail.com', 587)
+        server.starttls()
+        server.login(remitente, password)
+        server.sendmail(remitente, correo_destino, msg.as_string())
+        server.quit()
+        st.session_state.correo_enviado = True
+    except Exception as e:
+        st.error(f"⚠️ Error al enviar el correo SMTP: {str(e)}")
+        st.session_state.correo_enviado = False
 
 # ==============================================================================
 # 7. RENDERIZADOR DE FASES COGNITIVAS (CONTROL DE CLICS OBLIGATORIOS)

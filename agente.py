@@ -593,9 +593,7 @@ st.markdown("---")
 # ==============================================================================
 def consultar_ia_orientada(nombre_usr, mbti_val, area_ti, func_nombre, func_desc, origen="equipo", pregunta_usuario=""):
     """
-    Gestiona las consultas a la IA integrando la consciencia dual: se dirige al postulante 
-    por su nombre pero analiza al personaje de la serie equilibrando su luz (light) y sombra (shadow), 
-    evitando idealizaciones excesivas y abriendo la puerta a trascender arquetipos rígidos.
+    Gestiona las consultas a la IA con depuración visual estricta en pantalla.
     """
     with st.spinner(txt["cargando_txt"]):
         resp_texto = ""
@@ -615,29 +613,36 @@ def consultar_ia_orientada(nombre_usr, mbti_val, area_ti, func_nombre, func_desc
             else:
                 resp_texto = f"🎭 **[Reflection for {nombre_usr}]:** You are engaging with the essence of **{personaje_actual}** (*{serie_actual}*), acknowledging both their brilliant light and hidden shadow through the **{mbti_val}** profile 🌟."
 
-        if not resp_texto and OPENAI_AVAILABLE and OPENAI_API_KEY:
-            try:
-                client = OpenAI(api_key=OPENAI_API_KEY)
-                sys_prompt = f"Eres Jung.AI, una presencia sabia y compasiva al estilo del Ánima/Ánimus 🔮✨. Te diriges al postulante por su nombre ('{nombre_usr}'), hablas del personaje ('{personaje_actual}') equilibrando su luz (light) y su sombra (shadow) sin idealizarlo excesivamente, en un solo párrafo completo y fluido. Responde en {'español' if current_idioma=='ESP' else 'inglés'}."
-                if origen == "equipo":
-                    prompt_completo = f"Dirigiéndote a {nombre_usr} en un solo párrafo, explica el impacto del MBTI y {func_nombre} en {area_ti}, analizando de forma equilibrada la luz y la sombra de {personaje_actual}."
-                elif origen == "ia":
-                    prompt_completo = f"Dirigiéndote a {nombre_usr} en un solo párrafo, analiza cómo ({func_nombre}: {func_desc}) moldea el rendimiento y los retos de {personaje_actual}, exponiendo tanto su destreza luminosa como su sombra."
-                else:
-                    prompt_completo = f"Postulante: {nombre_usr}. Personaje: {personaje_actual}. Concepto: {func_nombre}: {func_desc}. Pregunta: {pregunta_usuario}. Responde en un solo párrafo equilibrando luz y sombra."
+        # VERIFICACIÓN ESTRICTA DE LLAMADA REAL A OPENAI
+        if not resp_texto:
+            if not OPENAI_AVAILABLE:
+                st.error("❌ Error crítico: La librería 'openai' no está disponible en este entorno.")
+            elif not OPENAI_API_KEY:
+                st.error("❌ Error crítico: OPENAI_API_KEY está vacía o no se leyó de los secrets.")
+            else:
+                try:
+                    client = OpenAI(api_key=OPENAI_API_KEY)
+                    sys_prompt = f"Eres Jung.AI, una presencia sabia y compasiva al estilo del Ánima/Ánimus 🔮✨. Te diriges al postulante por su nombre ('{nombre_usr}'), hablas del personaje ('{personaje_actual}') equilibrando su luz (light) y su sombra (shadow) sin idealizarlo excesivamente, en un solo párrafo completo y fluido. Responde en {'español' if current_idioma=='ESP' else 'inglés'}."
+                    
+                    if origen == "equipo":
+                        prompt_completo = f"Dirigiéndote a {nombre_usr} en un solo párrafo, explica el impacto del MBTI y {func_nombre} en {area_ti}, analizando de forma equilibrada la luz y la sombra de {personaje_actual}."
+                    elif origen == "ia":
+                        prompt_completo = f"Dirigiéndote a {nombre_usr} en un solo párrafo, analiza cómo ({func_nombre}: {func_desc}) moldea el rendimiento y los retos de {personaje_actual}, exponiendo tanto su destreza luminosa como su sombra."
+                    else:
+                        prompt_completo = f"Postulante: {nombre_usr}. Personaje: {personaje_actual}. Concepto: {func_nombre}: {func_desc}. Pregunta: {pregunta_usuario}. Responde en un solo párrafo equilibrando luz y sombra."
 
-                resp = client.chat.completions.create(
-                    model="gpt-4o-mini",
-                    messages=[
-                        {"role": "system", "content": sys_prompt},
-                        {"role": "user", "content": prompt_completo}
-                    ],
-                    temperature=0.7,
-                    max_tokens=250
-                )
-                resp_texto = resp.choices[0].message.content.strip()
-            except Exception:
-                pass
+                    resp = client.chat.completions.create(
+                        model="gpt-4o-mini",
+                        messages=[
+                            {"role": "system", "content": sys_prompt},
+                            {"role": "user", "content": prompt_completo}
+                        ],
+                        temperature=0.7,
+                        max_tokens=250
+                    )
+                    resp_texto = resp.choices[0].message.content.strip()
+                except Exception as e:
+                    st.error(f"⚠️ Excepción capturada de OpenAI: {str(e)}")
 
         if not resp_texto:
             if origen == "equipo":

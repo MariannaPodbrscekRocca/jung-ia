@@ -656,17 +656,19 @@ def consultar_ia_orientada(nombre_usr, mbti_val, area_ti, func_nombre, func_desc
         return resp_texto
 
 def generar_fechas_tentativas():
-    """Genera 5 fechas hábiles futuras para la entrevista de Fase 2."""
-    fechas = []
-    actual = datetime.now() + timedelta(days=1)
-    horas_disponibles = [10, 12, 15, 17, 19]
-    while len(fechas) < 5:
-        if actual.weekday() < 5:
-            hora = random.choice(horas_disponibles)
-            fecha_str = actual.replace(hour=hora, minute=0, second=0).strftime("%A, %d %b %Y - %I:00 %p")
-            fechas.append(fecha_str)
-        actual += timedelta(days=1)
-    return fechas
+    """Genera y congela en el Session State 5 fechas hábiles para que no cambien al recargar."""
+    if "fechas_fase2" not in st.session_state:
+        fechas = []
+        actual = datetime.now() + timedelta(days=1)
+        horas_disponibles = [10, 12, 15, 17, 19]
+        while len(fechas) < 5:
+            if actual.weekday() < 5:
+                hora = random.choice(horas_disponibles)
+                fecha_str = actual.replace(hour=hora, minute=0, second=0).strftime("%A, %d %b %Y - %I:00 %p")
+                fechas.append(fecha_str)
+            actual += timedelta(days=1)
+        st.session_state.fechas_fase2 = fechas
+    return st.session_state.fechas_fase2
 
 def obtener_termino_genero(genero):
     """Retorna los sufijos gramaticales según el género."""
@@ -1398,7 +1400,7 @@ elif st.session_state.step == "resultado":
                 genero_val = next(g[1] for g in lista_generos_mapeo if g[0] == genero_val_sel)
                 
                 st.session_state.datos = {
-                    "nombres": nombres_val.strip().title(),
+                    "nombres": nombres_val.name.strip().title() if hasattr(nombres_val, "name") else nombres_val.strip().title(),
                     "apellidos": apellidos_val.strip().title(),
                     "preferido": preferido_val.strip().title() if preferido_val else nombres_val.strip().title(),
                     "genero": genero_val,

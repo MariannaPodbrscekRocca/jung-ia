@@ -543,6 +543,9 @@ idioma_choice = st.sidebar.selectbox("🌐 Select Language / Seleccionar Idioma:
 current_idioma = "ESP" if idioma_choice == "Español" else "ENG"
 txt = TEXTOS[current_idioma]
 
+# LÍNEA DE DEBUGGING TEMPORAL EN BARRA LATERAL
+st.sidebar.write("¿API Key detectada?", bool(OPENAI_API_KEY))
+
 if "eval" in st.session_state and "personaje_idx" in st.session_state:
     idx_p = st.session_state.personaje_idx
     col_s = st.session_state.eval.get("serie_key", "Serie_Harry_Potter_BOTH")

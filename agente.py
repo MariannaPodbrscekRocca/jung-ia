@@ -678,7 +678,7 @@ def obtener_termino_genero(genero):
         return {"candidat": "canditade", "estimad": "Estimadx"}
 
 def enviar_correo_multilingue(fecha_seleccionada="", idioma_preferido="Español"):
-    """Envía el correo SMTP y muestra errores detallados en pantalla si falla."""
+    """Envía el correo SMTP usando exactamente la fecha elegida por el usuario."""
     datos_postulante = st.session_state.get("datos", {})
     correo_destino = datos_postulante.get("correo", "")
     nombre_postulante = datos_postulante.get("nombres", "Postulante")

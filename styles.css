@@ -1,0 +1,60 @@
+/* ==========================================================================
+   JUNG.IA - HOJA DE ESTILOS: CIRCO DIGITAL / CARPA RETRO (STREAMLIT)
+   ================================================================---------- */
+
+:root {
+    --bg-color: #0b0c10;
+    --card-bg: #1f2833;
+    --text-primary: #c5c6c7;
+    --accent-cyan: #66fcf1;
+    --accent-teal: #45f3ff;
+    --accent-pink: #ff007f;
+    --accent-gold: #ffb703;
+}
+
+.stApp {
+    background-color: var(--bg-color) !important;
+    color: var(--text-primary) !important;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Títulos y Encabezados */
+h1, h2, h3 {
+    color: var(--accent-cyan) !important;
+    text-shadow: 0 0 10px rgba(102, 252, 241, 0.5);
+    font-weight: 800;
+    letter-spacing: 1px;
+}
+
+/* Tarjetas y Contenedores Interactivos */
+.circus-card {
+    background-color: var(--card-bg);
+    border: 2px solid var(--accent-teal);
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 0 15px rgba(69, 243, 255, 0.2);
+}
+
+/* Botones Principales Personalizados */
+.stButton>button {
+    background: linear-gradient(45deg, var(--accent-pink), #ff5e00) !important;
+    color: #ffffff !important;
+    font-weight: bold !important;
+    border: none !important;
+    border-radius: 8px !important;
+    box-shadow: 0 0 15px rgba(255, 0, 127, 0.4);
+    transition: all 0.3s ease;
+}
+
+.stButton>button:hover {
+    transform: scale(1.03);
+    box-shadow: 0 0 25px rgba(255, 0, 127, 0.8);
+}
+
+/* Inputs de texto y Selectores */
+input, textarea, select {
+    background-color: #0b0c10 !important;
+    color: var(--accent-cyan) !important;
+    border: 1px solid var(--accent-teal) !important;
+    border-radius: 6px !important;
+}

@@ -1,6 +1,8 @@
 🎪 JUNG.IA: Sistema Inteligente de Reclutamiento y Diagnóstico Psicométrico 🧠✨
 Desarrollado para Jung Tech Company en colaboración con el agente de inteligencia artificial Jung.IA. 🤖💼
 
+Link para testear la aplicacion: https://jungai.streamlit.app/
+
 Alumna: Marianna Podbrscek Rocca
 
 📋 1. Descripción General y Propósito del Proyecto

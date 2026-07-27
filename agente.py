@@ -22,9 +22,13 @@ st.set_page_config(
     layout="wide"
 )
 
-# Script para forzar el scroll al inicio (top) de la página en cada carga o cambio de sección
+# Script infalible para forzar el scroll al tope (inicio absoluto) de la página en cada interacción
 st.markdown("""
     <script>
+        const body = window.parent.document.querySelector(".main");
+        if (body) {
+            body.scrollTop = 0;
+        }
         window.scrollTo(0, 0);
     </script>
 """, unsafe_allow_html=True)
@@ -305,7 +309,7 @@ TEXTOS = {
         "instruccion_apellidos": "💡 Por favor llena este espacio con tus apellidos.",
         "instruccion_preferido": "💡 Por favor llena este espacio con el nombre con el que prefieres que te llamemos (Opcional).",
         "instruccion_tel": "💡 Por favor ingresa tu número de teléfono sin código de país (sin espacios).",
-        "instruccion_mail": "💡 Escribe tu correo antes del '@'. Si pones '@', lo posterior se limpiará y se unirá con el dominio de abajo.",
+        "instruccion_mail": "💡 Escribe tu usuario antes de '@'. Si pones '@', lo posterior se limpiará y se unirá con el dominio de abajo.",
         "msg_ok": "✅ ¡Campo completado correctamente!",
         "err_campo": "⚠️ El número de teléfono es obligatorio y solo acepta números sin espacios.",
         "err_usr_mail": "⚠️ El usuario de correo es obligatorio y no puede estar vacío.",

@@ -314,7 +314,8 @@ TEXTOS = {
         "instruccion_apellidos": "💡 Por favor llena este espacio con tus apellidos.",
         "instruccion_preferido": "💡 Por favor llena este espacio con el nombre con el que prefieres que te llamemos (Opcional).",
         "instruccion_tel": "💡 Por favor ingresa tu número de teléfono sin código de país (sin espacios).",
-        "instruccion_mail": "💡 Escribe tu correo. Si escribes un dominio como '@hotmail.com', el menú de abajo se sincronizará automáticamente.",
+        "instruccion_mail": "💡 Escribe tu correo. Si escribes texto después del '@', se borrará automáticamente y se unirá con el dominio de abajo.",
+        "alerta_regla_correo": "💡 **Aviso importante:** Todo lo que va después del arroba (@) se borrará y se unirá con el dominio seleccionado abajo. ¿Estás de acuerdo con eso?",
         "msg_ok": "✅ ¡Campo completado correctamente!",
         "err_campo": "⚠️ El número de teléfono es obligatorio y solo acepta números sin espacios.",
         "err_usr_mail": "⚠️ El usuario de correo es obligatorio y no puede estar vacío.",
@@ -382,12 +383,11 @@ TEXTOS = {
         "cargando_txt": "⏰ Cargando...",
         "orientacion_proceso": "💡 **Reclutamiento:** ¡Hola! Este es un proceso oficial de Jung Tech 🏢. Haz preguntas y explora los botones para conocerte a fondo 🧠✨.",
         "firma_autor": "Página web diseñada por: <b>Marianna Podbrscek Rocca</b>",
-        # Textos de última confirmación y Oops en ESP
         "titulo_ultima_confirmacion": "🔍 Última Confirmación de Datos",
         "info_ultima_confirmacion": "Por favor revisa que tus datos de contacto sean correctos antes de continuar:",
         "msg_tel_verificado": "📞 Teléfono verificado: Hemos borrado los espacios en blanco. El prefijo de país es <b>{prefijo}</b> y este es tu número de teléfono: <b>{tel}</b>.",
-        "msg_correo_verificado": "📩 Correo verificado: Hemos borrado lo que va después del arroba en el cambio de arriba. Tu correo final quedó así: <b style='color: #00ffcc;'>{correo}</b>",
-        "btn_confirma_datos": "🚀 Sí, mis datos están bien, continuar",
+        "msg_correo_verificado": "📩 Correo verificado: Todo lo posterior al arroba ha sido depurado y unificado con el dominio. ¿Deseas que lo mandemos a este correo exacto: <b style='color: #00ffcc;'>{correo}</b>?",
+        "btn_confirma_datos": "🚀 Sí, mis datos están bien, enviar correo",
         "btn_corrige_datos": "✏️ No, quiero corregir algo",
         "titulo_oops": "⚠️ ¡Has presionado un botón Oops!",
         "pref_presion_oops": "Presionaste:",
@@ -427,7 +427,8 @@ TEXTOS = {
         "instruccion_apellidos": "💡 Please fill this field with your last name.",
         "instruccion_preferido": "💡 Please fill this field with your preferred name (Optional).",
         "instruccion_tel": "💡 Please enter your phone number without country code (no spaces).",
-        "instruccion_mail": "💡 Type your email. If you type a domain like '@hotmail.com', the dropdown below will sync automatically.",
+        "instruccion_mail": "💡 Type your email. If you type anything after '@', it will be cleared and merged with the domain below.",
+        "alerta_regla_correo": "💡 **Important Notice:** Everything after the @ symbol will be deleted and merged with the domain selected below. Do you agree with this?",
         "msg_ok": "✅ Field successfully completed!",
         "err_campo": "⚠️ Phone number is required and only accepts numbers without spaces.",
         "err_usr_mail": "⚠️ Email username is required and cannot be empty.",
@@ -496,12 +497,11 @@ TEXTOS = {
         "cargando_txt": "⏰ Loading...",
         "orientacion_proceso": "💡 **Recruitment:** Hello! This is an official Jung Tech hiring process 🏢. Ask questions and explore buttons to get to know yourself deeply 🧠✨.",
         "firma_autor": "Website designed by: <b>Marianna Podbrscek Rocca</b>",
-        # Textos de última confirmación y Oops en ENG
         "titulo_ultima_confirmacion": "🔍 Final Data Confirmation",
         "info_ultima_confirmacion": "Please review that your contact details are correct before proceeding:",
         "msg_tel_verificado": "📞 Verified Phone: We have removed blank spaces. The country prefix is <b>{prefijo}</b> and this is your phone number: <b>{tel}</b>.",
-        "msg_correo_verificado": "📩 Verified Email: We have cleared anything after the @ symbol from your input above. Your final email is configured as: <b style='color: #00ffcc;'>{correo}</b>",
-        "btn_confirma_datos": "🚀 Yes, my data is correct, continue",
+        "msg_correo_verificado": "📩 Verified Email: Everything after the @ symbol has been cleared and merged with the domain. Do you wish to send it to this exact email: <b style='color: #00ffcc;'>{correo}</b>?",
+        "btn_confirma_datos": "🚀 Yes, my data is correct, send email",
         "btn_corrige_datos": "✏️ No, I want to fix something",
         "titulo_oops": "⚠️ You have pressed an Oops button!",
         "pref_presion_oops": "You pressed:",
@@ -538,7 +538,7 @@ PREGUNTAS_SUGERIDAS = {
 }
 
 # ==============================================================================
-# 5. INICIALIZACIÓN DEL ESTADO DE LA APLICACIÓN (SESSION STATE)
+# 5. INICIALIZACIÓN DEL ESTADO DE LA APPLICATION (SESSION STATE)
 # ==============================================================================
 if "step" not in st.session_state:
     st.session_state.step = "bienvenida"
@@ -564,6 +564,8 @@ if "correo_enviado" not in st.session_state:
     st.session_state.correo_enviado = False
 if "pre_registro_activo" not in st.session_state:
     st.session_state.pre_registro_activo = False
+if "pre_envio_resultado_activo" not in st.session_state:
+    st.session_state.pre_envio_resultado_activo = False
 
 for campo in ["val_nombres", "val_apellidos", "val_preferido", "val_num_tel", "val_usr_mail", "verif_nombres", "verif_apellidos", "verif_tel", "verif_mail"]:
     if campo not in st.session_state:
@@ -578,7 +580,6 @@ idioma_choice = st.sidebar.selectbox("🌐 Select Language / Seleccionar Idioma:
 current_idioma = "ESP" if idioma_choice == "Español" else "ENG"
 txt = TEXTOS[current_idioma]
 
-# TÍTULO PRINCIPAL Y SUBTÍTULO LIMPIO (SIN DUPLICAR)
 st.title("🎪 JUNG.AI: THE CIRCUS OF PERSONALITIES 🎪")
 st.markdown(f"<p class='subtitle-circus'>{txt['subtitulo']}</p>", unsafe_allow_html=True)
 st.markdown("---")
@@ -623,7 +624,7 @@ if "eval" in st.session_state and "personaje_idx" in st.session_state:
         })
 
 # ==============================================================================
-# 6. FUNCIÓN DE CONSULTA A LA IA (CONSCIENCIA DUAL DE POSTULANTE + LUZ Y SOMBRA)
+# 6. FUNCIÓN DE CONSULTA A LA IA
 # ==============================================================================
 def consultar_ia_orientada(nombre_usr, mbti_val, area_ti, func_nombre, func_desc, origen="equipo", pregunta_usuario=""):
     with st.spinner(txt["cargando_txt"]):
@@ -802,7 +803,7 @@ def enviar_correo_multilingue(fecha_seleccionada="", idioma_preferido="Español"
         st.session_state.correo_enviado = False
 
 # ==============================================================================
-# 7. RENDERIZADOR DE FASES COGNITIVAS (CONTROL DE CLICS OBLIGATORIOS)
+# 7. RENDERIZADOR DE FASES COGNITIVAS
 # ==============================================================================
 def renderizar_fase_cognitiva(titulo_fase, f_val, f_desc, clave_fase, siguiente_paso_tuple):
     ev = st.session_state.eval
@@ -940,7 +941,7 @@ def renderizar_fase_cognitiva(titulo_fase, f_val, f_desc, clave_fase, siguiente_
     st.markdown('</div>', unsafe_allow_html=True)
 
 # ==============================================================================
-# 8. MÁQUINA DE ESTADOS PRINCIPAL (FLUJO PASO A PASO DE LA APLICACIÓN)
+# 8. MÁQUINA DE ESTADOS PRINCIPAL
 # ==============================================================================
 
 if st.session_state.get("modo_oops_activo"):
@@ -1109,6 +1110,10 @@ elif st.session_state.step == "captura_datos":
                     st.markdown(f"<p class='instruction-success'>{txt['msg_ok']}</p>", unsafe_allow_html=True)
                 else:
                     st.markdown(f"<p class='instruction-fucsia'>{txt['instruccion_mail']}</p>", unsafe_allow_html=True)
+                
+                # Alerta explícita solicitada sobre el borrado del correo después del arroba
+                st.markdown(f"<p style='color: #ffaa00; font-size: 0.95rem; font-weight: bold; margin-top: 4px; margin-bottom: 4px;'>{txt['alerta_regla_correo']}</p>", unsafe_allow_html=True)
+                
                 usr_mail = st.text_input(txt["input_usr_mail"], value=val_mail, label_visibility="collapsed")
                 
                 if errs.get("prov_msg"):
@@ -1193,7 +1198,6 @@ elif st.session_state.step == "seleccion_serie" and not st.session_state.get("mo
     st.markdown(f"### 🎪 {txt['badge_postulante']}, `{usr}`")
     st.subheader(txt["intro_filtro_series"])
     
-    # Menú desplegable limpio sin viñetas de texto estáticas
     serie_sel = st.selectbox(txt["lbl_selecciona_prod"], list(SERIES_MAP.keys()))
     
     col_ss1, col_ss2, col_ss3 = st.columns([2, 2, 2])
@@ -1336,126 +1340,179 @@ elif st.session_state.step == "resultado" and not st.session_state.get("modo_oop
     errs_v = st.session_state.get("errs_verif", {})
     opciones_fechas = generar_fechas_tentativas()
 
-    with st.form("form_verif_correo_completo"):
-        if errs_v.get("nombres"):
-            st.markdown(f"<p class='instruction-error'>{errs_v['nombres']}</p>", unsafe_allow_html=True)
-        else:
-            st.markdown(f"<p class='instruction-fucsia'>{txt['input_nombres']}:</p>", unsafe_allow_html=True)
-        nombres_val = st.text_input(txt["input_nombres"], value=st.session_state.get("verif_nombres", ""), label_visibility="collapsed")
-        
-        if errs_v.get("apellidos"):
-            st.markdown(f"<p class='instruction-error'>{errs_v['apellidos']}</p>", unsafe_allow_html=True)
-        else:
-            st.markdown(f"<p class='instruction-fucsia'>Apellidos / Last Name:</p>", unsafe_allow_html=True)
-        apellidos_val = st.text_input("Apellidos", value=st.session_state.get("verif_apellidos", ""), label_visibility="collapsed")
-        
-        st.markdown(f"<p class='instruction-fucsia'>{txt['input_preferido']}:</p>", unsafe_allow_html=True)
-        preferido_val = st.text_input(txt["input_preferido"], value=usr, label_visibility="collapsed")
-        
-        st.markdown(f"<p class='instruction-fucsia'>{txt['lbl_genero']}</p>", unsafe_allow_html=True)
-        genero_actual = st.session_state.datos.get("genero", "Neutro")
-        
-        lista_generos_verif = LISTA_GENEROS_ESP if current_idioma == "ESP" else LISTA_GENEROS_ENG
-        genero_label_idx = 0 if genero_actual == "Femenino" else (1 if genero_actual == "Masculino" else 2)
-        genero_val_sel = st.selectbox("Género:", [g[0] for g in lista_generos_verif], index=genero_label_idx, label_visibility="collapsed")
+    # Precargamos los datos iniciales registrados en el formulario final
+    datos_iniciales = st.session_state.get("datos", {})
+    nombre_inicial = datos_iniciales.get("nombres", "")
+    apellido_inicial = datos_iniciales.get("apellidos", "")
+    preferido_inicial = usr
+    
+    # Extraemos el correo limpio (usuario antes del @) y su dominio actual
+    correo_completo_guardado = datos_iniciales.get("correo", "")
+    usuario_correo_inicial = correo_completo_guardado.split("@")[0] if "@" in correo_completo_guardado else correo_completo_guardado
+    
+    dominio_guardado_idx = 0
+    if "@" in correo_completo_guardado:
+        dom_parte = "@" + correo_completo_guardado.split("@")[1]
+        for idx, d in enumerate(LISTA_DOMINIOS_EMAIL):
+            if d[1] == dom_parte:
+                dominio_guardado_idx = idx
+                break
 
-        c_tel1, c_tel2 = st.columns(2)
-        with c_tel1:
-            prefijo_sel = st.selectbox(txt["lbl_prefijo"], [p[0] for p in LISTA_PREFIJOS])
-            if errs_v.get("num_tel"):
-                st.markdown(f"<p class='instruction-error'>{errs_v['num_tel']}</p>", unsafe_allow_html=True)
-            else:
-                st.markdown(f"<p class='instruction-fucsia'>{txt['input_num_tel']}</p>", unsafe_allow_html=True)
-            num_tel_val = st.text_input(txt["input_num_tel"], value=st.session_state.get("verif_tel", ""), label_visibility="collapsed")
-            
-        with c_tel2:
-            if errs_v.get("usr_mail"):
-                st.markdown(f"<p class='instruction-error'>{errs_v['usr_mail']}</p>", unsafe_allow_html=True)
-            else:
-                st.markdown(f"<p class='instruction-fucsia'>{txt['input_usr_mail']}</p>", unsafe_allow_html=True)
-            correo_usr_val = st.text_input(txt["input_usr_mail"], value=st.session_state.get("verif_mail", ""), label_visibility="collapsed")
-            
-            if errs_v.get("prov_msg"):
-                st.markdown(f"<p class='instruction-error'>{errs_v['prov_msg']}</p>", unsafe_allow_html=True)
-            dominio_sel = st.selectbox(txt["lbl_dominio"], [d[0] for d in LISTA_DOMINIOS_EMAIL], label_visibility="collapsed")
+    tel_completo_guardado = datos_iniciales.get("telefono", "")
+    tel_solo_digitos = "".join([c for c in tel_completo_guardado if c.isdigit()])
+
+    # Si se activó la pre-verificación final antes del envío de correo
+    if st.session_state.get("pre_envio_resultado_activo", False):
+        st.markdown(f"### {txt['titulo_ultima_confirmacion']}")
+        st.info(txt["info_ultima_confirmacion"])
         
-        st.markdown(f"<p class='instruction-fucsia'>{txt['lbl_idioma_correo']}</p>", unsafe_allow_html=True)
-        idioma_correo_sel = st.selectbox("Idioma del correo:", [
-            "Español (Spanish)", 
-            "Inglés (English)"
-        ], label_visibility="collapsed")
+        prefijo_txt = st.session_state.temp_fin_prefijo
+        tel_limpio = st.session_state.temp_fin_tel
+        correo_final = st.session_state.temp_fin_correo
+        fecha_fase2_val = st.session_state.temp_fin_fecha
+        idioma_mail_val = st.session_state.temp_fin_idioma
         
-        st.markdown(f"<p class='instruction-fucsia'>{txt['lbl_fecha_fase2']}</p>", unsafe_allow_html=True)
-        fecha_elegida = st.selectbox("Seleccione horario:", opciones_fechas, label_visibility="collapsed")
+        msg_tel_html = txt["msg_tel_verificado"].format(prefijo=prefijo_txt, tel=tel_limpio)
+        msg_correo_html = txt["msg_correo_verificado"].format(correo=correo_final)
         
-        st.markdown(f"<p class='instruction-fucsia'>{txt['pregunta_envio_correo']}</p>", unsafe_allow_html=True)
+        st.markdown(f"""
+        <div style="background: rgba(255, 0, 127, 0.1); border: 2px solid #ff007f; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+            <p>{msg_tel_html}</p>
+            <p>{msg_correo_html}</p>
+        </div>
+        """, unsafe_allow_html=True)
         
-        col_f1, col_f2 = st.columns(2)
-        with col_f1:
-            btn_confirma_envio = st.form_submit_button(txt["btn_confirmar_y_enviar"], type="primary")
-        with col_f2:
-            btn_reset_test = st.form_submit_button(txt["btn_oops_no_conforme"])
-            
-        if btn_confirma_envio:
-            num_tel_val_limpio = num_tel_val.replace(" ", "")
-            correo_usr_val_limpio = correo_usr_val.split('@')[0] if '@' in correo_usr_val else correo_usr_val
-
-            st.session_state.verif_nombres = nombres_val
-            st.session_state.verif_apellidos = apellidos_val
-            st.session_state.verif_tel = num_tel_val_limpio
-            st.session_state.verif_mail = correo_usr_val_limpio
-
-            new_errs_v = {}
-            has_error_v = False
-
-            if not nombres_val.strip():
-                new_errs_v["nombres"] = txt["err_nombres"]
-                has_error_v = True
-            if not apellidos_val.strip():
-                new_errs_v["apellidos"] = txt["err_apellidos"]
-                has_error_v = True
-            if not correo_usr_val_limpio.strip():
-                new_errs_v["usr_mail"] = txt["err_usr_mail"]
-                has_error_v = True
-            
-            if dominio_sel == "Otro proveedor":
-                new_errs_v["prov_msg"] = txt["err_proveedor"]
-                has_error_v = True
-
-            if not num_tel_val_limpio.strip():
-                new_errs_v["num_tel"] = txt["err_campo"]
-                has_error_v = True
-            elif not num_tel_val_limpio.isdigit():
-                new_errs_v["num_tel"] = txt["err_tel"]
-                has_error_v = True
-
-            if has_error_v:
-                st.session_state.errs_verif = new_errs_v
-                st.rerun()
-            else:
-                st.session_state.errs_verif = {}
-                prefix_val = next(p[1] for p in LISTA_PREFIJOS if p[0] == prefijo_sel)
-                dom_val = next(d[1] for d in LISTA_DOMINIOS_EMAIL if d[0] == dominio_sel)
-                
-                lista_generos_mapeo = LISTA_GENEROS_ESP if current_idioma == "ESP" else LISTA_GENEROS_ENG
-                genero_val = next(g[1] for g in lista_generos_mapeo if g[0] == genero_val_sel)
-                
-                st.session_state.datos = {
-                    "nombres": nombres_val.strip().title(),
-                    "apellidos": apellidos_val.strip().title(),
-                    "preferido": preferido_val.strip().title() if preferido_val else nombres_val.strip().title(),
-                    "genero": genero_val,
-                    "telefono": f"{prefix_val} {num_tel_val_limpio}",
-                    "correo": f"{correo_usr_val_limpio}{dom_val}"
-                }
-                
-                enviar_correo_multilingue(fecha_seleccionada=fecha_elegida, idioma_preferido=idioma_correo_sel)
+        col_ec1, col_ec2 = st.columns(2)
+        with col_ec1:
+            if st.button(txt["btn_confirma_datos"], type="primary"):
+                st.session_state.pre_envio_resultado_activo = False
+                enviar_correo_multilingue(fecha_seleccionada=fecha_fase2_val, idioma_preferido=idioma_mail_val)
                 st.session_state.correo_enviado = True
                 st.rerun()
+        with col_ec2:
+            if st.button(txt["btn_corrige_datos"]):
+                st.session_state.pre_envio_resultado_activo = False
+                st.rerun()
+    else:
+        with st.form("form_verif_correo_completo"):
+            if errs_v.get("nombres"):
+                st.markdown(f"<p class='instruction-error'>{errs_v['nombres']}</p>", unsafe_allow_html=True)
+            else:
+                st.markdown(f"<p class='instruction-fucsia'>{txt['input_nombres']}:</p>", unsafe_allow_html=True)
+            nombres_val = st.text_input(txt["input_nombres"], value=st.session_state.get("verif_nombres", "") or nombre_inicial, label_visibility="collapsed")
             
-        if btn_reset_test:
-            st.session_state.modo_oops_activo = "reinicio_test"
-            st.rerun()
+            if errs_v.get("apellidos"):
+                st.markdown(f"<p class='instruction-error'>{errs_v['apellidos']}</p>", unsafe_allow_html=True)
+            else:
+                st.markdown(f"<p class='instruction-fucsia'>Apellidos / Last Name:</p>", unsafe_allow_html=True)
+            apellidos_val = st.text_input("Apellidos", value=st.session_state.get("verif_apellidos", "") or apellido_inicial, label_visibility="collapsed")
+            
+            st.markdown(f"<p class='instruction-fucsia'>{txt['input_preferido']}:</p>", unsafe_allow_html=True)
+            preferido_val = st.text_input(txt["input_preferido"], value=preferido_inicial, label_visibility="collapsed")
+            
+            st.markdown(f"<p class='instruction-fucsia'>{txt['lbl_genero']}</p>", unsafe_allow_html=True)
+            genero_actual = datos_iniciales.get("genero", "Neutro")
+            
+            lista_generos_verif = LISTA_GENEROS_ESP if current_idioma == "ESP" else LISTA_GENEROS_ENG
+            genero_label_idx = 0 if genero_actual == "Femenino" else (1 if genero_actual == "Masculino" else 2)
+            genero_val_sel = st.selectbox("Género:", [g[0] for g in lista_generos_verif], index=genero_label_idx, label_visibility="collapsed")
+
+            c_tel1, c_tel2 = st.columns(2)
+            with c_tel1:
+                prefijo_sel = st.selectbox(txt["lbl_prefijo"], [p[0] for p in LISTA_PREFIJOS])
+                if errs_v.get("num_tel"):
+                    st.markdown(f"<p class='instruction-error'>{errs_v['num_tel']}</p>", unsafe_allow_html=True)
+                else:
+                    st.markdown(f"<p class='instruction-fucsia'>{txt['input_num_tel']}</p>", unsafe_allow_html=True)
+                num_tel_val = st.text_input(txt["input_num_tel"], value=st.session_state.get("verif_tel", "") or tel_solo_digitos, label_visibility="collapsed")
+                
+            with c_tel2:
+                if errs_v.get("usr_mail"):
+                    st.markdown(f"<p class='instruction-error'>{errs_v['usr_mail']}</p>", unsafe_allow_html=True)
+                else:
+                    st.markdown(f"<p class='instruction-fucsia'>{txt['input_usr_mail']}</p>", unsafe_allow_html=True)
+                
+                # Alerta sobre la regla de limpieza del correo en pantalla final
+                st.markdown(f"<p style='color: #ffaa00; font-size: 0.90rem; font-weight: bold; margin-top: 4px; margin-bottom: 4px;'>{txt['alerta_regla_correo']}</p>", unsafe_allow_html=True)
+                
+                correo_usr_val = st.text_input(txt["input_usr_mail"], value=st.session_state.get("verif_mail", "") or usuario_correo_inicial, label_visibility="collapsed")
+                
+                if errs_v.get("prov_msg"):
+                    st.markdown(f"<p class='instruction-error'>{errs_v['prov_msg']}</p>", unsafe_allow_html=True)
+                dominio_sel = st.selectbox(txt["lbl_dominio"], [d[0] for d in LISTA_DOMINIOS_EMAIL], index=dominio_guardado_idx, label_visibility="collapsed")
+            
+            st.markdown(f"<p class='instruction-fucsia'>{txt['lbl_idioma_correo']}</p>", unsafe_allow_html=True)
+            idioma_correo_sel = st.selectbox("Idioma del correo:", [
+                "Español (Spanish)", 
+                "Inglés (English)"
+            ], label_visibility="collapsed")
+            
+            st.markdown(f"<p class='instruction-fucsia'>{txt['lbl_fecha_fase2']}</p>", unsafe_allow_html=True)
+            fecha_elegida = st.selectbox("Seleccione horario:", opciones_fechas, label_visibility="collapsed")
+            
+            st.markdown(f"<p class='instruction-fucsia'>{txt['pregunta_envio_correo']}</p>", unsafe_allow_html=True)
+            
+            col_f1, col_f2 = st.columns(2)
+            with col_f1:
+                btn_confirma_envio = st.form_submit_button(txt["btn_confirmar_y_enviar"], type="primary")
+            with col_f2:
+                btn_reset_test = st.form_submit_button(txt["btn_oops_no_conforme"])
+                
+            if btn_confirma_envio:
+                num_tel_val_limpio = num_tel_val.replace(" ", "")
+                correo_usr_val_limpio = correo_usr_val.split('@')[0] if '@' in correo_usr_val else correo_usr_val
+
+                st.session_state.verif_nombres = nombres_val
+                st.session_state.verif_apellidos = apellidos_val
+                st.session_state.verif_tel = num_tel_val_limpio
+                st.session_state.verif_mail = correo_usr_val_limpio
+
+                new_errs_v = {}
+                has_error_v = False
+
+                if not nombres_val.strip():
+                    new_errs_v["nombres"] = txt["err_nombres"]
+                    has_error_v = True
+                if not apellidos_val.strip():
+                    new_errs_v["apellidos"] = txt["err_apellidos"]
+                    has_error_v = True
+                if not correo_usr_val_limpio.strip():
+                    new_errs_v["usr_mail"] = txt["err_usr_mail"]
+                    has_error_v = True
+                
+                if dominio_sel == "Otro proveedor":
+                    new_errs_v["prov_msg"] = txt["err_proveedor"]
+                    has_error_v = True
+
+                if not num_tel_val_limpio.strip():
+                    new_errs_v["num_tel"] = txt["err_campo"]
+                    has_error_v = True
+                elif not num_tel_val_limpio.isdigit():
+                    new_errs_v["num_tel"] = txt["err_tel"]
+                    has_error_v = True
+
+                if has_error_v:
+                    st.session_state.errs_verif = new_errs_v
+                    st.rerun()
+                else:
+                    st.session_state.errs_verif = {}
+                    prefix_val = next(p[1] for p in LISTA_PREFIJOS if p[0] == prefijo_sel)
+                    dom_val = next(d[1] for d in LISTA_DOMINIOS_EMAIL if d[0] == dominio_sel)
+                    
+                    correo_final_armado = f"{correo_usr_val_limpio}{dom_val}"
+                    
+                    # Activamos la ventana previa de confirmación final antes del envío
+                    st.session_state.pre_envio_resultado_activo = True
+                    st.session_state.temp_fin_prefijo = prefix_val
+                    st.session_state.temp_fin_tel = num_tel_val_limpio
+                    st.session_state.temp_fin_correo = correo_final_armado
+                    st.session_state.temp_fin_fecha = fecha_elegida
+                    st.session_state.temp_fin_idioma = idioma_correo_sel
+                    st.rerun()
+                
+            if btn_reset_test:
+                st.session_state.modo_oops_activo = "reinicio_test"
+                st.rerun()
 
     if st.session_state.get("correo_enviado", False):
         st.success(txt["msg_correo_enviado"])

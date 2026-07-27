@@ -73,3 +73,11 @@ Abre la carpeta del proyecto en Visual Studio Code.
 Asegúrate de tener instalada la extensión Live Server en tu editor.
 
 Haz clic derecho sobre el archivo index.html y selecciona "Open with Live Server". Esto abrirá instantáneamente una pestaña en tu navegador web mostrando la estructura visual y los enlaces al diseño CSS del circo digital.
+
+<h3>🎥 Demostración en Video de Jung.AI</h3>
+<p>Mira el funcionamiento completo de la aplicación y su agente de IA:</p>
+
+<video width="100%" controls>
+  <source src="video_demos/telefono_mail.mp4" type="video/mp4">
+  Tu navegador no soporta la reproducción de videos.
+</video>

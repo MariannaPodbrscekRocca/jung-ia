@@ -274,18 +274,6 @@ LISTA_DOMINIOS_EMAIL = [
     ("@hotmail.com", "@hotmail.com"), ("Otro proveedor", "OTRO")
 ]
 
-LISTA_GENEROS_ESP = [
-    ("Femenino", "Femenino"), 
-    ("Masculino", "Masculino"), 
-    ("Neutro / No binario u otro/a/e", "Neutro")
-]
-
-LISTA_GENEROS_ENG = [
-    ("Female", "Femenino"), 
-    ("Male", "Masculino"), 
-    ("Neutral / Non-binary or other", "Neutro")
-]
-
 SERIES_MAP = {
     "Harry Potter": "Serie_Harry_Potter_BOTH",
     "Arrested Development": "Serie_Arrested_Development_BOTH",
@@ -324,7 +312,7 @@ TEXTOS = {
         "instruccion_preferido": "💡 Por favor llena este espacio con el nombre con el que prefieres que te llamemos (Opcional).",
         "instruccion_tel": "💡 Por favor ingresa tu número de teléfono sin código de país (sin espacios).",
         "instruccion_mail": "💡 Escribe tu correo electrónico.",
-        "alerta_regla_correo": "**Important Notice:** Everything after the @ symbol will be deleted and merged with the domain selected below. PLEASE MAKE SURE THAT BELOW YOU HAVE SELECTED THE RIGHT EMAIL DOMAIN",
+        "alerta_regla_correo": "**Aviso importante:** Todo lo posterior al arroba (@) se borrará y se unirá con el dominio seleccionado abajo. Asegúrate de haber seleccionado el dominio correcto.",
         "msg_ok": "✅ ¡Campo completado correctamente!",
         "err_campo": "⚠️ El número de teléfono es obligatorio y solo acepta números sin espacios.",
         "err_usr_mail": "⚠️ El usuario de correo es obligatorio y no puede estar vacío.",
@@ -336,30 +324,30 @@ TEXTOS = {
         "lbl_dominio": "Selecciona tu dominio:",
         "input_num_tel": "Número de teléfono (sin prefijo ni espacios):",
         "input_usr_mail": "Correo electrónico o usuario:",
-        "btn_registrar": "Validate Credentials and Register",
-        "btn_volver_inicio": "🌐 Volver a la Pantalla Inicial para Cambiar de Idioma",
+        "btn_registrar": "Validar Credenciales y Registrar / Validate Credentials and Register",
+        "btn_volver_inicio": "🌐 Volver a la Pantalla Inicial",
         "err_vacio_ia": "⚠️ Por favor escribe una pregunta antes de hacer clic en Ask AI.",
         "intro_filtro_series": "Este es el inicio de tu entrevista de trabajo, elige una de estas películas o series para iniciar tu proceso de selección:",
         "lbl_selecciona_prod": "Selecciona una producción audiovisual:",
         "lbl_banco": "Banco de 16 Personalidades:",
-        "btn_serie": "Confirmar Función y Ver Arquetipos 🎭",
-        "btn_oops_datos": "😕 Oops, ingresé mal mis datos, quiero regresar al menú anterior",
+        "btn_serie": "Confirmar Producción y Ver Arquetipos 🎭",
+        "btn_oops_datos": "😕 Oops, ingresé mal mis datos, quiero regresar",
         "pregunta_personaje": "{nombre}, ¿con qué personaje te identificas más dentro de la pista?",
         "btn_diagnostico": "✨ Revelar Diagnóstico Cognitivo y Arquetipo ✨",
-        "btn_oops_serie": "😕 Oops, me equivoqué, quiero cambiar de película o serie",
-        "btn_no_conozco": "😕 Oops, no conozco ninguna de estas películas o series",
+        "btn_oops_serie": "😕 Oops, me equivoqué, quiero cambiar de producción",
+        "btn_no_conozco": "😕 Oops, no conozco ninguna de estas producciones",
         "msg_no_conozco": "¡No te preocupes! Esta prueba está diseñada exclusivamente para estas cuatro producciones actuales. Sin embargo, nos encantaría tomar tus datos para avisarte en cuanto abramos opciones para más series y películas. ¿Deseas registrar tus datos para futuras convocatorias?",
         "btn_aceptar_futuras": "Sí, registrar mis datos y finalizar",
         "btn_arrepinti": "😊 ¡Me arrepentí, ahora sí quiero tomar el test!",
         "gracias_cierre": "¡Muchas gracias! Tus datos han sido guardados exitosamente en nuestra base de datos de Jung Tech. Te notificaremos cuando tengamos nuevas series y películas disponibles. ¡Hasta pronto! 🎪✨",
-        "btn_reiniciar_test": "🔄 Reiniciar Test / Restart Test",
-        "btn_oops_reconexion": "😕 Oops, no siento que este perfil me describa como ser humano y como profesional, quiero volver a empezar el test",
+        "btn_reiniciar_test": "🔄 Reiniciar Test",
+        "btn_oops_reconexion": "😕 Oops, no siento que este perfil me describa, quiero volver a empezar",
         "btn_dom_1": "Opción 1: Si mi función es {f_val}, ¿cómo es mi personalidad en el día a día?",
         "btn_dom_2": "Opción 2: ¿Qué es el MBTI y cómo impacta en tu vida profesional?",
         "btn_dom_3": "Opción 3: ¿Cómo afecta esta función tu vida diaria y rendimiento?",
-        "btn_siguiente_seccion": "➔ Siguiente Sección / Next Section",
+        "btn_siguiente_seccion": "➔ Siguiente Sección",
         "instruccion_requisito": "💡 **Requisito del Circo Digital:** Debes hacer clic y explorar las opciones 1, 2 y 3 (en el orden que prefieras) para poder desbloquear el botón y pasar a la siguiente sección.",
-        "err_falta_clicks": "⚠️ ¡Alto ahí! Te falta explorar alguna(s) de las opciones (1, 2, or/and 3) antes de continuar. Los botones que te falta presionar tienen un corazón roto (💔) al lado. Recuerda que en Jung Tech valoramos que nuestros empleados usen la IA y hagan preguntas. Si não comprendiste algo, ¡pregúntale a la IA! Este es un test laboral, dale rienda suelta a tu curiosidad. 🚀",
+        "err_falta_clicks": "⚠️ ¡Alto ahí! Te falta explorar alguna(s) de las opciones (1, 2, or/and 3) antes de continuar. Los botones que te falta presionar tienen un corazón roto (💔) al lado. Recuerda que en Jung Tech valoramos que nuestros empleados usen la IA y hagan preguntas. Si no comprendiste algo, ¡pregúntale a la IA! Este es un test laboral, dale rienda suelta a tu curiosidad. 🚀",
         "lbl_op1_sel": "Opción 1 Seleccionada",
         "lbl_op2_sel": "Opción 2 Seleccionada - Equipo de Reclutamiento",
         "lbl_op3_sel": "Opción 3 Seleccionada - Análisis IA",
@@ -386,8 +374,8 @@ TEXTOS = {
         "btn_oops_no_conforme": "😕 Oops, no estoy conforme con mi resultado (Resetear Test)",
         "msg_fin_sin_correo": "🎉 ¡Proceso finalizado con éxito! Gracias por participar en el circo digital de Jung Tech. 🚀🎪",
         "titulo_verificacion_datos": "🔍 Verificación y Confirmación de Datos del Postulante:",
-        "msg_correo_enviado": "REPORT AND PREPARATION GUIDE SUCCESSFULLY SENT TO YOUR EMAIL IN THE REQUESTED LANGUAGE! ⚠️ PLEASE CHECK YOUR SPAM FOLDER! We look forward to seeing you at your Phase 2 interview. End of process. 🚀🎪<br><br><b>THIS IS THE END OF THIS ASSESSMENT, IF YOU HAVE ALREADY RECEIVED YOUR EMAIL YOU CAN CLOSE THE PAGE, IF YOU HAVE NOT RECEIVED IT PLEASE CHECK THE Email address or username SECTION AT THE TOP TO VERIFY THAT EVERYTHING IS CORRECT AND PRESS THE CONFIRM DETAIL, LANGUAGE, DATE AND SEND EMAIL BUTTON AGAIN</b>",
-        "label_improvisada": "💡 ¿Tienes dudas? Pregúntale a la IA (💡 SI TE GUSTA LA PREGUNTA, PRESIONA TAB):",
+        "msg_correo_enviado": "¡REPORTE Y TEMARIO ENVIADOS CON ÉXITO A TU CORREO EN EL IDIOMA SOLICITADO! ⚠️ ¡POR FAVOR REVISA TU CARPETA DE SPAM! Te esperamos en la entrevista de Fase 2. Fin del proceso. 🚀🎪<br><br><b>ESTE ES EL FINAL DE ESTA EVALUACIÓN, SI YA RECIBISTE TU CORREO PUEDES CERRAR LA PÁGINA, SI NO LO HAS RECIBIDO POR FAVOR REVISA LA SECCIÓN DE CORREO EN LA PARTE SUPERIOR PARA VERIFICAR QUE TODO ESTÉ BIEN Y VUELVE A PRESIONAR EL BOTÓN DE CONFIRMACIÓN</b>",
+        "label_improvisada": "💡 ¿Tienes dudas? Pregúntale a la IA (💡 SI TE GUSTA LA PREGUNTA, PRESIONA TAB O TÍPEALA):",
         "btn_enviar_improvisada": "Ask AI 🪄",
         "cargando_txt": "⏰ Cargando...",
         "orientacion_proceso": "💡 **Reclutamiento:** ¡Hola! Este es un proceso oficial de Jung Tech 🏢. Haz preguntas y explora los botones para conocerte a fondo 🧠✨.",
@@ -401,13 +389,13 @@ TEXTOS = {
         "titulo_oops": "⚠️ ¡Has presionado un botón Oops!",
         "pref_presion_oops": "Presionaste:",
         "pregunta_reinicio": "⚠️ ¿Estás segura de que deseas reiniciar el test y volver a empezar desde cero?",
-        "btn_si_reiniciar": "Sí, reiniciar todo / Yes, restart all",
-        "btn_no_cancelar": "No, cancelar / No, cancel",
-        "btn_si_regresar": "Sí, regresar a corregir / Yes, go back",
-        "btn_no_continuar": "No, continuar / No, continue",
-        "btn_si_cambiar_pelicula": "Sí, cambiar película / Yes, change movie",
-        "btn_no_mantener": "No, mantener / No, keep",
-        "pregunta_cambiar_pelicula": "¿Deseas cambiar la película o serie seleccionada para tu proceso de selección?",
+        "btn_si_reiniciar": "Sí, reiniciar todo",
+        "btn_no_cancelar": "No, cancelar",
+        "btn_si_regresar": "Sí, regresar a corregir",
+        "btn_no_continuar": "No, continuar",
+        "btn_si_cambiar_pelicula": "Sí, cambiar producción",
+        "btn_no_mantener": "No, mantener",
+        "pregunta_cambiar_pelicula": "¿Deseas cambiar la producción seleccionada para tu proceso de selección?",
         "pregunta_regresar_datos": "¿Deseas regresar a la pantalla anterior para corregir tus datos personales de registro?"
     },
     "ENG": {
@@ -450,27 +438,27 @@ TEXTOS = {
         "input_num_tel": "Phone number (without country code or spaces):",
         "input_usr_mail": "Email address or username:",
         "btn_registrar": "Validate Credentials and Register",
-        "btn_volver_inicio": "🌐 Return to Home Screen to Change Language",
+        "btn_volver_inicio": "🌐 Return to Home Screen",
         "err_vacio_ia": "⚠️ Please type a question before clicking Ask AI.",
         "intro_filtro_series": "This is the beginning of your job interview, choose one of these movies or series to start your selection process:",
         "lbl_selecciona_prod": "Select an audiovisual production:",
         "lbl_banco": "Bank of 16 Personalities:",
         "btn_serie": "Confirm Show and View Archetypes 🎭",
-        "btn_oops_datos": "😕 Oops, I entered my info incorrectly, I want to go back to the previous menu",
+        "btn_oops_datos": "😕 Oops, I entered my info incorrectly, I want to go back",
         "pregunta_personaje": "{nombre}, which character do you identify with the most under the circus tent?",
         "btn_diagnostico": "✨ Reveal Cognitive Diagnosis and Archetype ✨",
-        "btn_oops_serie": "😕 Oops, my bad, I would like to change movie",
-        "btn_no_conozco": "😕 Oops, I don't know any of these movies or series",
+        "btn_oops_serie": "😕 Oops, my bad, I would like to change production",
+        "btn_no_conozco": "😕 Oops, I don't know any of these productions",
         "msg_no_conozco": "Don't worry! This test is exclusively designed for these four current productions. However, we would love to take your details to notify you as soon as we open options for more series and movies. Would you like to register your details for future calls?",
         "btn_aceptar_futuras": "Yes, register my details and finish",
         "btn_arrepinti": "😊 I changed my mind, now I want to take the test!",
         "gracias_cierre": "Thank you very much! Your data has been successfully saved in our Jung Tech database. We will notify you when new series and movies are available. See you soon! 🎪✨",
         "btn_reiniciar_test": "🔄 Restart Test",
-        "btn_oops_reconexion": "😕 Oops, I don't feel like this profile describes me as a human and as a professional, I want to start the test over",
+        "btn_oops_reconexion": "😕 Oops, I don't feel like this profile describes me, I want to start over",
         "btn_dom_1": "Option 1: If my function is {f_val}, what is my personality like in daily life?",
         "btn_dom_2": "Option 2: What is the MBTI and how does it impact your professional life?",
         "btn_dom_3": "Option 3: How does this function affect your daily life and performance?",
-        "btn_siguiente_seccion": "➔ Siguiente Sección / Next Section",
+        "btn_siguiente_seccion": "➔ Next Section",
         "instruccion_requisito": "💡 **Digital Circus Requirement:** You must click and explore options 1, 2, and 3 (in any order you prefer) to unlock the button and move to the next section.",
         "err_falta_clicks": "⚠️ Hold on! You still need to explore some of the options (1, 2, or/and 3) before proceeding. The buttons you still need to press have a broken heart (💔) next to them. At Jung Tech, we value our employees using AI and asking questions. If you didn't understand something, ask the AI! Remember this is a job assessment test, so let your curiosity run wild. 🚀",
         "lbl_op1_sel": "Option 1 Selected",
@@ -500,7 +488,7 @@ TEXTOS = {
         "msg_fin_sin_correo": "🎉 Process completed successfully! Thank you for participating in Jung Tech's digital circus. 🚀🎪",
         "titulo_verificacion_datos": "🔍 Verification and Confirmation of Candidate Details:",
         "msg_correo_enviado": "REPORT AND PREPARATION GUIDE SUCCESSFULLY SENT TO YOUR EMAIL IN THE REQUESTED LANGUAGE! ⚠️ PLEASE CHECK YOUR SPAM FOLDER! We look forward to seeing you at your Phase 2 interview. End of process. 🚀🎪<br><br><b>THIS IS THE END OF THIS ASSESSMENT, IF YOU HAVE ALREADY RECEIVED YOUR EMAIL YOU CAN CLOSE THE PAGE, IF YOU HAVE NOT RECEIVED IT PLEASE CHECK THE Email address or username SECTION AT THE TOP TO VERIFY THAT EVERYTHING IS CORRECT AND PRESS THE CONFIRM DETAIL, LANGUAGE, DATE AND SEND EMAIL BUTTON AGAIN</b>",
-        "label_improvisada": "💡 Any questions? Ask the AI (💡 IF YOU LIKE THE QUESTION, PRESS TAB):",
+        "label_improvisada": "💡 Any questions? Ask the AI (💡 IF YOU LIKE THE QUESTION, PRESS TAB OR TYPE IT):",
         "btn_enviar_improvisada": "Ask AI 🪄",
         "cargando_txt": "⏰ Loading...",
         "orientacion_proceso": "💡 **Recruitment:** Hello! This is an official Jung Tech hiring process 🏢. Ask questions and explore buttons to get to know yourself deeply 🧠✨.",
@@ -588,7 +576,6 @@ idioma_choice = st.sidebar.selectbox("🌐 Select Language / Seleccionar Idioma:
 current_idioma = "ESP" if idioma_choice == "Español" else "ENG"
 txt = TEXTOS[current_idioma]
 
-# ANCLAJE SUPERIOR Y TÍTULO PRINCIPAL
 st.markdown('<div id="top-app"></div>', unsafe_allow_html=True)
 st.title("🎪 JUNG.AI: THE CIRCUS OF PERSONALITIES 🎪")
 st.markdown(f"<p class='subtitle-circus'>{txt['subtitulo']}</p>", unsafe_allow_html=True)
@@ -1506,6 +1493,10 @@ elif st.session_state.step == "resultado" and not st.session_state.get("modo_oop
                     
                     correo_final_armado = f"{correo_usr_val_limpio}{dom_val}"
                     
+                    # Actualizamos en tiempo real el state de datos para que la función SMTP tome el último correo y teléfono modificados
+                    st.session_state.datos["correo"] = correo_final_armado
+                    st.session_state.datos["telefono"] = f"{prefix_val} {num_tel_val_limpio}"
+
                     st.session_state.pre_envio_resultado_activo = True
                     st.session_state.temp_fin_prefijo = prefix_val
                     st.session_state.temp_fin_tel = num_tel_val_limpio

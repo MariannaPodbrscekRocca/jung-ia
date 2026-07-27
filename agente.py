@@ -238,7 +238,6 @@ CSV_PATH = "matriz_personalidades.csv"
 
 @st.cache_data
 def cargar_matriz_completa():
-    """Carga y procesa el archivo CSV local con Pandas asegurando la lectura íntegra de celdas."""
     if os.path.exists(CSV_PATH):
         df = pd.read_csv(CSV_PATH).fillna("[Sin Nombre]")
         if len(df) < 16:
@@ -278,7 +277,12 @@ LISTA_GENEROS_ENG = [
     ("Neutral / Non-binary or other", "Neutro")
 ]
 
-PRODUCCIONES_LISTA = ["• Harry Potter", "• Arrested Development", "• South Park", "• Breaking Bad"]
+SERIES_MAP = {
+    "Harry Potter": "Serie_Harry_Potter_BOTH",
+    "Arrested Development": "Serie_Arrested_Development_BOTH",
+    "South Park": "Serie_South_Park_BOTH",
+    "Breaking Bad": "Serie_Breaking_Bad_BOTH"
+}
 
 # ==============================================================================
 # 4. DICCIONARIO BILINGÜE Y PREGUNTAS SUGERIDAS DINÁMICAS (POR FASE)
@@ -377,7 +381,25 @@ TEXTOS = {
         "btn_enviar_improvisada": "Ask AI 🪄",
         "cargando_txt": "⏰ Cargando...",
         "orientacion_proceso": "💡 **Reclutamiento:** ¡Hola! Este es un proceso oficial de Jung Tech 🏢. Haz preguntas y explora los botones para conocerte a fondo 🧠✨.",
-        "firma_autor": "Página web diseñada por: <b>Marianna Podbrscek Rocca</b>"
+        "firma_autor": "Página web diseñada por: <b>Marianna Podbrscek Rocca</b>",
+        # Textos de última confirmación y Oops en ESP
+        "titulo_ultima_confirmacion": "🔍 Última Confirmación de Datos",
+        "info_ultima_confirmacion": "Por favor revisa que tus datos de contacto sean correctos antes de continuar:",
+        "msg_tel_verificado": "📞 Teléfono verificado: Hemos borrado los espacios en blanco. El prefijo de país es <b>{prefijo}</b> y este es tu número de teléfono: <b>{tel}</b>.",
+        "msg_correo_verificado": "📩 Correo verificado: Hemos borrado lo que va después del arroba en el cambio de arriba. Tu correo final quedó así: <b style='color: #00ffcc;'>{correo}</b>",
+        "btn_confirma_datos": "🚀 Sí, mis datos están bien, continuar",
+        "btn_corrige_datos": "✏️ No, quiero corregir algo",
+        "titulo_oops": "⚠️ ¡Has presionado un botón Oops!",
+        "pref_presion_oops": "Presionaste:",
+        "pregunta_reinicio": "⚠️ ¿Estás segura de que deseas reiniciar el test y volver a empezar desde cero?",
+        "btn_si_reiniciar": "Sí, reiniciar todo / Yes, restart all",
+        "btn_no_cancelar": "No, cancelar / No, cancel",
+        "btn_si_regresar": "Sí, regresar a corregir / Yes, go back",
+        "btn_no_continuar": "No, continuar / No, continue",
+        "btn_si_cambiar_pelicula": "Sí, cambiar película / Yes, change movie",
+        "btn_no_mantener": "No, mantener / No, keep",
+        "pregunta_cambiar_pelicula": "¿Deseas cambiar la película o serie seleccionada para tu proceso de selección?",
+        "pregunta_regresar_datos": "¿Deseas regresar a la pantalla anterior para corregir tus datos personales de registro?"
     },
     "ENG": {
         "subtitulo": "Intelligent Recruitment and Psychometric Diagnosis System according to Carl Jung's model",
@@ -473,7 +495,25 @@ TEXTOS = {
         "btn_enviar_improvisada": "Ask AI 🪄",
         "cargando_txt": "⏰ Loading...",
         "orientacion_proceso": "💡 **Recruitment:** Hello! This is an official Jung Tech hiring process 🏢. Ask questions and explore buttons to get to know yourself deeply 🧠✨.",
-        "firma_autor": "Website designed by: <b>Marianna Podbrscek Rocca</b>"
+        "firma_autor": "Website designed by: <b>Marianna Podbrscek Rocca</b>",
+        # Textos de última confirmación y Oops en ENG
+        "titulo_ultima_confirmacion": "🔍 Final Data Confirmation",
+        "info_ultima_confirmacion": "Please review that your contact details are correct before proceeding:",
+        "msg_tel_verificado": "📞 Verified Phone: We have removed blank spaces. The country prefix is <b>{prefijo}</b> and this is your phone number: <b>{tel}</b>.",
+        "msg_correo_verificado": "📩 Verified Email: We have cleared anything after the @ symbol from your input above. Your final email is configured as: <b style='color: #00ffcc;'>{correo}</b>",
+        "btn_confirma_datos": "🚀 Yes, my data is correct, continue",
+        "btn_corrige_datos": "✏️ No, I want to fix something",
+        "titulo_oops": "⚠️ You have pressed an Oops button!",
+        "pref_presion_oops": "You pressed:",
+        "pregunta_reinicio": "⚠️ Are you sure you want to restart the test and start over from scratch?",
+        "btn_si_reiniciar": "Yes, restart all",
+        "btn_no_cancelar": "No, cancel",
+        "btn_si_regresar": "Yes, go back to fix",
+        "btn_no_continuar": "No, continue",
+        "btn_si_cambiar_pelicula": "Yes, change movie",
+        "btn_no_mantener": "No, keep",
+        "pregunta_cambiar_pelicula": "Do you want to change the movie or series selected for your selection process?",
+        "pregunta_regresar_datos": "Do you want to go back to the previous screen to correct your personal registration details?"
     }
 }
 
@@ -495,13 +535,6 @@ PREGUNTAS_SUGERIDAS = {
         "loop": "How can I healthily break free from this cognitive loop at work?",
         "arquetipo": "Can I transcend this archetype if my vocation evolves in the future?"
     }
-}
-
-SERIES_MAP = {
-    "Harry Potter": "Serie_Harry_Potter_BOTH",
-    "Arrested Development": "Serie_Arrested_Development_BOTH",
-    "South Park": "Serie_South_Park_BOTH",
-    "Breaking Bad": "Serie_Breaking_Bad_BOTH"
 }
 
 # ==============================================================================
@@ -541,25 +574,12 @@ if "errs_reg" not in st.session_state:
 if "errs_verif" not in st.session_state:
     st.session_state.errs_verif = {}
 
-# TÍTULO PRINCIPAL Y ENCABEZADO OBLIGATORIO AL TOPE DE CADA PÁGINA
-st.title("🎪 JUNG.AI: THE CIRCUS OF PERSONALITIES 🎪")
-st.markdown(f"<p class='subtitle-circus'>{TEXTOS['ESP']['subtitulo'] if 'ESP' in TEXTOS else ''}</p>", unsafe_allow_html=True)
-
-def cambiar_idioma():
-    """Reinicia los estados de error al cambiar de idioma."""
-    st.session_state.errs_reg = {}
-    st.session_state.errs_verif = {}
-    st.session_state.pre_registro_activo = False
-    st.session_state.modo_oops_activo = None
-    for f in ["funcion_dominante", "funcion_auxiliar", "funcion_terciaria", "funcion_inferior", "loop", "arquetipo"]:
-        if f"clics_{f}" in st.session_state:
-            st.session_state[f"clics_{f}"] = set()
-
-idioma_choice = st.sidebar.selectbox("🌐 Select Language / Seleccionar Idioma:", ["English", "Español"], on_change=cambiar_idioma)
+idioma_choice = st.sidebar.selectbox("🌐 Select Language / Seleccionar Idioma:", ["English", "Español"])
 current_idioma = "ESP" if idioma_choice == "Español" else "ENG"
 txt = TEXTOS[current_idioma]
 
-# Actualizamos el subtítulo según el idioma seleccionado
+# TÍTULO PRINCIPAL Y SUBTÍTULO LIMPIO (SIN DUPLICAR)
+st.title("🎪 JUNG.AI: THE CIRCUS OF PERSONALITIES 🎪")
 st.markdown(f"<p class='subtitle-circus'>{txt['subtitulo']}</p>", unsafe_allow_html=True)
 st.markdown("---")
 
@@ -606,12 +626,8 @@ if "eval" in st.session_state and "personaje_idx" in st.session_state:
 # 6. FUNCIÓN DE CONSULTA A LA IA (CONSCIENCIA DUAL DE POSTULANTE + LUZ Y SOMBRA)
 # ==============================================================================
 def consultar_ia_orientada(nombre_usr, mbti_val, area_ti, func_nombre, func_desc, origen="equipo", pregunta_usuario=""):
-    """
-    Gestiona las consultas a la IA integrando la consciencia dual con el cliente OpenAI oficial.
-    """
     with st.spinner(txt["cargando_txt"]):
         resp_texto = ""
-        
         personaje_actual = st.session_state.eval.get("personaje", "Desconocido")
         serie_actual = st.session_state.eval.get("serie_nombre", "producción seleccionada")
 
@@ -673,7 +689,6 @@ def consultar_ia_orientada(nombre_usr, mbti_val, area_ti, func_nombre, func_desc
         return resp_texto
 
 def generar_fechas_tentativas():
-    """Genera y congela en el Session State 5 fechas hábiles para que no cambien al recargar."""
     if "fechas_fase2" not in st.session_state:
         fechas = []
         actual = datetime.now() + timedelta(days=1)
@@ -688,7 +703,6 @@ def generar_fechas_tentativas():
     return st.session_state.fechas_fase2
 
 def obtener_termino_genero(genero):
-    """Retorna los sufijos gramaticales según el género."""
     if genero == "Femenino":
         return {"candidat": "candidata", "estimad": "Estimada"}
     elif genero == "Masculino":
@@ -697,7 +711,6 @@ def obtener_termino_genero(genero):
         return {"candidat": "canditade", "estimad": "Estimadx"}
 
 def enviar_correo_multilingue(fecha_seleccionada="", idioma_preferido="Español"):
-    """Envía el correo SMTP usando exactamente la fecha elegida por el usuario."""
     datos_postulante = st.session_state.get("datos", {})
     correo_destino = datos_postulante.get("correo", "")
     nombre_postulante = datos_postulante.get("nombres", "Postulante")
@@ -711,14 +724,8 @@ def enviar_correo_multilingue(fecha_seleccionada="", idioma_preferido="Español"
         return
 
     terms = obtener_termino_genero(genero_postulante)
-    
-    remitente = os.getenv("MAIL_USER", "")
-    if not remitente and "MAIL_USER" in st.secrets:
-        remitente = st.secrets["MAIL_USER"]
-
-    password = os.getenv("MAIL_PASSWORD", "")
-    if not password and "MAIL_PASSWORD" in st.secrets:
-        password = st.secrets["MAIL_PASSWORD"]
+    remitente = os.getenv("MAIL_USER", "") or st.secrets.get("MAIL_USER", "")
+    password = os.getenv("MAIL_PASSWORD", "") or st.secrets.get("MAIL_PASSWORD", "")
 
     if not remitente or not password:
         st.error("⚠️ Error de configuración: MAIL_USER o MAIL_PASSWORD no están definidos en los Secrets.")
@@ -798,7 +805,6 @@ def enviar_correo_multilingue(fecha_seleccionada="", idioma_preferido="Español"
 # 7. RENDERIZADOR DE FASES COGNITIVAS (CONTROL DE CLICS OBLIGATORIOS)
 # ==============================================================================
 def renderizar_fase_cognitiva(titulo_fase, f_val, f_desc, clave_fase, siguiente_paso_tuple):
-    """Renderiza las fases cognitivas exigiendo la exploración obligatoria de las 3 opciones."""
     ev = st.session_state.eval
     usr_completo = st.session_state.datos.get("preferido", "Postulante")
     usr = usr_completo.split()[0] if usr_completo else "Postulante"
@@ -844,41 +850,16 @@ def renderizar_fase_cognitiva(titulo_fase, f_val, f_desc, clave_fase, siguiente_
     key_lang = "ESP" if current_idioma == "ESP" else "ENG"
     pregunta_sugerida_actual = PREGUNTAS_SUGERIDAS[key_lang].get(clave_fase, "What is my selected character?")
     
-    # Opción 1 (Tu estructura original intacta)
     if st.button(b1, key=f"{clave_fase}_b1", type="primary" if "opcion_1" in st.session_state[key_clics] else "secondary"):
         toggle_accion("opcion_1")
     if st.session_state.accion_activa == f"{clave_fase}_opcion_1":
         personaje_actual = ev.get('personaje', 'Character')
         
         if current_idioma == "ESP":
-            if clave_fase == "funcion_dominante":
-                muletilla = "déjame adivinar 🔮"
-            elif clave_fase == "funcion_auxiliar":
-                muletilla = "estoy seguro 🧠"
-            elif clave_fase == "funcion_terciaria":
-                muletilla = "puedo anticipar 👁️"
-            elif clave_fase == "funcion_inferior":
-                muletilla = "revelando el misterio 🎭"
-            elif clave_fase == "loop":
-                muletilla = "analizando tu bucle 🔄"
-            else:
-                muletilla = "tu arquetipo señala 🌟"
-                
+            muletilla = "déjame adivinar 🔮" if clave_fase == "funcion_dominante" else ("estoy seguro 🧠" if clave_fase == "funcion_auxiliar" else "puedo anticipar 👁️")
             texto_op1 = f"🧠 Tu concepto es **{f_val}**, lo cual significa que *{f_desc}*. Y {muletilla} como **{personaje_actual}** valoras profundamente esta perspectiva en tu día a día como **{ev.get('mbti')}** ⚡."
         else:
-            if clave_fase == "funcion_dominante":
-                muletilla = "let me guess 🔮"
-            elif clave_fase == "funcion_auxiliar":
-                muletilla = "I'm certain 🧠"
-            elif clave_fase == "funcion_terciaria":
-                muletilla = "I can foresee 👁️"
-            elif clave_fase == "funcion_inferior":
-                muletilla = "unveiling the mystery 🎭"
-            elif clave_fase == "loop":
-                muletilla = "analyzing your loop 🔄"
-            else:
-                muletilla = "your archetype reveals 🌟"
-                
+            muletilla = "let me guess 🔮" if clave_fase == "funcion_dominante" else ("I'm certain 🧠" if clave_fase == "funcion_auxiliar" else "I can foresee 👁️")
             texto_op1 = f"🧠 Your concept is **{f_val}**, meaning that *{f_desc}*. Plus, {muletilla} as **{personaje_actual}** you deeply value this perspective in your daily life as an **{ev.get('mbti')}** ⚡."
 
         st.markdown(f"<div class='box-opcion-1'><b>[{txt['lbl_op1_sel']}]:</b><br>{texto_op1}</div>", unsafe_allow_html=True)
@@ -890,16 +871,11 @@ def renderizar_fase_cognitiva(titulo_fase, f_val, f_desc, clave_fase, siguiente_
             st.markdown("<div style='margin-top: 25px;'></div>", unsafe_allow_html=True)
             btn_enviar_ia1 = st.button(txt["btn_enviar_improvisada"], key=f"{clave_fase}_btn_lib_1", type="primary")
 
-        if st.session_state.get(f"{clave_fase}_alerta_vacia_1", False):
-            st.markdown(f"<div class='alert-grande-roja'>{txt['err_vacio_ia']}</div>", unsafe_allow_html=True)
-
         if btn_enviar_ia1:
             texto_a_enviar = pregunta_libre_1.strip() if pregunta_libre_1.strip() else pregunta_sugerida_actual
-            st.session_state[f"{clave_fase}_alerta_vacia_1"] = False
             resp_libre = consultar_ia_orientada(usr, ev.get('mbti'), ev.get('area_ti'), f_val, f_desc, origen="libre", pregunta_usuario=texto_a_enviar)
             st.info(f"**Jung.AI:** {resp_libre}")
 
-    # Opción 2
     if st.button(b2, key=f"{clave_fase}_b2", type="primary" if "opcion_2" in st.session_state[key_clics] else "secondary"):
         toggle_accion("opcion_2")
     if st.session_state.accion_activa == f"{clave_fase}_opcion_2":
@@ -913,16 +889,11 @@ def renderizar_fase_cognitiva(titulo_fase, f_val, f_desc, clave_fase, siguiente_
             st.markdown("<div style='margin-top: 25px;'></div>", unsafe_allow_html=True)
             btn_enviar_ia2 = st.button(txt["btn_enviar_improvisada"], key=f"{clave_fase}_btn_lib_2", type="primary")
 
-        if st.session_state.get(f"{clave_fase}_alerta_vacia_2", False):
-            st.markdown(f"<div class='alert-grande-roja'>{txt['err_vacio_ia']}</div>", unsafe_allow_html=True)
-
         if btn_enviar_ia2:
             texto_a_enviar = pregunta_libre_2.strip() if pregunta_libre_2.strip() else pregunta_sugerida_actual
-            st.session_state[f"{clave_fase}_alerta_vacia_2"] = False
             resp_libre = consultar_ia_orientada(usr, ev.get('mbti'), ev.get('area_ti'), f_val, f_desc, origen="libre", pregunta_usuario=texto_a_enviar)
             st.info(f"**Jung.AI:** {resp_libre}")
 
-    # Opción 3 (Conectada a la IA)
     if st.button(b3, key=f"{clave_fase}_b3", type="primary" if "opcion_3" in st.session_state[key_clics] else "secondary"):
         toggle_accion("opcion_3")
     if st.session_state.accion_activa == f"{clave_fase}_opcion_3":
@@ -936,12 +907,8 @@ def renderizar_fase_cognitiva(titulo_fase, f_val, f_desc, clave_fase, siguiente_
             st.markdown("<div style='margin-top: 25px;'></div>", unsafe_allow_html=True)
             btn_enviar_ia3 = st.button(txt["btn_enviar_improvisada"], key=f"{clave_fase}_btn_lib_3", type="primary")
 
-        if st.session_state.get(f"{clave_fase}_alerta_vacia_3", False):
-            st.markdown(f"<div class='alert-grande-roja'>{txt['err_vacio_ia']}</div>", unsafe_allow_html=True)
-
         if btn_enviar_ia3:
             texto_a_enviar = pregunta_libre_3.strip() if pregunta_libre_3.strip() else pregunta_sugerida_actual
-            st.session_state[f"{clave_fase}_alerta_vacia_3"] = False
             resp_libre = consultar_ia_orientada(usr, ev.get('mbti'), ev.get('area_ti'), f_val, f_desc, origen="libre", pregunta_usuario=texto_a_enviar)
             st.info(f"**Jung.AI:** {resp_libre}")
 
@@ -951,7 +918,6 @@ def renderizar_fase_cognitiva(titulo_fase, f_val, f_desc, clave_fase, siguiente_
         st.markdown(f"<div class='alert-grande-roja'>{txt['err_falta_clicks']}</div>", unsafe_allow_html=True)
 
     col_inf_1, col_inf_2 = st.columns([3, 1])
-    
     with col_inf_1:
         if st.button(txt["btn_siguiente_seccion"], type="primary", key=f"{clave_fase}_btn_sig"):
             if {"opcion_1", "opcion_2", "opcion_3"}.issubset(st.session_state[key_clics]):
@@ -977,14 +943,13 @@ def renderizar_fase_cognitiva(titulo_fase, f_val, f_desc, clave_fase, siguiente_
 # 8. MÁQUINA DE ESTADOS PRINCIPAL (FLUJO PASO A PASO DE LA APLICACIÓN)
 # ==============================================================================
 
-# Si se activó un botón OOPS durante el test, mostramos su ventana dedicada con confirmación detallada
 if st.session_state.get("modo_oops_activo"):
     oops_tipo = st.session_state.modo_oops_activo
     st.markdown('<div class="circus-terminal-box">', unsafe_allow_html=True)
-    st.markdown(f"<h2>⚠️ ¡Has presionado un botón Oops!</h2>", unsafe_allow_html=True)
+    st.markdown(f"<h2>{txt['titulo_oops']}</h2>", unsafe_allow_html=True)
     
     if oops_tipo == "no_conozco":
-        st.markdown(f"<div class='alert-grande-roja'>Presionaste: <b>\"{txt['btn_no_conozco']}\"</b></div>", unsafe_allow_html=True)
+        st.markdown(f"<div class='alert-grande-roja'>{txt['pref_presion_oops']} <b>\"{txt['btn_no_conozco']}\"</b></div>", unsafe_allow_html=True)
         st.warning(txt["msg_no_conozco"])
         col_o1, col_o2 = st.columns(2)
         with col_o1:
@@ -1000,49 +965,48 @@ if st.session_state.get("modo_oops_activo"):
                 st.rerun()
                 
     elif oops_tipo == "oops_datos":
-        st.markdown(f"<div class='alert-grande-roja'>Presionaste: <b>\"{txt['btn_oops_datos']}\"</b></div>", unsafe_allow_html=True)
-        st.info("¿Deseas regresar a la pantalla anterior para corregir tus datos personales de registro?")
+        st.markdown(f"<div class='alert-grande-roja'>{txt['pref_presion_oops']} <b>\"{txt['btn_oops_datos']}\"</b></div>", unsafe_allow_html=True)
+        st.info(txt["pregunta_regresar_datos"])
         col_od1, col_od2 = st.columns(2)
         with col_od1:
-            if st.button("Sí, regresar a corregir / Yes, go back", type="primary", key="oops_regresar_datos"):
+            if st.button(txt["btn_si_regresar"], type="primary", key="oops_regresar_datos"):
                 st.session_state.modo_oops_activo = None
                 st.session_state.step = "captura_datos"
                 st.rerun()
         with col_od2:
-            if st.button("No, continuar / No, continue", key="oops_seguir_datos"):
+            if st.button(txt["btn_no_continuar"], key="oops_seguir_datos"):
                 st.session_state.modo_oops_activo = None
                 st.rerun()
                 
     elif oops_tipo == "oops_serie":
-        st.markdown(f"<div class='alert-grande-roja'>Presionaste: <b>\"{txt['btn_oops_serie']}\"</b></div>", unsafe_allow_html=True)
-        st.info("¿Deseas cambiar la película o serie seleccionada para tu proceso de selección?")
+        st.markdown(f"<div class='alert-grande-roja'>{txt['pref_presion_oops']} <b>\"{txt['btn_oops_serie']}\"</b></div>", unsafe_allow_html=True)
+        st.info(txt["pregunta_cambiar_pelicula"])
         col_os1, col_os2 = st.columns(2)
         with col_os1:
-            if st.button("Sí, cambiar película / Yes, change movie", type="primary", key="oops_cambiar_pelicula"):
+            if st.button(txt["btn_si_cambiar_pelicula"], type="primary", key="oops_cambiar_pelicula"):
                 st.session_state.modo_oops_activo = None
                 st.session_state.step = "seleccion_serie"
                 st.rerun()
         with col_os2:
-            if st.button("No, mantener / No, keep", key="oops_mantener_pelicula"):
+            if st.button(txt["btn_no_mantener"], key="oops_mantener_pelicula"):
                 st.session_state.modo_oops_activo = None
                 st.rerun()
                 
     elif oops_tipo == "reinicio_test":
-        st.markdown(f"<div class='alert-grande-roja'>Presionaste: <b>\"{txt['btn_oops_reconexion']}\"</b></div>", unsafe_allow_html=True)
-        st.warning("⚠️ ¿Estás segura de que deseas reiniciar el test y volver a empezar desde cero?")
+        st.markdown(f"<div class='alert-grande-roja'>{txt['pref_presion_oops']} <b>\"{txt['btn_oops_reconexion']}\"</b></div>", unsafe_allow_html=True)
+        st.warning(txt["pregunta_reinicio"])
         col_or1, col_or2 = st.columns(2)
         with col_or1:
-            if st.button("Sí, reiniciar todo / Yes, restart all", type="primary", key="oops_confirma_reinicio"):
+            if st.button(txt["btn_si_reiniciar"], type="primary", key="oops_confirma_reinicio"):
                 st.session_state.clear()
                 st.rerun()
         with col_or2:
-            if st.button("No, cancelar / No, cancel", key="oops_cancela_reinicio"):
+            if st.button(txt["btn_no_cancelar"], key="oops_cancela_reinicio"):
                 st.session_state.modo_oops_activo = None
                 st.rerun()
                 
     st.markdown('</div>', unsafe_allow_html=True)
 
-# Estado 1: Pantalla de Bienvenida inicial
 elif st.session_state.step == "bienvenida":
     st.markdown('<div class="circus-terminal-box">', unsafe_allow_html=True)
     st.markdown(f"### {txt['titulo_bienvenida']}")
@@ -1053,7 +1017,6 @@ elif st.session_state.step == "bienvenida":
         st.rerun()
     st.markdown('</div>', unsafe_allow_html=True)
 
-# Estado 2: Captura de Datos del Candidato
 elif st.session_state.step == "captura_datos":
     st.markdown('<div class="circus-terminal-box">', unsafe_allow_html=True)
     st.subheader(txt["confirmar_datos"])
@@ -1064,7 +1027,6 @@ elif st.session_state.step == "captura_datos":
     val_tel = st.session_state.get("val_num_tel", "")
     val_mail = st.session_state.get("val_usr_mail", "")
 
-    # Autodetección de dominio si el usuario escribe el correo completo en el input
     dominio_predeterminado_idx = 0
     if "@" in val_mail:
         partes_correo = val_mail.split("@")
@@ -1076,30 +1038,32 @@ elif st.session_state.step == "captura_datos":
                 break
 
     if st.session_state.get("pre_registro_activo", False):
-        # Pantalla de última confirmación inteligente antes de registrar
-        st.markdown("### 🔍 Última Confirmación de Datos")
-        st.info("Por favor revisa que tus datos de contacto sean correctos antes de continuar:")
+        st.markdown(f"### {txt['titulo_ultima_confirmacion']}")
+        st.info(txt["info_ultima_confirmacion"])
         
         prefijo_txt = st.session_state.temp_prefijo
         tel_limpio = st.session_state.temp_tel
         correo_final = st.session_state.temp_correo
         
+        msg_tel_html = txt["msg_tel_verificado"].format(prefijo=prefijo_txt, tel=tel_limpio)
+        msg_correo_html = txt["msg_correo_verificado"].format(correo=correo_final)
+        
         st.markdown(f"""
         <div style="background: rgba(255, 0, 127, 0.1); border: 2px solid #ff007f; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
-            <p><b>📞 Teléfono verificado:</b> Hemos borrado los espacios en blanco. El prefijo de país es <b>{prefijo_txt}</b> y este es tu número de teléfono: <b>{tel_limpio}</b>.</p>
-            <p><b>📩 Correo verificado:</b> Hemos borrado lo que va después del arroba en el cambio de arriba. Tu correo final quedó así: <b style="color: #00ffcc;">{correo_final}</b></p>
+            <p>{msg_tel_html}</p>
+            <p>{msg_correo_html}</p>
         </div>
         """, unsafe_allow_html=True)
         
         col_conf1, col_conf2 = st.columns(2)
         with col_conf1:
-            if st.button("🚀 Sí, mis datos están bien, continuar", type="primary"):
+            if st.button(txt["btn_confirma_datos"], type="primary"):
                 st.session_state.datos = st.session_state.temp_datos_completos
                 st.session_state.pre_registro_activo = False
                 st.session_state.step = "seleccion_serie"
                 st.rerun()
         with col_conf2:
-            if st.button("✏️ No, quiero corregir algo"):
+            if st.button(txt["btn_corrige_datos"]):
                 st.session_state.pre_registro_activo = False
                 st.rerun()
     else:
@@ -1222,16 +1186,14 @@ elif st.session_state.step == "captura_datos":
 
     st.markdown('</div>', unsafe_allow_html=True)
 
-# Estado 3: Selección de la Producción Audiovisual (Series / Películas)
 elif st.session_state.step == "seleccion_serie" and not st.session_state.get("modo_oops_activo"):
     usr_completo = st.session_state.datos.get("preferido", "Postulante")
     usr = usr_completo.split()[0] if usr_completo else "Postulante"
     st.markdown('<div class="circus-terminal-box">', unsafe_allow_html=True)
     st.markdown(f"### 🎪 {txt['badge_postulante']}, `{usr}`")
     st.subheader(txt["intro_filtro_series"])
-    for prod in PRODUCCIONES_LISTA:
-        st.markdown(f"**{prod}**")
-        
+    
+    # Menú desplegable limpio sin viñetas de texto estáticas
     serie_sel = st.selectbox(txt["lbl_selecciona_prod"], list(SERIES_MAP.keys()))
     
     col_ss1, col_ss2, col_ss3 = st.columns([2, 2, 2])
@@ -1252,7 +1214,6 @@ elif st.session_state.step == "seleccion_serie" and not st.session_state.get("mo
 
     st.markdown('</div>', unsafe_allow_html=True)
 
-# Estado 4: Selección del Personaje del Banco del CSV
 elif st.session_state.step == "seleccion_personaje" and not st.session_state.get("modo_oops_activo"):
     usr_completo = st.session_state.datos.get("preferido", "Postulante")
     usr = usr_completo.split()[0] if usr_completo else "Postulante"
@@ -1323,7 +1284,6 @@ elif st.session_state.step == "seleccion_personaje" and not st.session_state.get
 
     st.markdown('</div>', unsafe_allow_html=True)
 
-# Estados de Fases Cognitivas
 elif st.session_state.step == "funcion_dominante" and not st.session_state.get("modo_oops_activo"):
     ev = st.session_state.eval
     renderizar_fase_cognitiva(txt["fase_1"], ev.get('f_dom', 'N/A'), ev.get('f_dom_d', 'N/A'), "funcion_dominante", ("funcion_auxiliar", txt["fase_2"]))
@@ -1348,7 +1308,6 @@ elif st.session_state.step == "arquetipo" and not st.session_state.get("modo_oop
     ev = st.session_state.eval
     renderizar_fase_cognitiva(txt["fase_6"], ev.get('arquetipo', 'N/A'), ev.get('arquetipo_d', 'N/A'), "arquetipo", ("resultado", txt["titulo_resultado"]))
 
-# Estado 11: Resultado Final y Envío de Correo SMTP
 elif st.session_state.step == "resultado" and not st.session_state.get("modo_oops_activo"):
     ev = st.session_state.eval
     usr_completo = st.session_state.datos.get("preferido", "Postulante")

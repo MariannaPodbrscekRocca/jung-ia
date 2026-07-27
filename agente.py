@@ -314,8 +314,8 @@ TEXTOS = {
         "instruccion_apellidos": "💡 Por favor llena este espacio con tus apellidos.",
         "instruccion_preferido": "💡 Por favor llena este espacio con el nombre con el que prefieres que te llamemos (Opcional).",
         "instruccion_tel": "💡 Por favor ingresa tu número de teléfono sin código de país (sin espacios).",
-        "instruccion_mail": "💡 Escribe tu correo. Si escribes texto después del '@', se borrará automáticamente y se unirá con el dominio de abajo.",
-        "alerta_regla_correo": "💡 **Aviso importante:** Todo lo que va después del arroba (@) se borrará y se unirá con el dominio seleccionado abajo. ¿Estás de acuerdo con eso?",
+        "instruccion_mail": "💡 Escribe tu correo electrónico.",
+        "alerta_regla_correo": "**Important Notice:** Everything after the @ symbol will be deleted and merged with the domain selected below. PLEASE MAKE SURE THAT BELOW YOU HAVE SELECTED THE RIGHT EMAIL DOMAIN",
         "msg_ok": "✅ ¡Campo completado correctamente!",
         "err_campo": "⚠️ El número de teléfono es obligatorio y solo acepta números sin espacios.",
         "err_usr_mail": "⚠️ El usuario de correo es obligatorio y no puede estar vacío.",
@@ -377,17 +377,17 @@ TEXTOS = {
         "btn_oops_no_conforme": "😕 Oops, no estoy conforme con mi resultado (Resetear Test)",
         "msg_fin_sin_correo": "🎉 ¡Proceso finalizado con éxito! Gracias por participar en el circo digital de Jung Tech. 🚀🎪",
         "titulo_verificacion_datos": "🔍 Verificación y Confirmación de Datos del Postulante:",
-        "msg_correo_enviado": "🎉 ¡Reporte y temario enviados con éxito a tu correo en el idioma solicitado! ⚠️ **¡POR FAVOR REVISA TU CARPETA DE SPAM!** Te esperamos en la entrevista de Fase 2. Fin del proceso. 🚀🎪",
-        "label_improvisada": "💡 ¿Tienes dudas? Pregúntale a la IA:",
+        "msg_correo_enviado": "REPORT AND PREPARATION GUIDE SUCCESSFULLY SENT TO YOUR EMAIL IN THE REQUESTED LANGUAGE! ⚠️ PLEASE CHECK YOUR SPAM FOLDER! We look forward to seeing you at your Phase 2 interview. End of process. 🚀🎪<br><br><b>THIS IS THE END OF THIS ASSESSMENT, IF YOU HAVE ALREADY RECEIVED YOUR EMAIL YOU CAN CLOSE THE PAGE, IF YOU HAVE NOT RECEIVED IT PLEASE CHECK THE Email address or username SECTION AT THE TOP TO VERIFY THAT EVERYTHING IS CORRECT AND PRESS THE CONFIRM DETAIL, LANGUAGE, DATE AND SEND EMAIL BUTTON AGAIN</b>",
+        "label_improvisada": "💡 ¿Tienes dudas? Pregúntale a la IA (💡 SI TE GUSTA LA PREGUNTA, PRESIONA TAB):",
         "btn_enviar_improvisada": "Ask AI 🪄",
         "cargando_txt": "⏰ Cargando...",
         "orientacion_proceso": "💡 **Reclutamiento:** ¡Hola! Este es un proceso oficial de Jung Tech 🏢. Haz preguntas y explora los botones para conocerte a fondo 🧠✨.",
         "firma_autor": "Página web diseñada por: <b>Marianna Podbrscek Rocca</b>",
         "titulo_ultima_confirmacion": "🔍 Última Confirmación de Datos",
-        "info_ultima_confirmacion": "Por favor revisa que tus datos de contacto sean correctos antes de continuar:",
+        "info_ultima_confirmacion": "Por favor revisa que tus datos recopilados sean correctos antes de continuar:",
         "msg_tel_verificado": "📞 Teléfono verificado: Hemos borrado los espacios en blanco. El prefijo de país es <b>{prefijo}</b> y este es tu número de teléfono: <b>{tel}</b>.",
         "msg_correo_verificado": "📩 Correo verificado: Todo lo posterior al arroba ha sido depurado y unificado con el dominio. ¿Deseas que lo mandemos a este correo exacto: <b style='color: #00ffcc;'>{correo}</b>?",
-        "btn_confirma_datos": "🚀 Sí, mis datos están bien, enviar correo",
+        "btn_confirma_datos": "🚀 Sí, mis datos recopilados son correctos, enviar correo",
         "btn_corrige_datos": "✏️ No, quiero corregir algo",
         "titulo_oops": "⚠️ ¡Has presionado un botón Oops!",
         "pref_presion_oops": "Presionaste:",
@@ -427,8 +427,8 @@ TEXTOS = {
         "instruccion_apellidos": "💡 Please fill this field with your last name.",
         "instruccion_preferido": "💡 Please fill this field with your preferred name (Optional).",
         "instruccion_tel": "💡 Please enter your phone number without country code (no spaces).",
-        "instruccion_mail": "💡 Type your email. If you type anything after '@', it will be cleared and merged with the domain below.",
-        "alerta_regla_correo": "💡 **Important Notice:** Everything after the @ symbol will be deleted and merged with the domain selected below. Do you agree with this?",
+        "instruccion_mail": "💡 Type your email.",
+        "alerta_regla_correo": "**Important Notice:** Everything after the @ symbol will be deleted and merged with the domain selected below. PLEASE MAKE SURE THAT BELOW YOU HAVE SELECTED THE RIGHT EMAIL DOMAIN",
         "msg_ok": "✅ Field successfully completed!",
         "err_campo": "⚠️ Phone number is required and only accepts numbers without spaces.",
         "err_usr_mail": "⚠️ Email username is required and cannot be empty.",
@@ -490,18 +490,17 @@ TEXTOS = {
         "btn_oops_no_conforme": "😕 Oops, I don't agree with my result (Reset Test)",
         "msg_fin_sin_correo": "🎉 Process completed successfully! Thank you for participating in Jung Tech's digital circus. 🚀🎪",
         "titulo_verificacion_datos": "🔍 Verification and Confirmation of Candidate Details:",
-        "msg_correo_enviado": "🎉 Report and preparation guide successfully sent to your email in the requested language! ⚠️ **PLEASE CHECK YOUR SPAM FOLDER!** We look forward to seeing you at your Phase 2 interview. End of process. 🚀🎪",
-        "info_esp_txt": "This response was generated by our team of specialists. If you want a response completely tailored to you, please click the button below and our personalized AI will resolve any questions about our recruitment process or MBTI functions.",
-        "label_improvisada": "💡 Any questions? Ask the AI:",
+        "msg_correo_enviado": "REPORT AND PREPARATION GUIDE SUCCESSFULLY SENT TO YOUR EMAIL IN THE REQUESTED LANGUAGE! ⚠️ PLEASE CHECK YOUR SPAM FOLDER! We look forward to seeing you at your Phase 2 interview. End of process. 🚀🎪<br><br><b>THIS IS THE END OF THIS ASSESSMENT, IF YOU HAVE ALREADY RECEIVED YOUR EMAIL YOU CAN CLOSE THE PAGE, IF YOU HAVE NOT RECEIVED IT PLEASE CHECK THE Email address or username SECTION AT THE TOP TO VERIFY THAT EVERYTHING IS CORRECT AND PRESS THE CONFIRM DETAIL, LANGUAGE, DATE AND SEND EMAIL BUTTON AGAIN</b>",
+        "label_improvisada": "💡 Any questions? Ask the AI (💡 IF YOU LIKE THE QUESTION, PRESS TAB):",
         "btn_enviar_improvisada": "Ask AI 🪄",
         "cargando_txt": "⏰ Loading...",
         "orientacion_proceso": "💡 **Recruitment:** Hello! This is an official Jung Tech hiring process 🏢. Ask questions and explore buttons to get to know yourself deeply 🧠✨.",
         "firma_autor": "Website designed by: <b>Marianna Podbrscek Rocca</b>",
         "titulo_ultima_confirmacion": "🔍 Final Data Confirmation",
-        "info_ultima_confirmacion": "Please review that your contact details are correct before proceeding:",
+        "info_ultima_confirmacion": "Please review that your collected data is correct before proceeding:",
         "msg_tel_verificado": "📞 Verified Phone: We have removed blank spaces. The country prefix is <b>{prefijo}</b> and this is your phone number: <b>{tel}</b>.",
         "msg_correo_verificado": "📩 Verified Email: Everything after the @ symbol has been cleared and merged with the domain. Do you wish to send it to this exact email: <b style='color: #00ffcc;'>{correo}</b>?",
-        "btn_confirma_datos": "🚀 Yes, my data is correct, send email",
+        "btn_confirma_datos": "🚀 Yes, my collected data is correct, send email",
         "btn_corrige_datos": "✏️ No, I want to fix something",
         "titulo_oops": "⚠️ You have pressed an Oops button!",
         "pref_presion_oops": "You pressed:",
@@ -1111,7 +1110,6 @@ elif st.session_state.step == "captura_datos":
                 else:
                     st.markdown(f"<p class='instruction-fucsia'>{txt['instruccion_mail']}</p>", unsafe_allow_html=True)
                 
-                # Alerta explícita solicitada sobre el borrado del correo después del arroba
                 st.markdown(f"<p style='color: #ffaa00; font-size: 0.95rem; font-weight: bold; margin-top: 4px; margin-bottom: 4px;'>{txt['alerta_regla_correo']}</p>", unsafe_allow_html=True)
                 
                 usr_mail = st.text_input(txt["input_usr_mail"], value=val_mail, label_visibility="collapsed")
@@ -1340,13 +1338,11 @@ elif st.session_state.step == "resultado" and not st.session_state.get("modo_oop
     errs_v = st.session_state.get("errs_verif", {})
     opciones_fechas = generar_fechas_tentativas()
 
-    # Precargamos los datos iniciales registrados en el formulario final
     datos_iniciales = st.session_state.get("datos", {})
     nombre_inicial = datos_iniciales.get("nombres", "")
     apellido_inicial = datos_iniciales.get("apellidos", "")
     preferido_inicial = usr
     
-    # Extraemos el correo limpio (usuario antes del @) y su dominio actual
     correo_completo_guardado = datos_iniciales.get("correo", "")
     usuario_correo_inicial = correo_completo_guardado.split("@")[0] if "@" in correo_completo_guardado else correo_completo_guardado
     
@@ -1361,7 +1357,6 @@ elif st.session_state.step == "resultado" and not st.session_state.get("modo_oop
     tel_completo_guardado = datos_iniciales.get("telefono", "")
     tel_solo_digitos = "".join([c for c in tel_completo_guardado if c.isdigit()])
 
-    # Si se activó la pre-verificación final antes del envío de correo
     if st.session_state.get("pre_envio_resultado_activo", False):
         st.markdown(f"### {txt['titulo_ultima_confirmacion']}")
         st.info(txt["info_ultima_confirmacion"])
@@ -1432,7 +1427,6 @@ elif st.session_state.step == "resultado" and not st.session_state.get("modo_oop
                 else:
                     st.markdown(f"<p class='instruction-fucsia'>{txt['input_usr_mail']}</p>", unsafe_allow_html=True)
                 
-                # Alerta sobre la regla de limpieza del correo en pantalla final
                 st.markdown(f"<p style='color: #ffaa00; font-size: 0.90rem; font-weight: bold; margin-top: 4px; margin-bottom: 4px;'>{txt['alerta_regla_correo']}</p>", unsafe_allow_html=True)
                 
                 correo_usr_val = st.text_input(txt["input_usr_mail"], value=st.session_state.get("verif_mail", "") or usuario_correo_inicial, label_visibility="collapsed")
@@ -1487,7 +1481,7 @@ elif st.session_state.step == "resultado" and not st.session_state.get("modo_oop
                 if not num_tel_val_limpio.strip():
                     new_errs_v["num_tel"] = txt["err_campo"]
                     has_error_v = True
-                elif not num_tel_val_limpio.isdigit():
+                elif not num_tel_limpio.isdigit():
                     new_errs_v["num_tel"] = txt["err_tel"]
                     has_error_v = True
 
@@ -1501,10 +1495,9 @@ elif st.session_state.step == "resultado" and not st.session_state.get("modo_oop
                     
                     correo_final_armado = f"{correo_usr_val_limpio}{dom_val}"
                     
-                    # Activamos la ventana previa de confirmación final antes del envío
                     st.session_state.pre_envio_resultado_activo = True
                     st.session_state.temp_fin_prefijo = prefix_val
-                    st.session_state.temp_fin_tel = num_tel_val_limpio
+                    st.session_state.temp_fin_tel = num_tel_limpio
                     st.session_state.temp_fin_correo = correo_final_armado
                     st.session_state.temp_fin_fecha = fecha_elegida
                     st.session_state.temp_fin_idioma = idioma_correo_sel

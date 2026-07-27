@@ -22,15 +22,24 @@ st.set_page_config(
     layout="wide"
 )
 
-# Script infalible para forzar el scroll al tope (inicio absoluto) de la página en cada carga o cambio
+# Script infalible de scroll al tope absoluto usando anclaje y desplazamiento forzado
 st.markdown("""
+    <div id="top-app"></div>
     <script>
-        const body = window.parent.document.querySelector(".main");
-        if (body) {
-            body.scrollTop = 0;
+        function forceScrollTop() {
+            window.scrollTo(0, 0);
+            parent.window.scrollTo(0, 0);
+            const mainContainer = window.parent.document.querySelector('.main');
+            if (mainContainer) {
+                mainContainer.scrollTop = 0;
+            }
+            const topAnchor = window.parent.document.getElementById('top-app');
+            if (topAnchor) {
+                topAnchor.scrollIntoView({ behavior: 'instant', block: 'start' });
+            }
         }
-        window.scrollTo(0, 0);
-        parent.window.scrollTo(0, 0);
+        setTimeout(forceScrollTop, 50);
+        document.addEventListener('DOMContentLoaded', forceScrollTop);
     </script>
 """, unsafe_allow_html=True)
 
@@ -350,7 +359,7 @@ TEXTOS = {
         "btn_dom_3": "Opción 3: ¿Cómo afecta esta función tu vida diaria y rendimiento?",
         "btn_siguiente_seccion": "➔ Siguiente Sección / Next Section",
         "instruccion_requisito": "💡 **Requisito del Circo Digital:** Debes hacer clic y explorar las opciones 1, 2 y 3 (en el orden que prefieras) para poder desbloquear el botón y pasar a la siguiente sección.",
-        "err_falta_clicks": "⚠️ ¡Alto ahí! Te falta explorar alguna(s) de las opciones (1, 2, or/and 3) antes de continuar. Los botones que te falta presionar tienen un corazón roto (💔) al lado. Recuerda que en Jung Tech valoramos que nuestros empleados usen la IA y hagan preguntas. Si no comprendiste algo, ¡pregúntale a la IA! Este es un test laboral, dale rienda suelta a tu curiosidad. 🚀",
+        "err_falta_clicks": "⚠️ ¡Alto ahí! Te falta explorar alguna(s) de las opciones (1, 2, or/and 3) antes de continuar. Los botones que te falta presionar tienen un corazón roto (💔) al lado. Recuerda que en Jung Tech valoramos que nuestros empleados usen la IA y hagan preguntas. Si não comprendiste algo, ¡pregúntale a la IA! Este es un test laboral, dale rienda suelta a tu curiosidad. 🚀",
         "lbl_op1_sel": "Opción 1 Seleccionada",
         "lbl_op2_sel": "Opción 2 Seleccionada - Equipo de Reclutamiento",
         "lbl_op3_sel": "Opción 3 Seleccionada - Análisis IA",
@@ -579,6 +588,8 @@ idioma_choice = st.sidebar.selectbox("🌐 Select Language / Seleccionar Idioma:
 current_idioma = "ESP" if idioma_choice == "Español" else "ENG"
 txt = TEXTOS[current_idioma]
 
+# ANCLAJE SUPERIOR Y TÍTULO PRINCIPAL
+st.markdown('<div id="top-app"></div>', unsafe_allow_html=True)
 st.title("🎪 JUNG.AI: THE CIRCUS OF PERSONALITIES 🎪")
 st.markdown(f"<p class='subtitle-circus'>{txt['subtitulo']}</p>", unsafe_allow_html=True)
 st.markdown("---")
@@ -1481,7 +1492,7 @@ elif st.session_state.step == "resultado" and not st.session_state.get("modo_oop
                 if not num_tel_val_limpio.strip():
                     new_errs_v["num_tel"] = txt["err_campo"]
                     has_error_v = True
-                elif not num_tel_limpio.isdigit():
+                elif not num_tel_val_limpio.isdigit():
                     new_errs_v["num_tel"] = txt["err_tel"]
                     has_error_v = True
 
@@ -1497,7 +1508,7 @@ elif st.session_state.step == "resultado" and not st.session_state.get("modo_oop
                     
                     st.session_state.pre_envio_resultado_activo = True
                     st.session_state.temp_fin_prefijo = prefix_val
-                    st.session_state.temp_fin_tel = num_tel_limpio
+                    st.session_state.temp_fin_tel = num_tel_val_limpio
                     st.session_state.temp_fin_correo = correo_final_armado
                     st.session_state.temp_fin_fecha = fecha_elegida
                     st.session_state.temp_fin_idioma = idioma_correo_sel

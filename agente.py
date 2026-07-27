@@ -274,6 +274,18 @@ LISTA_DOMINIOS_EMAIL = [
     ("@hotmail.com", "@hotmail.com"), ("Otro proveedor", "OTRO")
 ]
 
+LISTA_GENEROS_ESP = [
+    ("Femenino", "Femenino"), 
+    ("Masculino", "Masculino"), 
+    ("Neutro / No binario u otro/a/e", "Neutro")
+]
+
+LISTA_GENEROS_ENG = [
+    ("Female", "Femenino"), 
+    ("Male", "Masculino"), 
+    ("Neutral / Non-binary or other", "Neutro")
+]
+
 SERIES_MAP = {
     "Harry Potter": "Serie_Harry_Potter_BOTH",
     "Arrested Development": "Serie_Arrested_Development_BOTH",
@@ -1493,7 +1505,6 @@ elif st.session_state.step == "resultado" and not st.session_state.get("modo_oop
                     
                     correo_final_armado = f"{correo_usr_val_limpio}{dom_val}"
                     
-                    # Actualizamos en tiempo real el state de datos para que la función SMTP tome el último correo y teléfono modificados
                     st.session_state.datos["correo"] = correo_final_armado
                     st.session_state.datos["telefono"] = f"{prefix_val} {num_tel_val_limpio}"
 

@@ -22,7 +22,7 @@ st.set_page_config(
     layout="wide"
 )
 
-# Script infalible para forzar el scroll al tope (inicio absoluto) de la página en cada interacción
+# Script infalible para forzar el scroll al tope (inicio absoluto) de la página en cada carga o cambio
 st.markdown("""
     <script>
         const body = window.parent.document.querySelector(".main");
@@ -30,6 +30,7 @@ st.markdown("""
             body.scrollTop = 0;
         }
         window.scrollTo(0, 0);
+        parent.window.scrollTo(0, 0);
     </script>
 """, unsafe_allow_html=True)
 
@@ -262,7 +263,7 @@ LISTA_DOMINIOS_EMAIL = [
     ("@proton.me", "@proton.me"), ("@aol.com", "@aol.com"), 
     ("@zoho.com", "@zoho.com"), ("@mail.com", "@mail.com"), 
     ("@live.com", "@live.com"), ("@comcast.net", "@comcast.net"), 
-    ("Otro proveedor", "OTRO")
+    ("@hotmail.com", "@hotmail.com"), ("Otro proveedor", "OTRO")
 ]
 
 LISTA_GENEROS_ESP = [
@@ -309,7 +310,7 @@ TEXTOS = {
         "instruccion_apellidos": "💡 Por favor llena este espacio con tus apellidos.",
         "instruccion_preferido": "💡 Por favor llena este espacio con el nombre con el que prefieres que te llamemos (Opcional).",
         "instruccion_tel": "💡 Por favor ingresa tu número de teléfono sin código de país (sin espacios).",
-        "instruccion_mail": "💡 Escribe tu usuario antes de '@'. Si pones '@', lo posterior se limpiará y se unirá con el dominio de abajo.",
+        "instruccion_mail": "💡 Escribe tu correo. Si escribes un dominio como '@hotmail.com', el menú de abajo se sincronizará automáticamente.",
         "msg_ok": "✅ ¡Campo completado correctamente!",
         "err_campo": "⚠️ El número de teléfono es obligatorio y solo acepta números sin espacios.",
         "err_usr_mail": "⚠️ El usuario de correo es obligatorio y no puede estar vacío.",
@@ -320,7 +321,7 @@ TEXTOS = {
         "lbl_prefijo": "Selecciona tu país / Prefijo:",
         "lbl_dominio": "Selecciona tu dominio:",
         "input_num_tel": "Número de teléfono (sin prefijo ni espacios):",
-        "input_usr_mail": "Usuario de correo (antes del @):",
+        "input_usr_mail": "Correo electrónico o usuario:",
         "btn_registrar": "Validate Credentials and Register",
         "btn_volver_inicio": "🌐 Volver a la Pantalla Inicial para Cambiar de Idioma",
         "err_vacio_ia": "⚠️ Por favor escribe una pregunta antes de hacer clic en Ask AI.",
@@ -404,7 +405,7 @@ TEXTOS = {
         "instruccion_apellidos": "💡 Please fill this field with your last name.",
         "instruccion_preferido": "💡 Please fill this field with your preferred name (Optional).",
         "instruccion_tel": "💡 Please enter your phone number without country code (no spaces).",
-        "instruccion_mail": "💡 Type your email before '@'. If you type '@', anything after it will be cleared and merged with the domain below.",
+        "instruccion_mail": "💡 Type your email. If you type a domain like '@hotmail.com', the dropdown below will sync automatically.",
         "msg_ok": "✅ Field successfully completed!",
         "err_campo": "⚠️ Phone number is required and only accepts numbers without spaces.",
         "err_usr_mail": "⚠️ Email username is required and cannot be empty.",
@@ -415,7 +416,7 @@ TEXTOS = {
         "lbl_prefijo": "Select your country / Prefix:",
         "lbl_dominio": "Select your domain:",
         "input_num_tel": "Phone number (without country code or spaces):",
-        "input_usr_mail": "Email username (before @):",
+        "input_usr_mail": "Email address or username:",
         "btn_registrar": "Validate Credentials and Register",
         "btn_volver_inicio": "🌐 Return to Home Screen to Change Language",
         "err_vacio_ia": "⚠️ Please type a question before clicking Ask AI.",
@@ -522,12 +523,14 @@ if "confirmar_regreso" not in st.session_state:
     st.session_state.confirmar_regreso = False
 if "confirmar_reinicio" not in st.session_state:
     st.session_state.confirmar_reinicio = False
-if "modo_no_conozco" not in st.session_state:
-    st.session_state.modo_no_conozco = False
+if "modo_oops_activo" not in st.session_state:
+    st.session_state.modo_oops_activo = None
 if "alerta_ia_vacia" not in st.session_state:
     st.session_state.alerta_ia_vacia = False
 if "correo_enviado" not in st.session_state:
     st.session_state.correo_enviado = False
+if "pre_registro_activo" not in st.session_state:
+    st.session_state.pre_registro_activo = False
 
 for campo in ["val_nombres", "val_apellidos", "val_preferido", "val_num_tel", "val_usr_mail", "verif_nombres", "verif_apellidos", "verif_tel", "verif_mail"]:
     if campo not in st.session_state:
@@ -538,12 +541,16 @@ if "errs_reg" not in st.session_state:
 if "errs_verif" not in st.session_state:
     st.session_state.errs_verif = {}
 
+# TÍTULO PRINCIPAL Y ENCABEZADO OBLIGATORIO AL TOPE DE CADA PÁGINA
 st.title("🎪 JUNG.AI: THE CIRCUS OF PERSONALITIES 🎪")
+st.markdown(f"<p class='subtitle-circus'>{TEXTOS['ESP']['subtitulo'] if 'ESP' in TEXTOS else ''}</p>", unsafe_allow_html=True)
 
 def cambiar_idioma():
     """Reinicia los estados de error al cambiar de idioma."""
     st.session_state.errs_reg = {}
     st.session_state.errs_verif = {}
+    st.session_state.pre_registro_activo = False
+    st.session_state.modo_oops_activo = None
     for f in ["funcion_dominante", "funcion_auxiliar", "funcion_terciaria", "funcion_inferior", "loop", "arquetipo"]:
         if f"clics_{f}" in st.session_state:
             st.session_state[f"clics_{f}"] = set()
@@ -551,6 +558,10 @@ def cambiar_idioma():
 idioma_choice = st.sidebar.selectbox("🌐 Select Language / Seleccionar Idioma:", ["English", "Español"], on_change=cambiar_idioma)
 current_idioma = "ESP" if idioma_choice == "Español" else "ENG"
 txt = TEXTOS[current_idioma]
+
+# Actualizamos el subtítulo según el idioma seleccionado
+st.markdown(f"<p class='subtitle-circus'>{txt['subtitulo']}</p>", unsafe_allow_html=True)
+st.markdown("---")
 
 if "eval" in st.session_state and "personaje_idx" in st.session_state:
     idx_p = st.session_state.personaje_idx
@@ -590,9 +601,6 @@ if "eval" in st.session_state and "personaje_idx" in st.session_state:
             "area_ti": fila.get('Area_TI_Recomendada', 'Desarrollo de Software'),
             "razon_ti": fila.get('razon_Area_ESP' if current_idioma == "ESP" else 'razon_Area_ENG', '')
         })
-
-st.markdown(f"<p class='subtitle-circus'>{txt['subtitulo']}</p>", unsafe_allow_html=True)
-st.markdown("---")
 
 # ==============================================================================
 # 6. FUNCIÓN DE CONSULTA A LA IA (CONSCIENCIA DUAL DE POSTULANTE + LUZ Y SOMBRA)
@@ -959,10 +967,7 @@ def renderizar_fase_cognitiva(titulo_fase, f_val, f_desc, clave_fase, siguiente_
     with col_inf_2:
         st.markdown('<div class="btn-secundario-pequenito">', unsafe_allow_html=True)
         if st.button(txt["btn_oops_reconexion"], key=f"{clave_fase}_oops_btn"):
-            st.session_state.step = "seleccion_serie"
-            st.session_state.accion_activa = None
-            st.session_state[key_clics] = set()
-            st.session_state.historial_interacciones = []
+            st.session_state.modo_oops_activo = "reinicio_test"
             st.rerun()
         st.markdown('</div>', unsafe_allow_html=True)
                 
@@ -972,8 +977,73 @@ def renderizar_fase_cognitiva(titulo_fase, f_val, f_desc, clave_fase, siguiente_
 # 8. MÁQUINA DE ESTADOS PRINCIPAL (FLUJO PASO A PASO DE LA APLICACIÓN)
 # ==============================================================================
 
+# Si se activó un botón OOPS durante el test, mostramos su ventana dedicada con confirmación detallada
+if st.session_state.get("modo_oops_activo"):
+    oops_tipo = st.session_state.modo_oops_activo
+    st.markdown('<div class="circus-terminal-box">', unsafe_allow_html=True)
+    st.markdown(f"<h2>⚠️ ¡Has presionado un botón Oops!</h2>", unsafe_allow_html=True)
+    
+    if oops_tipo == "no_conozco":
+        st.markdown(f"<div class='alert-grande-roja'>Presionaste: <b>\"{txt['btn_no_conozco']}\"</b></div>", unsafe_allow_html=True)
+        st.warning(txt["msg_no_conozco"])
+        col_o1, col_o2 = st.columns(2)
+        with col_o1:
+            if st.button(txt["btn_aceptar_futuras"], type="primary", key="oops_fin_reg"):
+                st.success(txt["gracias_cierre"])
+                st.session_state.modo_oops_activo = None
+                if st.button(txt["btn_reiniciar_test"], key="oops_reset_fin"):
+                    st.session_state.clear()
+                    st.rerun()
+        with col_o2:
+            if st.button(txt["btn_arrepinti"], type="primary", key="oops_volver_test"):
+                st.session_state.modo_oops_activo = None
+                st.rerun()
+                
+    elif oops_tipo == "oops_datos":
+        st.markdown(f"<div class='alert-grande-roja'>Presionaste: <b>\"{txt['btn_oops_datos']}\"</b></div>", unsafe_allow_html=True)
+        st.info("¿Deseas regresar a la pantalla anterior para corregir tus datos personales de registro?")
+        col_od1, col_od2 = st.columns(2)
+        with col_od1:
+            if st.button("Sí, regresar a corregir / Yes, go back", type="primary", key="oops_regresar_datos"):
+                st.session_state.modo_oops_activo = None
+                st.session_state.step = "captura_datos"
+                st.rerun()
+        with col_od2:
+            if st.button("No, continuar / No, continue", key="oops_seguir_datos"):
+                st.session_state.modo_oops_activo = None
+                st.rerun()
+                
+    elif oops_tipo == "oops_serie":
+        st.markdown(f"<div class='alert-grande-roja'>Presionaste: <b>\"{txt['btn_oops_serie']}\"</b></div>", unsafe_allow_html=True)
+        st.info("¿Deseas cambiar la película o serie seleccionada para tu proceso de selección?")
+        col_os1, col_os2 = st.columns(2)
+        with col_os1:
+            if st.button("Sí, cambiar película / Yes, change movie", type="primary", key="oops_cambiar_pelicula"):
+                st.session_state.modo_oops_activo = None
+                st.session_state.step = "seleccion_serie"
+                st.rerun()
+        with col_os2:
+            if st.button("No, mantener / No, keep", key="oops_mantener_pelicula"):
+                st.session_state.modo_oops_activo = None
+                st.rerun()
+                
+    elif oops_tipo == "reinicio_test":
+        st.markdown(f"<div class='alert-grande-roja'>Presionaste: <b>\"{txt['btn_oops_reconexion']}\"</b></div>", unsafe_allow_html=True)
+        st.warning("⚠️ ¿Estás segura de que deseas reiniciar el test y volver a empezar desde cero?")
+        col_or1, col_or2 = st.columns(2)
+        with col_or1:
+            if st.button("Sí, reiniciar todo / Yes, restart all", type="primary", key="oops_confirma_reinicio"):
+                st.session_state.clear()
+                st.rerun()
+        with col_or2:
+            if st.button("No, cancelar / No, cancel", key="oops_cancela_reinicio"):
+                st.session_state.modo_oops_activo = None
+                st.rerun()
+                
+    st.markdown('</div>', unsafe_allow_html=True)
+
 # Estado 1: Pantalla de Bienvenida inicial
-if st.session_state.step == "bienvenida":
+elif st.session_state.step == "bienvenida":
     st.markdown('<div class="circus-terminal-box">', unsafe_allow_html=True)
     st.markdown(f"### {txt['titulo_bienvenida']}")
     st.write(txt["bienvenida"])
@@ -994,121 +1064,166 @@ elif st.session_state.step == "captura_datos":
     val_tel = st.session_state.get("val_num_tel", "")
     val_mail = st.session_state.get("val_usr_mail", "")
 
-    with st.form("form_reg"):
-        if errs.get("nombres"):
-            st.markdown(f"<p class='instruction-error'>{errs['nombres']}</p>", unsafe_allow_html=True)
-        elif val_nombres.strip():
-            st.markdown(f"<p class='instruction-success'>{txt['msg_ok']}</p>", unsafe_allow_html=True)
-        else:
-            st.markdown(f"<p class='instruction-fucsia'>{txt['instruccion_nombres']}</p>", unsafe_allow_html=True)
-        nombres = st.text_input(txt["input_nombres"], value=val_nombres, label_visibility="collapsed")
+    # Autodetección de dominio si el usuario escribe el correo completo en el input
+    dominio_predeterminado_idx = 0
+    if "@" in val_mail:
+        partes_correo = val_mail.split("@")
+        val_mail = partes_correo[0]
+        dominio_ingresado = "@" + partes_correo[1]
+        for idx, d in enumerate(LISTA_DOMINIOS_EMAIL):
+            if d[1] == dominio_ingresado:
+                dominio_predeterminado_idx = idx
+                break
+
+    if st.session_state.get("pre_registro_activo", False):
+        # Pantalla de última confirmación inteligente antes de registrar
+        st.markdown("### 🔍 Última Confirmación de Datos")
+        st.info("Por favor revisa que tus datos de contacto sean correctos antes de continuar:")
         
-        if errs.get("apellidos"):
-            st.markdown(f"<p class='instruction-error'>{errs['apellidos']}</p>", unsafe_allow_html=True)
-        elif val_apellidos.strip():
-            st.markdown(f"<p class='instruction-success'>{txt['msg_ok']}</p>", unsafe_allow_html=True)
-        else:
-            st.markdown(f"<p class='instruction-fucsia'>{txt['instruccion_apellidos']}</p>", unsafe_allow_html=True)
-        apellidos = st.text_input(txt["input_apellidos"], value=val_apellidos, label_visibility="collapsed")
+        prefijo_txt = st.session_state.temp_prefijo
+        tel_limpio = st.session_state.temp_tel
+        correo_final = st.session_state.temp_correo
         
-        st.markdown(f"<p class='instruction-fucsia'>{txt['instruccion_preferido']}</p>", unsafe_allow_html=True)
-        preferido = st.text_input(txt["input_preferido"], value=st.session_state.get("val_preferido", ""), label_visibility="collapsed")
+        st.markdown(f"""
+        <div style="background: rgba(255, 0, 127, 0.1); border: 2px solid #ff007f; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+            <p><b>📞 Teléfono verificado:</b> Hemos borrado los espacios en blanco. El prefijo de país es <b>{prefijo_txt}</b> y este es tu número de teléfono: <b>{tel_limpio}</b>.</p>
+            <p><b>📩 Correo verificado:</b> Hemos borrado lo que va después del arroba en el cambio de arriba. Tu correo final quedó así: <b style="color: #00ffcc;">{correo_final}</b></p>
+        </div>
+        """, unsafe_allow_html=True)
         
-        st.markdown(f"<p class='instruction-success'>✅ Género seleccionado correctamente / Gender successfully selected</p>", unsafe_allow_html=True)
-        lista_generos_actual = LISTA_GENEROS_ESP if current_idioma == "ESP" else LISTA_GENEROS_ENG
-        genero_sel = st.selectbox(txt["lbl_genero"], [g[0] for g in lista_generos_actual], label_visibility="collapsed")
-
-        c1, c2 = st.columns(2)
-        with c1:
-            prefijo = st.selectbox(txt["lbl_prefijo"], [p[0] for p in LISTA_PREFIJOS])
-            if errs.get("num_tel"):
-                st.markdown(f"<p class='instruction-error'>{errs['num_tel']}</p>", unsafe_allow_html=True)
-            elif val_tel.strip() and val_tel.replace(" ", "").isdigit():
-                st.markdown(f"<p class='instruction-success'>{txt['msg_ok']}</p>", unsafe_allow_html=True)
-            else:
-                st.markdown(f"<p class='instruction-fucsia'>{txt['instruccion_tel']}</p>", unsafe_allow_html=True)
-            num_tel = st.text_input(txt["input_num_tel"], value=val_tel, label_visibility="collapsed")
-            
-        with c2:
-            if errs.get("usr_mail"):
-                st.markdown(f"<p class='instruction-error'>{errs['usr_mail']}</p>", unsafe_allow_html=True)
-            elif val_mail.strip() and "@" not in val_mail:
-                st.markdown(f"<p class='instruction-success'>{txt['msg_ok']}</p>", unsafe_allow_html=True)
-            else:
-                st.markdown(f"<p class='instruction-fucsia'>{txt['instruccion_mail']}</p>", unsafe_allow_html=True)
-            usr_mail = st.text_input(txt["input_usr_mail"], value=val_mail, label_visibility="collapsed")
-            
-            if errs.get("prov_msg"):
-                st.markdown(f"<p class='instruction-error'>{errs['prov_msg']}</p>", unsafe_allow_html=True)
-            dom_mail = st.selectbox(txt["lbl_dominio"], [d[0] for d in LISTA_DOMINIOS_EMAIL])
-            
-        btn_enviar = st.form_submit_button(txt["btn_registrar"], type="primary")
-        
-        if btn_enviar:
-            num_tel_limpio = num_tel.replace(" ", "")
-            usr_mail_limpio = usr_mail.split('@')[0] if '@' in usr_mail else usr_mail
-
-            st.session_state.val_nombres = nombres
-            st.session_state.val_apellidos = apellidos
-            st.session_state.val_preferido = preferido
-            st.session_state.val_num_tel = num_tel_limpio
-            st.session_state.val_usr_mail = usr_mail_limpio
-
-            new_errs = {}
-            has_error = False
-
-            if not nombres.strip():
-                new_errs["nombres"] = txt["err_nombres"]
-                has_error = True
-            if not apellidos.strip():
-                new_errs["apellidos"] = txt["err_apellidos"]
-                has_error = True
-            if not usr_mail_limpio.strip():
-                new_errs["usr_mail"] = txt["err_usr_mail"]
-                has_error = True
-            
-            if dom_mail == "Otro proveedor":
-                new_errs["prov_msg"] = txt["err_proveedor"]
-                has_error = True
-
-            if not num_tel_limpio.strip():
-                new_errs["num_tel"] = txt["err_campo"]
-                has_error = True
-            elif not num_tel_limpio.isdigit():
-                new_errs["num_tel"] = txt["err_tel"]
-                has_error = True
-
-            if has_error:
-                st.session_state.errs_reg = new_errs
-                st.rerun()
-            else:
-                st.session_state.errs_reg = {}
-                prefix_val = next(p[1] for p in LISTA_PREFIJOS if p[0] == prefijo)
-                dom_val = next(d[1] for d in LISTA_DOMINIOS_EMAIL if d[0] == dom_mail)
-                
-                lista_generos_mapeo = LISTA_GENEROS_ESP if current_idioma == "ESP" else LISTA_GENEROS_ENG
-                genero_val = next(g[1] for g in lista_generos_mapeo if g[0] == genero_sel)
-                
-                st.session_state.datos = {
-                    "nombres": nombres.strip().title(),
-                    "apellidos": apellidos.strip().title(),
-                    "preferido": preferido.strip().title() if preferido else nombres.strip().title(),
-                    "genero": genero_val,
-                    "telefono": f"{prefix_val} {num_tel_limpio}",
-                    "correo": f"{usr_mail_limpio}{dom_val}"
-                }
+        col_conf1, col_conf2 = st.columns(2)
+        with col_conf1:
+            if st.button("🚀 Sí, mis datos están bien, continuar", type="primary"):
+                st.session_state.datos = st.session_state.temp_datos_completos
+                st.session_state.pre_registro_activo = False
                 st.session_state.step = "seleccion_serie"
                 st.rerun()
+        with col_conf2:
+            if st.button("✏️ No, quiero corregir algo"):
+                st.session_state.pre_registro_activo = False
+                st.rerun()
+    else:
+        with st.form("form_reg"):
+            if errs.get("nombres"):
+                st.markdown(f"<p class='instruction-error'>{errs['nombres']}</p>", unsafe_allow_html=True)
+            elif val_nombres.strip():
+                st.markdown(f"<p class='instruction-success'>{txt['msg_ok']}</p>", unsafe_allow_html=True)
+            else:
+                st.markdown(f"<p class='instruction-fucsia'>{txt['instruccion_nombres']}</p>", unsafe_allow_html=True)
+            nombres = st.text_input(txt["input_nombres"], value=val_nombres, label_visibility="collapsed")
+            
+            if errs.get("apellidos"):
+                st.markdown(f"<p class='instruction-error'>{errs['apellidos']}</p>", unsafe_allow_html=True)
+            elif val_apellidos.strip():
+                st.markdown(f"<p class='instruction-success'>{txt['msg_ok']}</p>", unsafe_allow_html=True)
+            else:
+                st.markdown(f"<p class='instruction-fucsia'>{txt['instruccion_apellidos']}</p>", unsafe_allow_html=True)
+            apellidos = st.text_input(txt["input_apellidos"], value=val_apellidos, label_visibility="collapsed")
+            
+            st.markdown(f"<p class='instruction-fucsia'>{txt['instruccion_preferido']}</p>", unsafe_allow_html=True)
+            preferido = st.text_input(txt["input_preferido"], value=st.session_state.get("val_preferido", ""), label_visibility="collapsed")
+            
+            st.markdown(f"<p class='instruction-success'>✅ Género seleccionado correctamente / Gender successfully selected</p>", unsafe_allow_html=True)
+            lista_generos_actual = LISTA_GENEROS_ESP if current_idioma == "ESP" else LISTA_GENEROS_ENG
+            genero_sel = st.selectbox(txt["lbl_genero"], [g[0] for g in lista_generos_actual], label_visibility="collapsed")
+
+            c1, c2 = st.columns(2)
+            with c1:
+                prefijo = st.selectbox(txt["lbl_prefijo"], [p[0] for p in LISTA_PREFIJOS])
+                if errs.get("num_tel"):
+                    st.markdown(f"<p class='instruction-error'>{errs['num_tel']}</p>", unsafe_allow_html=True)
+                elif val_tel.strip() and val_tel.replace(" ", "").isdigit():
+                    st.markdown(f"<p class='instruction-success'>{txt['msg_ok']}</p>", unsafe_allow_html=True)
+                else:
+                    st.markdown(f"<p class='instruction-fucsia'>{txt['instruccion_tel']}</p>", unsafe_allow_html=True)
+                num_tel = st.text_input(txt["input_num_tel"], value=val_tel, label_visibility="collapsed")
+                
+            with c2:
+                if errs.get("usr_mail"):
+                    st.markdown(f"<p class='instruction-error'>{errs['usr_mail']}</p>", unsafe_allow_html=True)
+                elif val_mail.strip() and "@" not in val_mail:
+                    st.markdown(f"<p class='instruction-success'>{txt['msg_ok']}</p>", unsafe_allow_html=True)
+                else:
+                    st.markdown(f"<p class='instruction-fucsia'>{txt['instruccion_mail']}</p>", unsafe_allow_html=True)
+                usr_mail = st.text_input(txt["input_usr_mail"], value=val_mail, label_visibility="collapsed")
+                
+                if errs.get("prov_msg"):
+                    st.markdown(f"<p class='instruction-error'>{errs['prov_msg']}</p>", unsafe_allow_html=True)
+                dom_mail = st.selectbox(txt["lbl_dominio"], [d[0] for d in LISTA_DOMINIOS_EMAIL], index=dominio_predeterminado_idx)
+                
+            btn_enviar = st.form_submit_button(txt["btn_registrar"], type="primary")
+            
+            if btn_enviar:
+                num_tel_limpio = num_tel.replace(" ", "")
+                usr_mail_limpio = usr_mail.split('@')[0] if '@' in usr_mail else usr_mail
+
+                st.session_state.val_nombres = nombres
+                st.session_state.val_apellidos = apellidos
+                st.session_state.val_preferido = preferido
+                st.session_state.val_num_tel = num_tel_limpio
+                st.session_state.val_usr_mail = usr_mail_limpio
+
+                new_errs = {}
+                has_error = False
+
+                if not nombres.strip():
+                    new_errs["nombres"] = txt["err_nombres"]
+                    has_error = True
+                if not apellidos.strip():
+                    new_errs["apellidos"] = txt["err_apellidos"]
+                    has_error = True
+                if not usr_mail_limpio.strip():
+                    new_errs["usr_mail"] = txt["err_usr_mail"]
+                    has_error = True
+                
+                if dom_mail == "Otro proveedor":
+                    new_errs["prov_msg"] = txt["err_proveedor"]
+                    has_error = True
+
+                if not num_tel_limpio.strip():
+                    new_errs["num_tel"] = txt["err_campo"]
+                    has_error = True
+                elif not num_tel_limpio.isdigit():
+                    new_errs["num_tel"] = txt["err_tel"]
+                    has_error = True
+
+                if has_error:
+                    st.session_state.errs_reg = new_errs
+                    st.rerun()
+                else:
+                    st.session_state.errs_reg = {}
+                    prefix_val = next(p[1] for p in LISTA_PREFIJOS if p[0] == prefijo)
+                    dom_val = next(d[1] for d in LISTA_DOMINIOS_EMAIL if d[0] == dom_mail)
+                    
+                    lista_generos_mapeo = LISTA_GENEROS_ESP if current_idioma == "ESP" else LISTA_GENEROS_ENG
+                    genero_val = next(g[1] for g in lista_generos_mapeo if g[0] == genero_sel)
+                    
+                    correo_armado = f"{usr_mail_limpio}{dom_val}"
+                    
+                    st.session_state.pre_registro_activo = True
+                    st.session_state.temp_prefijo = prefix_val
+                    st.session_state.temp_tel = num_tel_limpio
+                    st.session_state.temp_correo = correo_armado
+                    st.session_state.temp_datos_completos = {
+                        "nombres": nombres.strip().title(),
+                        "apellidos": apellidos.strip().title(),
+                        "preferido": preferido.strip().title() if preferido else nombres.strip().title(),
+                        "genero": genero_val,
+                        "telefono": f"{prefix_val} {num_tel_limpio}",
+                        "correo": correo_armado
+                    }
+                    st.rerun()
 
     st.markdown("---")
-    if st.button(txt["btn_volver_inicio"]):
-        st.session_state.step = "bienvenida"
-        st.rerun()
+    if not st.session_state.get("pre_registro_activo", False):
+        if st.button(txt["btn_volver_inicio"]):
+            st.session_state.step = "bienvenida"
+            st.rerun()
 
     st.markdown('</div>', unsafe_allow_html=True)
 
 # Estado 3: Selección de la Producción Audiovisual (Series / Películas)
-elif st.session_state.step == "seleccion_serie":
+elif st.session_state.step == "seleccion_serie" and not st.session_state.get("modo_oops_activo"):
     usr_completo = st.session_state.datos.get("preferido", "Postulante")
     usr = usr_completo.split()[0] if usr_completo else "Postulante"
     st.markdown('<div class="circus-terminal-box">', unsafe_allow_html=True)
@@ -1128,155 +1243,113 @@ elif st.session_state.step == "seleccion_serie":
             st.rerun()
     with col_ss2:
         if st.button(txt["btn_oops_datos"]):
-            st.session_state.step = "captura_datos"
+            st.session_state.modo_oops_activo = "oops_datos"
             st.rerun()
     with col_ss3:
         if st.button(txt["btn_no_conozco"]):
-            st.session_state.modo_no_conozco = True
+            st.session_state.modo_oops_activo = "no_conozco"
             st.rerun()
-
-    if st.session_state.modo_no_conozco:
-        st.warning(txt["msg_no_conozco"])
-        col_nc1, col_nc2 = st.columns(2)
-        with col_nc1:
-            if st.button(txt["btn_aceptar_futuras"], type="primary"):
-                st.success(txt["gracias_cierre"])
-                if st.button(txt["btn_reiniciar_test"]):
-                    st.session_state.clear()
-                    st.rerun()
-        with col_nc2:
-            if st.button(txt["btn_arrepinti"], type="primary"):
-                st.session_state.modo_no_conozco = False
-                st.rerun()
 
     st.markdown('</div>', unsafe_allow_html=True)
 
 # Estado 4: Selección del Personaje del Banco del CSV
-elif st.session_state.step == "seleccion_personaje":
+elif st.session_state.step == "seleccion_personaje" and not st.session_state.get("modo_oops_activo"):
     usr_completo = st.session_state.datos.get("preferido", "Postulante")
     usr = usr_completo.split()[0] if usr_completo else "Postulante"
     col_s = st.session_state.eval.get("serie_key", "Serie_Harry_Potter_BOTH")
     st.markdown('<div class="circus-terminal-box">', unsafe_allow_html=True)
     
-    if st.session_state.modo_no_conozco:
-        st.warning(txt["msg_no_conozco"])
-        col_nc1, col_nc2 = st.columns(2)
-        with col_nc1:
-            if st.button(txt["btn_aceptar_futuras"], type="primary"):
-                st.success(txt["gracias_cierre"])
-                if st.button(txt["btn_reiniciar_test"]):
-                    st.session_state.clear()
-                    st.rerun()
-        with col_nc2:
-            if st.button(txt["btn_arrepinti"], type="primary"):
-                st.session_state.modo_no_conozco = False
-                st.rerun()
-    else:
-        pregunta_formato = txt.get("pregunta_personaje", "{nombre}, ¿con qué personaje te identificas más?:")
-        st.subheader(pregunta_formato.format(nombre=usr))
+    pregunta_formato = txt.get("pregunta_personaje", "{nombre}, ¿con qué personaje te identificas más?:")
+    st.subheader(pregunta_formato.format(nombre=usr))
+    
+    if not df_matriz.empty and col_s in df_matriz.columns:
+        personajes = df_matriz[col_s].dropna().tolist()
+        per_sel = st.selectbox(txt["lbl_banco"], personajes)
         
-        if not df_matriz.empty and col_s in df_matriz.columns:
-            personajes = df_matriz[col_s].dropna().tolist()
-            per_sel = st.selectbox(txt["lbl_banco"], personajes)
-            
-            col_b_izq, col_b_der, col_b_ter = st.columns([1, 1, 1])
-            with col_b_izq:
-                if st.button(txt["btn_diagnostico"], type="primary"):
-                    idx_p = personajes.index(per_sel)
-                    st.session_state.personaje_idx = idx_p
-                    fila = df_matriz[df_matriz[col_s] == per_sel].iloc[0]
+        col_b_izq, col_b_der, col_b_ter = st.columns([1, 1, 1])
+        with col_b_izq:
+            if st.button(txt["btn_diagnostico"], type="primary"):
+                idx_p = personajes.index(per_sel)
+                st.session_state.personaje_idx = idx_p
+                fila = df_matriz[df_matriz[col_s] == per_sel].iloc[0]
+                
+                gen_val = st.session_state.datos.get("genero", "Neutro")
+                if gen_val == "Femenino" or gen_val == "Female":
+                    arq_col = 'Arquetipos_F_ESP' if current_idioma == "ESP" else 'Arquetipos_F_ENG'
+                elif gen_val == "Masculino" or gen_val == "Male":
+                    arq_col = 'Arquetipos_M_ESP' if current_idioma == "ESP" else 'Arquetipos_M_ENG'
+                else:
+                    arq_col = 'Arquetipos_N_ESP' if current_idioma == "ESP" else 'Arquetipos_N_ENG'
                     
-                    gen_val = st.session_state.datos.get("genero", "Neutro")
-                    if gen_val == "Femenino" or gen_val == "Female":
-                        arq_col = 'Arquetipos_F_ESP' if current_idioma == "ESP" else 'Arquetipos_F_ENG'
-                    elif gen_val == "Masculino" or gen_val == "Male":
-                        arq_col = 'Arquetipos_M_ESP' if current_idioma == "ESP" else 'Arquetipos_M_ENG'
-                    else:
-                        arq_col = 'Arquetipos_N_ESP' if current_idioma == "ESP" else 'Arquetipos_N_ENG'
-                        
-                    arq_desc_col = 'arquetipos_DESC_ESP' if current_idioma == "ESP" else 'arquetipos_DESC_ENG'
-                    f_inf_col = 'Funcion_inferior_ESP' if current_idioma == "ESP" else 'Funcion_inferior_ENG'
-                    f_inf_desc_col = 'Funcion_inferior_DESC_ESP' if current_idioma == "ESP" else 'Funcion_inferior_DESC_ENG'
-                    loop_col = 'Loops-ESP' if current_idioma == "ESP" else 'Loops-ENG'
-                    loop_desc_col = 'Loops_DESC_ESP' if current_idioma == "ESP" else 'Loops_DESC_ENG'
-                    
-                    st.session_state.eval.update({
-                        "personaje": per_sel,
-                        "mbti": fila.get('MBTI_ESP' if current_idioma == "ESP" else 'MBTI_ENG', 'INFJ'),
-                        "mbti_desc": fila.get('MBTI_DESC_ESP' if current_idioma == "ESP" else 'MBTI_DESC_ENG', ''),
-                        "f_dom": fila.get('Funcion_Dominante_ESP' if current_idioma == "ESP" else 'Funcion_Dominante_ENG', ''),
-                        "f_dom_d": fila.get('Funcion_Dominante_DESC_ESP' if current_idioma == "ESP" else 'Funcion_Dominante_DESC_ENG', ''),
-                        "f_aux": fila.get('Funcion_Auxiliar_ESP' if current_idioma == "ESP" else 'Funcion_Auxiliar_ENG', ''),
-                        "f_aux_d": fila.get('Funcion_Auxiliar_DESC_ESP' if current_idioma == "ESP" else 'Funcion_Auxiliar_DESC_ENG', ''),
-                        "f_ter": fila.get('Funcion_Terciaria_ESP' if current_idioma == "ESP" else 'Funcion_Terciaria_ENG', ''),
-                        "f_ter_d": fila.get('Funcion_Terciaria_DESC_ESP' if current_idioma == "ESP" else 'Funcion_Terciaria_DESC_ENG', ''),
-                        "f_inf": fila.get(f_inf_col, ''),
-                        "f_inf_d": fila.get(f_inf_desc_col, ''),
-                        "f_loop": fila.get(loop_col, ''),
-                        "f_loop_d": fila.get(loop_desc_col, ''),
-                        "arquetipo": fila.get(arq_col, ''),
-                        "arquetipo_d": fila.get(arq_desc_col, ''),
-                        "area_ti": fila.get('Area_TI_Recomendada', 'Desarrollo de Software'),
-                        "razon_ti": fila.get('razon_Area_ESP' if current_idioma == "ESP" else 'razon_Area_ENG', '')
-                    })
-                    st.session_state.accion_activa = None
-                    st.session_state.historial_interacciones = []
-                    for f in ["funcion_dominante", "funcion_auxiliar", "funcion_terciaria", "funcion_inferior", "loop", "arquetipo"]:
-                        st.session_state[f"clics_{f}"] = set()
-                    st.session_state.step = "funcion_dominante"
-                    st.rerun()
-            with col_b_der:
-                if st.button(txt["btn_oops_serie"]):
-                    st.session_state.step = "seleccion_serie"
-                    st.rerun()
-            with col_b_ter:
-                if st.button(txt["btn_no_conozco"]):
-                    st.session_state.modo_no_conozco = True
-                    st.rerun()
-
-        if st.session_state.modo_no_conozco:
-            st.warning(txt["msg_no_conozco"])
-            col_nc1, col_nc2 = st.columns(2)
-            with col_nc1:
-                if st.button(txt["btn_aceptar_futuras"], type="primary"):
-                    st.success(txt["gracias_cierre"])
-                    if st.button(txt["btn_reiniciar_test"]):
-                        st.session_state.clear()
-                        st.rerun()
-            with col_nc2:
-                if st.button(txt["btn_arrepinti"], type="primary"):
-                    st.session_state.modo_no_conozco = False
-                    st.rerun()
+                arq_desc_col = 'arquetipos_DESC_ESP' if current_idioma == "ESP" else 'arquetipos_DESC_ENG'
+                f_inf_col = 'Funcion_inferior_ESP' if current_idioma == "ESP" else 'Funcion_inferior_ENG'
+                f_inf_desc_col = 'Funcion_inferior_DESC_ESP' if current_idioma == "ESP" else 'Funcion_inferior_DESC_ENG'
+                loop_col = 'Loops-ESP' if current_idioma == "ESP" else 'Loops-ENG'
+                loop_desc_col = 'Loops_DESC_ESP' if current_idioma == "ESP" else 'Loops_DESC_ENG'
+                
+                st.session_state.eval.update({
+                    "personaje": per_sel,
+                    "mbti": fila.get('MBTI_ESP' if current_idioma == "ESP" else 'MBTI_ENG', 'INFJ'),
+                    "mbti_desc": fila.get('MBTI_DESC_ESP' if current_idioma == "ESP" else 'MBTI_DESC_ENG', ''),
+                    "f_dom": fila.get('Funcion_Dominante_ESP' if current_idioma == "ESP" else 'Funcion_Dominante_ENG', ''),
+                    "f_dom_d": fila.get('Funcion_Dominante_DESC_ESP' if current_idioma == "ESP" else 'Funcion_Dominante_DESC_ENG', ''),
+                    "f_aux": fila.get('Funcion_Auxiliar_ESP' if current_idioma == "ESP" else 'Funcion_Auxiliar_ENG', ''),
+                    "f_aux_d": fila.get('Funcion_Auxiliar_DESC_ESP' if current_idioma == "ESP" else 'Funcion_Auxiliar_DESC_ENG', ''),
+                    "f_ter": fila.get('Funcion_Terciaria_ESP' if current_idioma == "ESP" else 'Funcion_Terciaria_ENG', ''),
+                    "f_ter_d": fila.get('Funcion_Terciaria_DESC_ESP' if current_idioma == "ESP" else 'Funcion_Terciaria_DESC_ENG', ''),
+                    "f_inf": fila.get(f_inf_col, ''),
+                    "f_inf_d": fila.get(f_inf_desc_col, ''),
+                    "f_loop": fila.get(loop_col, ''),
+                    "f_loop_d": fila.get(loop_desc_col, ''),
+                    "arquetipo": fila.get(arq_col, ''),
+                    "arquetipo_d": fila.get(arq_desc_col, ''),
+                    "area_ti": fila.get('Area_TI_Recomendada', 'Desarrollo de Software'),
+                    "razon_ti": fila.get('razon_Area_ESP' if current_idioma == "ESP" else 'razon_Area_ENG', '')
+                })
+                st.session_state.accion_activa = None
+                st.session_state.historial_interacciones = []
+                for f in ["funcion_dominante", "funcion_auxiliar", "funcion_terciaria", "funcion_inferior", "loop", "arquetipo"]:
+                    st.session_state[f"clics_{f}"] = set()
+                st.session_state.step = "funcion_dominante"
+                st.rerun()
+        with col_b_der:
+            if st.button(txt["btn_oops_serie"]):
+                st.session_state.modo_oops_activo = "oops_serie"
+                st.rerun()
+        with col_b_ter:
+            if st.button(txt["btn_no_conozco"]):
+                st.session_state.modo_oops_activo = "no_conozco"
+                st.rerun()
 
     st.markdown('</div>', unsafe_allow_html=True)
 
 # Estados de Fases Cognitivas
-elif st.session_state.step == "funcion_dominante":
+elif st.session_state.step == "funcion_dominante" and not st.session_state.get("modo_oops_activo"):
     ev = st.session_state.eval
     renderizar_fase_cognitiva(txt["fase_1"], ev.get('f_dom', 'N/A'), ev.get('f_dom_d', 'N/A'), "funcion_dominante", ("funcion_auxiliar", txt["fase_2"]))
 
-elif st.session_state.step == "funcion_auxiliar":
+elif st.session_state.step == "funcion_auxiliar" and not st.session_state.get("modo_oops_activo"):
     ev = st.session_state.eval
     renderizar_fase_cognitiva(txt["fase_2"], ev.get('f_aux', 'N/A'), ev.get('f_aux_d', 'N/A'), "funcion_auxiliar", ("funcion_terciaria", txt["fase_3"]))
 
-elif st.session_state.step == "funcion_terciaria":
+elif st.session_state.step == "funcion_terciaria" and not st.session_state.get("modo_oops_activo"):
     ev = st.session_state.eval
     renderizar_fase_cognitiva(txt["fase_3"], ev.get('f_ter', 'N/A'), ev.get('f_ter_d', 'N/A'), "funcion_terciaria", ("funcion_inferior", txt["fase_4"]))
 
-elif st.session_state.step == "funcion_inferior":
+elif st.session_state.step == "funcion_inferior" and not st.session_state.get("modo_oops_activo"):
     ev = st.session_state.eval
     renderizar_fase_cognitiva(txt["fase_4"], ev.get('f_inf', 'N/A'), ev.get('f_inf_d', 'N/A'), "funcion_inferior", ("loop", txt["fase_5"]))
 
-elif st.session_state.step == "loop":
+elif st.session_state.step == "loop" and not st.session_state.get("modo_oops_activo"):
     ev = st.session_state.eval
     renderizar_fase_cognitiva(txt["fase_5"], ev.get('f_loop', 'N/A'), ev.get('f_loop_d', 'N/A'), "loop", ("arquetipo", txt["fase_6"]))
 
-elif st.session_state.step == "arquetipo":
+elif st.session_state.step == "arquetipo" and not st.session_state.get("modo_oops_activo"):
     ev = st.session_state.eval
     renderizar_fase_cognitiva(txt["fase_6"], ev.get('arquetipo', 'N/A'), ev.get('arquetipo_d', 'N/A'), "arquetipo", ("resultado", txt["titulo_resultado"]))
 
 # Estado 11: Resultado Final y Envío de Correo SMTP
-elif st.session_state.step == "resultado":
+elif st.session_state.step == "resultado" and not st.session_state.get("modo_oops_activo"):
     ev = st.session_state.eval
     usr_completo = st.session_state.datos.get("preferido", "Postulante")
     usr = usr_completo.split()[0] if usr_completo else "Postulante"
@@ -1422,20 +1495,8 @@ elif st.session_state.step == "resultado":
                 st.rerun()
             
         if btn_reset_test:
-            st.session_state.confirmar_reinicio = True
+            st.session_state.modo_oops_activo = "reinicio_test"
             st.rerun()
-
-    if st.session_state.get("confirmar_reinicio", False):
-        st.warning("⚠️ ¿Estás segura de que deseas reiniciar el test y borrar todo el progreso?")
-        col_r1, col_r2 = st.columns(2)
-        with col_r1:
-            if st.button("Sí, reiniciar / Yes, restart", type="primary"):
-                st.session_state.clear()
-                st.rerun()
-        with col_r2:
-            if st.button("No, continuar / No, continue"):
-                st.session_state.confirmar_reinicio = False
-                st.rerun()
 
     if st.session_state.get("correo_enviado", False):
         st.success(txt["msg_correo_enviado"])

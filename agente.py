@@ -336,7 +336,7 @@ TEXTOS = {
         "lbl_dominio": "Selecciona tu dominio:",
         "input_num_tel": "Número de teléfono (sin prefijo ni espacios):",
         "input_usr_mail": "Correo electrónico o usuario:",
-        "btn_registrar": "Validar Credenciales y Registrar / Validate Credentials and Register",
+        "btn_registrar": "Validar Credenciales y Registrar",
         "btn_volver_inicio": "🌐 Volver a la Pantalla Inicial",
         "err_vacio_ia": "⚠️ Por favor escribe una pregunta antes de hacer clic en Ask AI.",
         "intro_filtro_series": "Este es el inicio de tu entrevista de trabajo, elige una de estas películas o series para iniciar tu proceso de selección:",
@@ -386,8 +386,8 @@ TEXTOS = {
         "btn_oops_no_conforme": "😕 Oops, no estoy conforme con mi resultado (Resetear Test)",
         "msg_fin_sin_correo": "🎉 ¡Proceso finalizado con éxito! Gracias por participar en el circo digital de Jung Tech. 🚀🎪",
         "titulo_verificacion_datos": "🔍 Verificación y Confirmación de Datos del Postulante:",
-        "msg_correo_enviado": "¡REPORTE Y TEMARIO ENVIADOS CON ÉXITO A TU CORREO EN EL IDIOMA SOLICITADO! ⚠️ ¡POR FAVOR REVISA TU CARPETA DE SPAM! Te esperamos en la entrevista de Fase 2. Fin del proceso. 🚀🎪<br><br><b>ESTE ES EL FINAL DE ESTA EVALUACIÓN, SI YA RECIBISTE TU CORREO PUEDES CERRAR LA PÁGINA, SI NO LO HAS RECIBIDO POR FAVOR REVISA LA SECCIÓN DE CORREO EN LA PARTE SUPERIOR PARA VERIFICAR QUE TODO ESTÉ BIEN Y VUELVE A PRESIONAR EL BOTÓN DE CONFIRMACIÓN</b>",
-        "label_improvisada": "💡 ¿Tienes dudas? Pregúntale a la IA (💡 SI TE GUSTA LA PREGUNTA, PRESIONA TAB O TÍPEALA):",
+        "msg_correo_enviado": "¡REPORTE Y TEMARIO ENVIADOS CON ÉXITO A TU CORREO EN EL IDIOMA SOLICITADO! ⚠️ ¡POR FAVOR REVISA TU CARPETA DE SPAM! Te esperamos en la entrevista de Fase 2. Fin del proceso. 🚀🎪\n\nESTE ES EL FINAL DE ESTA EVALUACIÓN, SI YA RECIBISTE TU CORREO PUEDES CERRAR LA PÁGINA, SI NO LO HAS RECIBIDO POR FAVOR REVISA LA SECCIÓN DE CORREO EN LA PARTE SUPERIOR PARA VERIFICAR QUE TODO ESTÉ BIEN Y VUELVE A PRESIONAR EL BOTÓN DE CONFIRMACIÓN",
+        "label_improvisada": "💡 ¿Tienes dudas? Pregúntale a la IA (💡 Si te gusta la pregunta sugerida abajo, haz clic sobre ella y presiona TAB para usarla, o tipea tu propia pregunta en la casilla y haz clic en Ask AI):",
         "btn_enviar_improvisada": "Ask AI 🪄",
         "cargando_txt": "⏰ Cargando...",
         "orientacion_proceso": "💡 **Reclutamiento:** ¡Hola! Este es un proceso oficial de Jung Tech 🏢. Haz preguntas y explora los botones para conocerte a fondo 🧠✨.",
@@ -408,7 +408,8 @@ TEXTOS = {
         "btn_si_cambiar_pelicula": "Sí, cambiar producción",
         "btn_no_mantener": "No, mantener",
         "pregunta_cambiar_pelicula": "¿Deseas cambiar la producción seleccionada para tu proceso de selección?",
-        "pregunta_regresar_datos": "¿Deseas regresar a la pantalla anterior para corregir tus datos personales de registro?"
+        "pregunta_regresar_datos": "¿Deseas regresar a la pantalla anterior para corregir tus datos personales de registro?",
+        "lbl_apellidos_titulo": "Apellidos"
     },
     "ENG": {
         "subtitulo": "Intelligent Recruitment and Psychometric Diagnosis System according to Carl Jung's model",
@@ -499,8 +500,8 @@ TEXTOS = {
         "btn_oops_no_conforme": "😕 Oops, I don't agree with my result (Reset Test)",
         "msg_fin_sin_correo": "🎉 Process completed successfully! Thank you for participating in Jung Tech's digital circus. 🚀🎪",
         "titulo_verificacion_datos": "🔍 Verification and Confirmation of Candidate Details:",
-        "msg_correo_enviado": "REPORT AND PREPARATION GUIDE SUCCESSFULLY SENT TO YOUR EMAIL IN THE REQUESTED LANGUAGE! ⚠️ PLEASE CHECK YOUR SPAM FOLDER! We look forward to seeing you at your Phase 2 interview. End of process. 🚀🎪<br><br><b>THIS IS THE END OF THIS ASSESSMENT, IF YOU HAVE ALREADY RECEIVED YOUR EMAIL YOU CAN CLOSE THE PAGE, IF YOU HAVE NOT RECEIVED IT PLEASE CHECK THE Email address or username SECTION AT THE TOP TO VERIFY THAT EVERYTHING IS CORRECT AND PRESS THE CONFIRM DETAIL, LANGUAGE, DATE AND SEND EMAIL BUTTON AGAIN</b>",
-        "label_improvisada": "💡 Any questions? Ask the AI (💡 IF YOU LIKE THE QUESTION, PRESS TAB OR TYPE IT):",
+        "msg_correo_enviado": "REPORT AND PREPARATION GUIDE SUCCESSFULLY SENT TO YOUR EMAIL IN THE REQUESTED LANGUAGE! ⚠️ PLEASE CHECK YOUR SPAM FOLDER! We look forward to seeing you at your Phase 2 interview. End of process. 🚀🎪\n\nTHIS IS THE END OF THIS ASSESSMENT, IF YOU HAVE ALREADY RECEIVED YOUR EMAIL YOU CAN CLOSE THE PAGE, IF YOU HAVE NOT RECEIVED IT PLEASE CHECK THE Email address or username SECTION AT THE TOP TO VERIFY THAT EVERYTHING IS CORRECT AND PRESS THE CONFIRM DETAIL, LANGUAGE, DATE AND SEND EMAIL BUTTON AGAIN",
+        "label_improvisada": "💡 Any questions? Ask the AI (💡 If you like the suggested question below, click on it and press TAB to use it, or type your own question in the box and click Ask AI):",
         "btn_enviar_improvisada": "Ask AI 🪄",
         "cargando_txt": "⏰ Loading...",
         "orientacion_proceso": "💡 **Recruitment:** Hello! This is an official Jung Tech hiring process 🏢. Ask questions and explore buttons to get to know yourself deeply 🧠✨.",
@@ -521,7 +522,8 @@ TEXTOS = {
         "btn_si_cambiar_pelicula": "Yes, change movie",
         "btn_no_mantener": "No, keep",
         "pregunta_cambiar_pelicula": "Do you want to change the movie or series selected for your selection process?",
-        "pregunta_regresar_datos": "Do you want to go back to the previous screen to correct your personal registration details?"
+        "pregunta_regresar_datos": "Do you want to go back to the previous screen to correct your personal registration details?",
+        "lbl_apellidos_titulo": "Last Name"
     }
 }
 
@@ -1409,8 +1411,8 @@ elif st.session_state.step == "resultado" and not st.session_state.get("modo_oop
             if errs_v.get("apellidos"):
                 st.markdown(f"<p class='instruction-error'>{errs_v['apellidos']}</p>", unsafe_allow_html=True)
             else:
-                st.markdown(f"<p class='instruction-fucsia'>Apellidos / Last Name:</p>", unsafe_allow_html=True)
-            apellidos_val = st.text_input("Apellidos", value=st.session_state.get("verif_apellidos", "") or apellido_inicial, label_visibility="collapsed")
+                st.markdown(f"<p class='instruction-fucsia'>{txt['lbl_apellidos_titulo']}:</p>", unsafe_allow_html=True)
+            apellidos_val = st.text_input(txt["lbl_apellidos_titulo"], value=st.session_state.get("verif_apellidos", "") or apellido_inicial, label_visibility="collapsed")
             
             st.markdown(f"<p class='instruction-fucsia'>{txt['input_preferido']}:</p>", unsafe_allow_html=True)
             preferido_val = st.text_input(txt["input_preferido"], value=preferido_inicial, label_visibility="collapsed")
@@ -1452,7 +1454,13 @@ elif st.session_state.step == "resultado" and not st.session_state.get("modo_oop
             ], label_visibility="collapsed")
             
             st.markdown(f"<p class='instruction-fucsia'>{txt['lbl_fecha_fase2']}</p>", unsafe_allow_html=True)
-            fecha_elegida = st.selectbox("Seleccione horario:", opciones_fechas, label_visibility="collapsed")
+            
+            idx_fecha_defecto = 0
+            fecha_previa = st.session_state.get("verif_fecha_elegida", "")
+            if fecha_previa in opciones_fechas:
+                idx_fecha_defecto = opciones_fechas.index(fecha_previa)
+
+            fecha_elegida = st.selectbox("Seleccione horario:", opciones_fechas, index=idx_fecha_defecto, label_visibility="collapsed")
             
             st.markdown(f"<p class='instruction-fucsia'>{txt['pregunta_envio_correo']}</p>", unsafe_allow_html=True)
             
@@ -1470,6 +1478,7 @@ elif st.session_state.step == "resultado" and not st.session_state.get("modo_oop
                 st.session_state.verif_apellidos = apellidos_val
                 st.session_state.verif_tel = num_tel_val_limpio
                 st.session_state.verif_mail = correo_usr_val_limpio
+                st.session_state.verif_fecha_elegida = fecha_elegida
 
                 new_errs_v = {}
                 has_error_v = False
@@ -1505,12 +1514,15 @@ elif st.session_state.step == "resultado" and not st.session_state.get("modo_oop
                     
                     correo_final_armado = f"{correo_usr_val_limpio}{dom_val}"
                     
+                    st.session_state.datos["nombres"] = nombres_val.strip().title()
+                    st.session_state.datos["apellidos"] = apellidos_val.strip().title()
+                    st.session_state.datos["preferido"] = preferido_val.strip().title() if preferido_val else nombres_val.strip().title()
                     st.session_state.datos["correo"] = correo_final_armado
-                    st.session_state.datos["telefono"] = f"{prefix_val} {num_tel_val_limpio}"
+                    st.session_state.datos["telefono"] = f"{prefix_val} {num_tel_limpio}"
 
                     st.session_state.pre_envio_resultado_activo = True
                     st.session_state.temp_fin_prefijo = prefix_val
-                    st.session_state.temp_fin_tel = num_tel_val_limpio
+                    st.session_state.temp_fin_tel = num_tel_limpio
                     st.session_state.temp_fin_correo = correo_final_armado
                     st.session_state.temp_fin_fecha = fecha_elegida
                     st.session_state.temp_fin_idioma = idioma_correo_sel

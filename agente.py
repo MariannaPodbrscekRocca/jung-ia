@@ -23,7 +23,7 @@ st.set_page_config(
 )
 
 # ------------------------------------------------------------------------------
-# HOJA DE ESTILOS CSS Y SCRIPT DE SCROLL Y BLOQUEO ANTIFRAUDE ABSOLUTO
+# HOJA DE ESTILOS CSS Y SISTEMA NUEVO DE SCROLL AL TOPE Y BLOQUEO ANTIFRAUDE
 # ------------------------------------------------------------------------------
 st.markdown("""
 <style>
@@ -221,26 +221,31 @@ st.markdown("""
 </style>
 
 <script>
-    function forceScrollToCircusTop() {
+    // Sistema avanzado de scroll forzado al tope absoluto usando la carpa 🎪
+    function executeUltraTopScroll() {
         try {
-            const circusTitle = document.getElementById('top-circus-anchor');
-            if (circusTitle) {
-                circusTitle.scrollIntoView({ behavior: 'auto', block: 'start' });
-            } else {
-                window.parent.scrollTo(0, 0);
-                window.scrollTo(0, 0);
+            const anchor = window.parent.document.getElementById('top-circus-anchor');
+            if (anchor) {
+                anchor.scrollIntoView({ behavior: 'auto', block: 'start' });
             }
-            const mainContainer = window.parent.document.querySelector('.main');
-            if (mainContainer) mainContainer.scrollTop = 0;
+            window.parent.scrollTo(0, 0);
+            window.scrollTo(0, 0);
+            
+            const mainEl = window.parent.document.querySelector('.main');
+            if (mainEl) mainEl.scrollTop = 0;
+
+            const stContainer = window.parent.document.querySelector('.stMainBlockContainer');
+            if (stContainer) stContainer.scrollTop = 0;
         } catch(e) {}
     }
-    
-    forceScrollToCircusTop();
-    setTimeout(forceScrollToCircusTop, 10);
-    setTimeout(forceScrollToCircusTop, 50);
-    setTimeout(forceScrollToCircusTop, 150);
 
-    // Bloqueo total de clics antifraude durante cualquier carga o llamada a IA
+    executeUltraTopScroll();
+    setTimeout(executeUltraTopScroll, 10);
+    setTimeout(executeUltraTopScroll, 50);
+    setTimeout(executeUltraTopScroll, 150);
+    setTimeout(executeUltraTopScroll, 300);
+
+    // Sistema de bloqueo antifraude de clics globales durante cargas de IA
     const observer = new MutationObserver(function(mutations) {
         const parentDoc = window.parent.document;
         const spinners = parentDoc.querySelectorAll('[data-testid="stStatusWidget"], .stSpinner, [data-baseweb="spinner"]');
@@ -255,7 +260,7 @@ st.markdown("""
             overlay.style.width = '100vw';
             overlay.style.height = '100vh';
             overlay.style.zIndex = '999999';
-            overlay.style.background = 'rgba(0,0,0,0.2)';
+            overlay.style.background = 'rgba(0,0,0,0.25)';
             overlay.style.cursor = 'wait';
             overlay.style.display = 'none';
             parentDoc.body.appendChild(overlay);
@@ -427,7 +432,7 @@ TEXTOS = {
         "btn_confirmar_y_enviar": "📤 Confirmar Datos, Idioma, Fecha y Enviar Email 😊",
         "btn_oops_no_conforme": "😕 Oops, no estoy conforme con mi resultado (Resetear Test)",
         "msg_fin_sin_correo": "🎉 ¡Proceso finalizado con éxito! Gracias por participar en el circo digital de Jung Tech. 🚀🎪",
-        "titulo_verificacion_datos": "🔍 Verificación y Confirmación de Datos del Postulante:",
+        "titulo_verificacion_datos": "🔍 Verification and Confirmation of Candidate Details:",
         "msg_correo_enviado": "¡REPORTE Y TEMARIO ENVIADOS CON ÉXITO A TU CORREO EN EL IDIOMA SOLICITADO! ⚠️ ¡POR FAVOR REVISA TU CARPETA DE SPAM! Te esperamos en la entrevista de Fase 2. Fin del proceso. 🚀🎪\n\nESTE ES EL FINAL DE ESTA EVALUACIÓN, SI YA RECIBISTE TU CORREO PUEDES CERRAR LA PÁGINA, SI NO LO HAS RECIBIDO POR FAVOR REVISA LA SECCIÓN DE CORREO EN LA PARTE SUPERIOR PARA VERIFICAR QUE TODO ESTÉ BIEN Y VUELVE A PRESIONAR EL BOTÓN DE CONFIRMACIÓN",
         "label_improvisada": "💡 Pregúntale a nuestro agente de inteligencia artificial. Escribe tu pregunta aquí seguido del botón Ask AI / o presiona la tecla TAB para hacerle esta pregunta predeterminada: {pregunta}. y presiona Ask AI",
         "btn_enviar_improvisada": "Ask AI 🪄",
@@ -1576,10 +1581,10 @@ elif st.session_state.step == "resultado" and not st.session_state.get("modo_oop
                     new_errs_v["prov_msg"] = txt["err_proveedor"]
                     has_error_v = True
 
-                if not num_tel_limpio.strip():
+                if not num_tel_val_limpio.strip():
                     new_errs_v["num_tel"] = txt["err_campo"]
                     has_error_v = True
-                elif not num_tel_limpio.isdigit():
+                elif not num_tel_val_limpio.isdigit():
                     new_errs_v["num_tel"] = txt["err_tel"]
                     has_error_v = True
 
@@ -1601,7 +1606,7 @@ elif st.session_state.step == "resultado" and not st.session_state.get("modo_oop
 
                     st.session_state.pre_envio_resultado_activo = True
                     st.session_state.temp_fin_prefijo = prefix_val
-                    st.session_state.temp_fin_tel = num_tel_limpio
+                    st.session_state.temp_fin_tel = num_tel_val_limpio
                     st.session_state.temp_fin_correo = correo_final_armado
                     st.session_state.temp_fin_fecha = fecha_elegida
                     st.session_state.temp_fin_idioma = idioma_correo_sel

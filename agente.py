@@ -22,13 +22,13 @@ st.set_page_config(
     layout="wide"
 )
 
-# Script infalible de scroll y bloqueo de múltiples clics durante el loading
+# Script infalible de scroll al tope absoluto en cada renderizado y recarga de página
 st.markdown("""
     <div id="top-app"></div>
     <script>
         function forceScrollTop() {
-            window.scrollTo(0, 0);
-            parent.window.scrollTo(0, 0);
+            window.scrollTo({ top: 0, behavior: 'instant' });
+            parent.window.scrollTo({ top: 0, behavior: 'instant' });
             const mainContainer = window.parent.document.querySelector('.main');
             if (mainContainer) {
                 mainContainer.scrollTop = 0;
@@ -38,11 +38,15 @@ st.markdown("""
                 topAnchor.scrollIntoView({ behavior: 'instant', block: 'start' });
             }
         }
+        
+        // Forzar scroll inmediatamente y en cada ciclo de renderizado
         forceScrollTop();
-        setTimeout(forceScrollTop, 10);
-        setTimeout(forceScrollTop, 50);
+        window.addEventListener('load', forceScrollTop);
+        setTimeout(forceScrollTop, 0);
+        setTimeout(forceScrollTop, 20);
+        setTimeout(forceScrollTop, 100);
 
-        # Bloqueo global de múltiples clics mientras aparezca el spinner de carga
+        // Bloqueo global de múltiples clics mientras aparezca el spinner de carga
         const observer = new MutationObserver(function(mutations) {
             const spinner = window.parent.document.querySelector('[data-testid="stStatusWidget"], .stSpinner');
             const overlay = document.getElementById('click-blocker') || createBlocker();
@@ -387,10 +391,10 @@ TEXTOS = {
         "btn_arrepinti": "😊 ¡Me arrepentí, ahora sí quiero tomar el test!",
         "gracias_cierre": "¡Muchas gracias! Tus datos han sido guardados exitosamente en nuestra base de datos de Jung Tech. Te notificaremos cuando tengamos nuevas series y películas disponibles. ¡Hasta pronto! 🎪✨",
         "btn_reiniciar_test": "🔄 Reiniciar Test",
-        "btn_oops_reconexion": "😕 Oops, I would like to change the movie or series",
-        "sec_1": "To continue with the evaluation process, please open Section 1 and read more about: If my function is {f_val}, what is my personality like in daily life? Please read this into detail, as this is part of our evaluation.",
-        "sec_2": "To continue with the evaluation process, please open Section 2 and read more about: What is the MBTI and how does it impact your professional life? Please read this into detail, as this is part of our evaluation.",
-        "sec_3": "To continue with the evaluation process, please open Section 3 and read more about: How does this function affect your daily life and performance? Please read this into detail, as this is part of our evaluation.",
+        "btn_oops_reconexion": "😕 Oops, me gustaría cambiar la película o serie",
+        "sec_1": "Para continuar con el proceso de evaluación, por favor abra la Sección 1 y lea más sobre: Si mi función es {f_val}, ¿cómo es mi personalidad en el día a día? Por favor léalo en detalle, ya que esto forma parte de nuestra evaluación.",
+        "sec_2": "Para continuar con el proceso de evaluación, por favor abra la Sección 2 y lea más sobre: ¿Qué es el MBTI y cómo impacta en su vida profesional? Por favor léalo en detalle, ya que esto forma parte de nuestra evaluación.",
+        "sec_3": "Para continuar con el proceso de evaluación, por favor abra la Sección 3 y lea más sobre: ¿Cómo afecta esta función su vida diaria y rendimiento? Por favor léalo en detalle, ya que esto forma parte de nuestra evaluación.",
         "btn_siguiente_seccion": "➔ Siguiente Sección",
         "instruccion_requisito": "💡 **Requisito del Circo Digital:** Debes hacer clic y abrir las secciones 1, 2 y 3 (en el orden que prefieras) para poder desbloquear el botón y pasar a la siguiente sección.",
         "err_falta_clicks": "⚠️ ¡Alto ahí! Te falta abrir alguna(s) de las secciones (Sección 1, 2, or/and 3) antes de continuar. Los botones que te falta presionar tienen un corazón roto (💔) al lado. Recuerda que en Jung Tech valoramos que nuestros empleados usen la IA y hagan preguntas. Si no comprendiste algo, ¡pregúntale a la IA! Este es un test laboral, dale rienda suelta a tu curiosidad. 🚀",
@@ -442,8 +446,7 @@ TEXTOS = {
         "btn_si_cambiar_pelicula": "Sí, cambiar producción",
         "btn_no_mantener": "No, mantener",
         "pregunta_cambiar_pelicula": "¿Deseas cambiar la producción seleccionada para tu proceso de selección?",
-        "pregunta_regresar_datos": "¿Deseas regresar a la pantalla anterior para corregir tus datos personales de registro?",
-        "lbl_apellidos_titulo": "Apellidos"
+        "pregunta_regresar_datos": "¿Deseas regresar a la pantalla anterior para corregir tus datos personales de registro?"
     },
     "ENG": {
         "subtitulo": "Intelligent Recruitment and Psychometric Diagnosis System according to Carl Jung's model",
@@ -885,13 +888,8 @@ def renderizar_fase_cognitiva(titulo_fase, f_val, f_desc, clave_fase, siguiente_
     c3_ind = " ✅" if "seccion_3" in st.session_state[key_clics] else " 💔"
 
     sec1_titulo = txt["sec_1"].format(f_val=f_val) + c1_ind
-    
-    if current_idioma == "ESP":
-        sec2_titulo = f"Para continuar con el proceso de evaluación, por favor abra la Sección 2 y lea más sobre: ¿Qué es el MBTI y cómo impacta en su vida profesional? Por favor léalo en detalle, ya que esto forma parte de nuestra evaluación.{c2_ind}"
-        sec3_titulo = f"Para continuar con el proceso de evaluación, por favor abra la Sección 3 y lea más sobre: ¿Cómo afecta esta función su vida diaria y rendimiento? Por favor léalo en detalle, ya que esto forma parte de nuestra evaluación.{c3_ind}"
-    else:
-        sec2_titulo = f"To continue with the evaluation process, please open Section 2 and read more about: What is the MBTI and how does it impact your professional life? Please read this into detail, as this is part of our evaluation.{c2_ind}"
-        sec3_titulo = f"To continue with the evaluation process, please open Section 3 and read more about: How does this function affect your daily life and performance? Please read this into detail, as this is part of our evaluation.{c3_ind}"
+    sec2_titulo = txt["sec_2"] + c2_ind
+    sec3_titulo = txt["sec_3"] + c3_ind
 
     key_lang = "ESP" if current_idioma == "ESP" else "ENG"
     pregunta_sugerida_actual = PREGUNTAS_SUGERIDAS[key_lang].get(clave_fase, "What is my selected character?")
@@ -1582,7 +1580,7 @@ elif st.session_state.step == "resultado" and not st.session_state.get("modo_oop
 
                     st.session_state.pre_envio_resultado_activo = True
                     st.session_state.temp_fin_prefijo = prefix_val
-                    st.session_state.temp_fin_tel = num_tel_limpio
+                    st.session_state.temp_fin_tel = num_tel_val_limpio
                     st.session_state.temp_fin_correo = correo_final_armado
                     st.session_state.temp_fin_fecha = fecha_elegida
                     st.session_state.temp_fin_idioma = idioma_correo_sel

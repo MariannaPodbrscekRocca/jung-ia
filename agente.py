@@ -387,7 +387,7 @@ TEXTOS = {
         "msg_fin_sin_correo": "🎉 ¡Proceso finalizado con éxito! Gracias por participar en el circo digital de Jung Tech. 🚀🎪",
         "titulo_verificacion_datos": "🔍 Verificación y Confirmación de Datos del Postulante:",
         "msg_correo_enviado": "¡REPORTE Y TEMARIO ENVIADOS CON ÉXITO A TU CORREO EN EL IDIOMA SOLICITADO! ⚠️ ¡POR FAVOR REVISA TU CARPETA DE SPAM! Te esperamos en la entrevista de Fase 2. Fin del proceso. 🚀🎪\n\nESTE ES EL FINAL DE ESTA EVALUACIÓN, SI YA RECIBISTE TU CORREO PUEDES CERRAR LA PÁGINA, SI NO LO HAS RECIBIDO POR FAVOR REVISA LA SECCIÓN DE CORREO EN LA PARTE SUPERIOR PARA VERIFICAR QUE TODO ESTÉ BIEN Y VUELVE A PRESIONAR EL BOTÓN DE CONFIRMACIÓN",
-        "label_improvisada": "💡 ¿Tienes dudas? Pregúntale a la IA (💡 Si te gusta la pregunta sugerida abajo, haz clic sobre ella y presiona TAB para usarla, o tipea tu propia pregunta en la casilla y haz clic en Ask AI):",
+        "label_improvisada": "💡 Pregúntale a nuestro agente de inteligencia artificial. Escribe tu pregunta aquí seguido del botón Ask AI / o presiona la tecla TAB para hacerle esta pregunta predeterminada: {pregunta}. y presiona Ask AI",
         "btn_enviar_improvisada": "Ask AI 🪄",
         "cargando_txt": "⏰ Cargando...",
         "orientacion_proceso": "💡 **Reclutamiento:** ¡Hola! Este es un proceso oficial de Jung Tech 🏢. Haz preguntas y explora los botones para conocerte a fondo 🧠✨.",
@@ -501,7 +501,7 @@ TEXTOS = {
         "msg_fin_sin_correo": "🎉 Process completed successfully! Thank you for participating in Jung Tech's digital circus. 🚀🎪",
         "titulo_verificacion_datos": "🔍 Verification and Confirmation of Candidate Details:",
         "msg_correo_enviado": "REPORT AND PREPARATION GUIDE SUCCESSFULLY SENT TO YOUR EMAIL IN THE REQUESTED LANGUAGE! ⚠️ PLEASE CHECK YOUR SPAM FOLDER! We look forward to seeing you at your Phase 2 interview. End of process. 🚀🎪\n\nTHIS IS THE END OF THIS ASSESSMENT, IF YOU HAVE ALREADY RECEIVED YOUR EMAIL YOU CAN CLOSE THE PAGE, IF YOU HAVE NOT RECEIVED IT PLEASE CHECK THE Email address or username SECTION AT THE TOP TO VERIFY THAT EVERYTHING IS CORRECT AND PRESS THE CONFIRM DETAIL, LANGUAGE, DATE AND SEND EMAIL BUTTON AGAIN",
-        "label_improvisada": "💡 Any questions? Ask the AI (💡 If you like the suggested question below, click on it and press TAB to use it, or type your own question in the box and click Ask AI):",
+        "label_improvisada": "💡 Ask our artificial intelligence agent. Type your question here followed by the Ask AI button / or press the TAB key to ask this default question: {pregunta}. and press Ask AI",
         "btn_enviar_improvisada": "Ask AI 🪄",
         "cargando_txt": "⏰ Loading...",
         "orientacion_proceso": "💡 **Recruitment:** Hello! This is an official Jung Tech hiring process 🏢. Ask questions and explore buttons to get to know yourself deeply 🧠✨.",
@@ -878,7 +878,8 @@ def renderizar_fase_cognitiva(titulo_fase, f_val, f_desc, clave_fase, siguiente_
         
         col_ia1_1, col_ia1_2 = st.columns([3, 1])
         with col_ia1_1:
-            pregunta_libre_1 = st.text_input(txt["label_improvisada"], placeholder=pregunta_sugerida_actual, key=f"{clave_fase}_lib_1", label_visibility="collapsed")
+            label_fmt_1 = txt["label_improvisada"].replace("{pregunta}", pregunta_sugerida_actual)
+            pregunta_libre_1 = st.text_input(label_fmt_1, placeholder=pregunta_sugerida_actual, key=f"{clave_fase}_lib_1")
         with col_ia1_2:
             st.markdown("<div style='margin-top: 25px;'></div>", unsafe_allow_html=True)
             btn_enviar_ia1 = st.button(txt["btn_enviar_improvisada"], key=f"{clave_fase}_btn_lib_1", type="primary")
@@ -896,7 +897,8 @@ def renderizar_fase_cognitiva(titulo_fase, f_val, f_desc, clave_fase, siguiente_
         
         col_ia2_1, col_ia2_2 = st.columns([3, 1])
         with col_ia2_1:
-            pregunta_libre_2 = st.text_input(txt["label_improvisada"], placeholder=pregunta_sugerida_actual, key=f"{clave_fase}_lib_2", label_visibility="collapsed")
+            label_fmt_2 = txt["label_improvisada"].replace("{pregunta}", pregunta_sugerida_actual)
+            pregunta_libre_2 = st.text_input(label_fmt_2, placeholder=pregunta_sugerida_actual, key=f"{clave_fase}_lib_2")
         with col_ia2_2:
             st.markdown("<div style='margin-top: 25px;'></div>", unsafe_allow_html=True)
             btn_enviar_ia2 = st.button(txt["btn_enviar_improvisada"], key=f"{clave_fase}_btn_lib_2", type="primary")
@@ -914,7 +916,8 @@ def renderizar_fase_cognitiva(titulo_fase, f_val, f_desc, clave_fase, siguiente_
         
         col_ia3_1, col_ia3_2 = st.columns([3, 1])
         with col_ia3_1:
-            pregunta_libre_3 = st.text_input(txt["label_improvisada"], placeholder=pregunta_sugerida_actual, key=f"{clave_fase}_lib_3", label_visibility="collapsed")
+            label_fmt_3 = txt["label_improvisada"].replace("{pregunta}", pregunta_sugerida_actual)
+            pregunta_libre_3 = st.text_input(label_fmt_3, placeholder=pregunta_sugerida_actual, key=f"{clave_fase}_lib_3")
         with col_ia3_2:
             st.markdown("<div style='margin-top: 25px;'></div>", unsafe_allow_html=True)
             btn_enviar_ia3 = st.button(txt["btn_enviar_improvisada"], key=f"{clave_fase}_btn_lib_3", type="primary")
@@ -1522,7 +1525,7 @@ elif st.session_state.step == "resultado" and not st.session_state.get("modo_oop
 
                     st.session_state.pre_envio_resultado_activo = True
                     st.session_state.temp_fin_prefijo = prefix_val
-                    st.session_state.temp_fin_tel = num_tel_limpio
+                    st.session_state.temp_fin_tel = num_tel_val_limpio
                     st.session_state.temp_fin_correo = correo_final_armado
                     st.session_state.temp_fin_fecha = fecha_elegida
                     st.session_state.temp_fin_idioma = idioma_correo_sel

@@ -22,7 +22,7 @@ st.set_page_config(
     layout="wide"
 )
 
-# Script infalible de scroll al tope absoluto usando anclaje y desplazamiento forzado
+# Script infalible de scroll al tope absoluto en cada renderizado o cambio de sección
 st.markdown("""
     <div id="top-app"></div>
     <script>
@@ -38,8 +38,10 @@ st.markdown("""
                 topAnchor.scrollIntoView({ behavior: 'instant', block: 'start' });
             }
         }
+        forceScrollTop();
+        setTimeout(forceScrollTop, 10);
         setTimeout(forceScrollTop, 50);
-        document.addEventListener('DOMContentLoaded', forceScrollTop);
+        setTimeout(forceScrollTop, 150);
     </script>
 """, unsafe_allow_html=True)
 
@@ -354,15 +356,15 @@ TEXTOS = {
         "gracias_cierre": "¡Muchas gracias! Tus datos han sido guardados exitosamente en nuestra base de datos de Jung Tech. Te notificaremos cuando tengamos nuevas series y películas disponibles. ¡Hasta pronto! 🎪✨",
         "btn_reiniciar_test": "🔄 Reiniciar Test",
         "btn_oops_reconexion": "😕 Oops, no siento que este perfil me describa, quiero volver a empezar",
-        "btn_dom_1": "Opción 1: Si mi función es {f_val}, ¿cómo es mi personalidad en el día a día?",
-        "btn_dom_2": "Opción 2: ¿Qué es el MBTI y cómo impacta en tu vida profesional?",
-        "btn_dom_3": "Opción 3: ¿Cómo afecta esta función tu vida diaria y rendimiento?",
+        "sec_1": "Por favor abre esta Sección 1: Si mi función es {f_val}, ¿cómo es mi personalidad en el día a día?",
+        "sec_2": "Por favor abre esta Sección 2: ¿Qué es el MBTI y cómo impacta en tu vida profesional?",
+        "sec_3": "Por favor abre esta Sección 3: ¿Cómo afecta esta función tu vida diaria y rendimiento?",
         "btn_siguiente_seccion": "➔ Siguiente Sección",
-        "instruccion_requisito": "💡 **Requisito del Circo Digital:** Debes hacer clic y explorar las opciones 1, 2 y 3 (en el orden que prefieras) para poder desbloquear el botón y pasar a la siguiente sección.",
-        "err_falta_clicks": "⚠️ ¡Alto ahí! Te falta explorar alguna(s) de las opciones (1, 2, or/and 3) antes de continuar. Los botones que te falta presionar tienen un corazón roto (💔) al lado. Recuerda que en Jung Tech valoramos que nuestros empleados usen la IA y hagan preguntas. Si no comprendiste algo, ¡pregúntale a la IA! Este es un test laboral, dale rienda suelta a tu curiosidad. 🚀",
-        "lbl_op1_sel": "Opción 1 Seleccionada",
-        "lbl_op2_sel": "Opción 2 Seleccionada - Equipo de Reclutamiento",
-        "lbl_op3_sel": "Opción 3 Seleccionada - Análisis IA",
+        "instruccion_requisito": "💡 **Requisito del Circo Digital:** Debes abrir y explorar las secciones 1, 2 y 3 (puedes abrirlas en el orden que prefieras) para poder desbloquear el botón y pasar a la siguiente sección.",
+        "err_falta_clicks": "⚠️ ¡Alto ahí! Te falta explorar alguna(s) de las secciones (Sección 1, 2, or/and 3) antes de continuar. Los acordeones que te falta abrir tienen un corazón roto (💔) al lado. Recuerda que en Jung Tech valoramos que nuestros empleados usen la IA y hagan preguntas. Si no comprendiste algo, ¡pregúntale a la IA! Este es un test laboral, dale rienda suelta a tu curiosidad. 🚀",
+        "lbl_op1_sel": "Sección 1 Abierta",
+        "lbl_op2_sel": "Sección 2 Abierta - Equipo de Reclutamiento",
+        "lbl_op3_sel": "Sección 3 Abierta - Análisis IA",
         "badge_postulante": "Hola",
         "badge_personaje": "Personaje",
         "fase_1": "1. Función Dominante",
@@ -390,7 +392,7 @@ TEXTOS = {
         "label_improvisada": "💡 Pregúntale a nuestro agente de inteligencia artificial. Escribe tu pregunta aquí seguido del botón Ask AI / o presiona la tecla TAB para hacerle esta pregunta predeterminada: {pregunta}. y presiona Ask AI",
         "btn_enviar_improvisada": "Ask AI 🪄",
         "cargando_txt": "⏰ Cargando...",
-        "orientacion_proceso": "💡 **Reclutamiento:** ¡Hola! Este es un proceso oficial de Jung Tech 🏢. Haz preguntas y explora los botones para conocerte a fondo 🧠✨.",
+        "orientacion_proceso": "💡 **Reclutamiento:** ¡Hola! Este es un proceso oficial de Jung Tech 🏢. Haz preguntas y abre las secciones para conocerte a fondo 🧠✨.",
         "firma_autor": "Página web diseñada por: <b>Marianna Podbrscek Rocca</b>",
         "titulo_ultima_confirmacion": "🔍 Última Confirmación de Datos",
         "info_ultima_confirmacion": "Por favor revisa que tus datos recopilados sean correctos antes de continuar:",
@@ -468,15 +470,15 @@ TEXTOS = {
         "gracias_cierre": "Thank you very much! Your data has been successfully saved in our Jung Tech database. We will notify you when new series and movies are available. See you soon! 🎪✨",
         "btn_reiniciar_test": "🔄 Restart Test",
         "btn_oops_reconexion": "😕 Oops, I don't feel like this profile describes me, I want to start over",
-        "btn_dom_1": "Option 1: If my function is {f_val}, what is my personality like in daily life?",
-        "btn_dom_2": "Option 2: What is the MBTI and how does it impact your professional life?",
-        "btn_dom_3": "Option 3: How does this function affect your daily life and performance?",
+        "sec_1": "Please open this Section 1: If my function is {f_val}, what is my personality like in daily life?",
+        "sec_2": "Please open this Section 2: What is the MBTI and how does it impact your professional life?",
+        "sec_3": "Please open this Section 3: How does this function affect your daily life and performance?",
         "btn_siguiente_seccion": "➔ Next Section",
-        "instruccion_requisito": "💡 **Digital Circus Requirement:** You must click and explore options 1, 2, and 3 (in any order you prefer) to unlock the button and move to the next section.",
-        "err_falta_clicks": "⚠️ Hold on! You still need to explore some of the options (1, 2, or/and 3) before proceeding. The buttons you still need to press have a broken heart (💔) next to them. At Jung Tech, we value our employees using AI and asking questions. If you didn't understand something, ask the AI! Remember this is a job assessment test, so let your curiosity run wild. 🚀",
-        "lbl_op1_sel": "Option 1 Selected",
-        "lbl_op2_sel": "Option 2 Selected - Recruitment Team",
-        "lbl_op3_sel": "Option 3 Selected - AI Analysis",
+        "instruccion_requisito": "💡 **Digital Circus Requirement:** You must open and explore sections 1, 2, and 3 (in any order you prefer) to unlock the button and move to the next section.",
+        "err_falta_clicks": "⚠️ Hold on! You still need to explore some of the sections (Section 1, 2, or/and 3) before proceeding. The accordions you still need to open have a broken heart (💔) next to them. At Jung Tech, we value our employees using AI and asking questions. If you didn't understand something, ask the AI! Remember this is a job assessment test, so let your curiosity run wild. 🚀",
+        "lbl_op1_sel": "Section 1 Open",
+        "lbl_op2_sel": "Section 2 Open - Recruitment Team",
+        "lbl_op3_sel": "Section 3 Open - AI Analysis",
         "badge_postulante": "Hello",
         "badge_personaje": "Character",
         "fase_1": "1. Dominant Function",
@@ -504,7 +506,7 @@ TEXTOS = {
         "label_improvisada": "💡 Ask our artificial intelligence agent. Type your question here followed by the Ask AI button / or press the TAB key to ask this default question: {pregunta}. and press Ask AI",
         "btn_enviar_improvisada": "Ask AI 🪄",
         "cargando_txt": "⏰ Loading...",
-        "orientacion_proceso": "💡 **Recruitment:** Hello! This is an official Jung Tech hiring process 🏢. Ask questions and explore buttons to get to know yourself deeply 🧠✨.",
+        "orientacion_proceso": "💡 **Recruitment:** Hello! This is an official Jung Tech hiring process 🏢. Ask questions and explore sections to get to know yourself deeply 🧠✨.",
         "firma_autor": "Website designed by: <b>Marianna Podbrscek Rocca</b>",
         "titulo_ultima_confirmacion": "🔍 Final Data Confirmation",
         "info_ultima_confirmacion": "Please review that your collected data is correct before proceeding:",
@@ -814,7 +816,7 @@ def enviar_correo_multilingue(fecha_seleccionada="", idioma_preferido="Español"
         st.session_state.correo_enviado = False
 
 # ==============================================================================
-# 7. RENDERIZADOR DE FASES COGNITIVAS
+# 7. RENDERIZADOR DE FASES COGNITIVAS (OPTIMIZADO CON ST.EXPANDER INSTANTÁNEO)
 # ==============================================================================
 def renderizar_fase_cognitiva(titulo_fase, f_val, f_desc, clave_fase, siguiente_paso_tuple):
     ev = st.session_state.eval
@@ -843,30 +845,21 @@ def renderizar_fase_cognitiva(titulo_fase, f_val, f_desc, clave_fase, siguiente_
     
     st.markdown(f"<p class='instruction-fucsia'>{txt['instruccion_requisito']}</p>", unsafe_allow_html=True)
     
-    c1_indicator = " ✅" if "opcion_1" in st.session_state[key_clics] else " 💔"
-    c2_indicator = " ✅" if "opcion_2" in st.session_state[key_clics] else " 💔"
-    c3_indicator = " ✅" if "opcion_3" in st.session_state[key_clics] else " 💔"
+    c1_ind = " ✅" if "seccion_1" in st.session_state[key_clics] else " 💔"
+    c2_ind = " ✅" if "seccion_2" in st.session_state[key_clics] else " 💔"
+    c3_ind = " ✅" if "seccion_3" in st.session_state[key_clics] else " 💔"
 
-    b1 = txt["btn_dom_1"].format(f_val=f_val) + c1_indicator
-    b2 = txt["btn_dom_2"] + c2_indicator
-    b3 = txt["btn_dom_3"] + c3_indicator
-    
-    def toggle_accion(nombre_accion):
-        id_completo = f"{clave_fase}_{nombre_accion}"
-        if st.session_state.accion_activa == id_completo:
-            st.session_state.accion_activa = None
-        else:
-            st.session_state.accion_activa = id_completo
-            st.session_state[key_clics].add(nombre_accion)
+    sec1_titulo = txt["sec_1"].format(f_val=f_val) + c1_ind
+    sec2_titulo = txt["sec_2"] + c2_ind
+    sec3_titulo = txt["sec_3"] + c3_ind
 
     key_lang = "ESP" if current_idioma == "ESP" else "ENG"
     pregunta_sugerida_actual = PREGUNTAS_SUGERIDAS[key_lang].get(clave_fase, "What is my selected character?")
-    
-    if st.button(b1, key=f"{clave_fase}_b1", type="primary" if "opcion_1" in st.session_state[key_clics] else "secondary"):
-        toggle_accion("opcion_1")
-    if st.session_state.accion_activa == f"{clave_fase}_opcion_1":
-        personaje_actual = ev.get('personaje', 'Character')
-        
+    personaje_actual = ev.get('personaje', 'Character')
+
+    # SECCIÓN 1 (Acordeón exclusivo y ultra rápido)
+    with st.expander(sec1_titulo, expanded=False):
+        st.session_state[key_clics].add("seccion_1")
         if current_idioma == "ESP":
             muletilla = "déjame adivinar 🔮" if clave_fase == "funcion_dominante" else ("estoy seguro 🧠" if clave_fase == "funcion_auxiliar" else "puedo anticipar 👁️")
             texto_op1 = f"🧠 Tu concepto es **{f_val}**, lo cual significa que *{f_desc}*. Y {muletilla} como **{personaje_actual}** valoras profundamente esta perspectiva en tu día a día como **{ev.get('mbti')}** ⚡."
@@ -889,9 +882,9 @@ def renderizar_fase_cognitiva(titulo_fase, f_val, f_desc, clave_fase, siguiente_
             resp_libre = consultar_ia_orientada(usr, ev.get('mbti'), ev.get('area_ti'), f_val, f_desc, origen="libre", pregunta_usuario=texto_a_enviar)
             st.info(f"**Jung.AI:** {resp_libre}")
 
-    if st.button(b2, key=f"{clave_fase}_b2", type="primary" if "opcion_2" in st.session_state[key_clics] else "secondary"):
-        toggle_accion("opcion_2")
-    if st.session_state.accion_activa == f"{clave_fase}_opcion_2":
+    # SECCIÓN 2
+    with st.expander(sec2_titulo, expanded=False):
+        st.session_state[key_clics].add("seccion_2")
         resp_ia_extra = consultar_ia_orientada(usr, ev.get('mbti'), ev.get('area_ti'), f_val, f_desc, origen="equipo")
         st.markdown(f"<div class='box-opcion-2'><b>[{txt['lbl_op2_sel']}]:</b><br>{resp_ia_extra}</div>", unsafe_allow_html=True)
         
@@ -908,9 +901,9 @@ def renderizar_fase_cognitiva(titulo_fase, f_val, f_desc, clave_fase, siguiente_
             resp_libre = consultar_ia_orientada(usr, ev.get('mbti'), ev.get('area_ti'), f_val, f_desc, origen="libre", pregunta_usuario=texto_a_enviar)
             st.info(f"**Jung.AI:** {resp_libre}")
 
-    if st.button(b3, key=f"{clave_fase}_b3", type="primary" if "opcion_3" in st.session_state[key_clics] else "secondary"):
-        toggle_accion("opcion_3")
-    if st.session_state.accion_activa == f"{clave_fase}_opcion_3":
+    # SECCIÓN 3
+    with st.expander(sec3_titulo, expanded=False):
+        st.session_state[key_clics].add("seccion_3")
         resp_ia_ia = consultar_ia_orientada(usr, ev.get('mbti'), ev.get('area_ti'), f_val, f_desc, origen="ia")
         st.markdown(f"<div class='box-opcion-3'><b>[{txt['lbl_op3_sel']}]:</b><br>{resp_ia_ia}</div>", unsafe_allow_html=True)
         
@@ -935,7 +928,7 @@ def renderizar_fase_cognitiva(titulo_fase, f_val, f_desc, clave_fase, siguiente_
     col_inf_1, col_inf_2 = st.columns([3, 1])
     with col_inf_1:
         if st.button(txt["btn_siguiente_seccion"], type="primary", key=f"{clave_fase}_btn_sig"):
-            if {"opcion_1", "opcion_2", "opcion_3"}.issubset(st.session_state[key_clics]):
+            if {"seccion_1", "seccion_2", "seccion_3"}.issubset(st.session_state[key_clics]):
                 st.session_state[f"{clave_fase}_alerta_clicks"] = False
                 sig_step, sig_nombre = siguiente_paso_tuple
                 st.session_state.step = sig_step
@@ -1521,7 +1514,7 @@ elif st.session_state.step == "resultado" and not st.session_state.get("modo_oop
                     st.session_state.datos["apellidos"] = apellidos_val.strip().title()
                     st.session_state.datos["preferido"] = preferido_val.strip().title() if preferido_val else nombres_val.strip().title()
                     st.session_state.datos["correo"] = correo_final_armado
-                    st.session_state.datos["telefono"] = f"{prefix_val} {num_tel_limpio}"
+                    st.session_state.datos["telefono"] = f"{prefix_val} {num_tel_val_limpio}"
 
                     st.session_state.pre_envio_resultado_activo = True
                     st.session_state.temp_fin_prefijo = prefix_val

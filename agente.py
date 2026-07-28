@@ -27,20 +27,16 @@ st.markdown('<div id="top-app"></div>', unsafe_allow_html=True)
 st.html("""
     <script>
         function jumpToTop() {
-            window.parent.scrollTo({ top: 0, behavior: 'instant' });
-            window.scrollTo({ top: 0, behavior: 'instant' });
-            const body = window.parent.document.body;
-            if (body) body.scrollTop = 0;
-            const docEl = window.parent.document.documentElement;
-            if (docEl) docEl.scrollTop = 0;
-            const mainContainer = window.parent.document.querySelector('.main');
-            if (mainContainer) {
-                mainContainer.scrollTop = 0;
-            }
-            const topAnchor = window.parent.document.getElementById('top-app');
-            if (topAnchor) {
-                topAnchor.scrollIntoView({ behavior: 'instant', block: 'start' });
-            }
+            try {
+                window.parent.scrollTo(0, 0);
+                window.scrollTo(0, 0);
+                const mainContainer = window.parent.document.querySelector('.main');
+                if (mainContainer) mainContainer.scrollTop = 0;
+                const topAnchor = window.parent.document.getElementById('top-app');
+                if (topAnchor) {
+                    topAnchor.scrollIntoView({ behavior: 'auto', block: 'start' });
+                }
+            } catch(e) {}
         }
         
         jumpToTop();
@@ -446,7 +442,8 @@ TEXTOS = {
         "btn_si_cambiar_pelicula": "Sí, cambiar producción 😊",
         "btn_no_mantener": "No, mantener 😊",
         "pregunta_cambiar_pelicula": "¿Deseas cambiar la producción seleccionada para tu proceso de selección?",
-        "pregunta_regresar_datos": "¿Deseas regresar a la pantalla anterior para corregir tus datos personales de registro?"
+        "pregunta_regresar_datos": "¿Deseas regresar a la pantalla anterior para corregir tus datos personales de registro?",
+        "lbl_apellidos_titulo": "Apellidos"
     },
     "ENG": {
         "subtitulo": "Intelligent Recruitment and Psychometric Diagnosis System according to Carl Jung's model",
@@ -559,7 +556,8 @@ TEXTOS = {
         "btn_si_cambiar_pelicula": "Yes, change movie 😊",
         "btn_no_mantener": "No, keep 😊",
         "pregunta_cambiar_pelicula": "Do you want to change the movie or series selected for your selection process?",
-        "pregunta_regresar_datos": "Do you want to go back to the previous screen to correct your personal registration details?"
+        "pregunta_regresar_datos": "Do you want to go back to the previous screen to correct your personal registration details?",
+        "lbl_apellidos_titulo": "Last Name"
     }
 }
 
@@ -1495,14 +1493,14 @@ elif st.session_state.step == "resultado" and not st.session_state.get("modo_oop
             with c_tel1:
                 prefijo_sel = st.selectbox(txt["lbl_prefijo"], [p[0] for p in LISTA_PREFIJOS])
                 if errs_v.get("num_tel"):
-                    st.markdown(f"<p class='instruction-error'>{errs_v['num_tel']}</p>", unsafe_allow_html=True)
+                    st.markdown(f"<p class='instruction-error'>{errs['num_tel']}</p>", unsafe_allow_html=True)
                 else:
                     st.markdown(f"<p class='instruction-fucsia'>{txt['input_num_tel']}</p>", unsafe_allow_html=True)
                 num_tel_val = st.text_input(txt["input_num_tel"], value=st.session_state.get("verif_tel", "") or tel_solo_digitos, label_visibility="collapsed")
                 
             with c_tel2:
                 if errs_v.get("usr_mail"):
-                    st.markdown(f"<p class='instruction-error'>{errs_v['usr_mail']}</p>", unsafe_allow_html=True)
+                    st.markdown(f"<p class='instruction-error'>{errs['usr_mail']}</p>", unsafe_allow_html=True)
                 else:
                     st.markdown(f"<p class='instruction-fucsia'>{txt['input_usr_mail']}</p>", unsafe_allow_html=True)
                 

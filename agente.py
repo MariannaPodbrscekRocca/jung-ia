@@ -22,7 +22,7 @@ st.set_page_config(
     layout="wide"
 )
 
-# Script infalible de scroll al tope absoluto en cada renderizado o cambio de sección
+# Script infalible de scroll y bloqueo de múltiples clics durante el loading
 st.markdown("""
     <div id="top-app"></div>
     <script>
@@ -41,12 +41,40 @@ st.markdown("""
         forceScrollTop();
         setTimeout(forceScrollTop, 10);
         setTimeout(forceScrollTop, 50);
-        setTimeout(forceScrollTop, 150);
+
+        # Bloqueo global de múltiples clics mientras aparezca el spinner de carga
+        const observer = new MutationObserver(function(mutations) {
+            const spinner = window.parent.document.querySelector('[data-testid="stStatusWidget"], .stSpinner');
+            const overlay = document.getElementById('click-blocker') || createBlocker();
+            if (spinner) {
+                overlay.style.display = 'block';
+            } else {
+                overlay.style.display = 'none';
+            }
+        });
+
+        function createBlocker() {
+            const div = document.createElement('div');
+            div.id = 'click-blocker';
+            div.style.position = 'fixed';
+            div.style.top = '0';
+            div.style.left = '0';
+            div.style.width = '100vw';
+            div.style.height = '100vh';
+            div.style.zIndex = '999999';
+            div.style.background = 'rgba(0,0,0,0.1)';
+            div.style.cursor = 'wait';
+            div.style.display = 'none';
+            window.parent.document.body.appendChild(div);
+            return div;
+        }
+
+        observer.observe(window.parent.document.body, { childList: true, subtree: true });
     </script>
 """, unsafe_allow_html=True)
 
 # ------------------------------------------------------------------------------
-# HOJA DE ESTILOS CSS PERSONALIZADA (ESTÉTICA DEL CIRCO DIGITAL Y CORRECCIÓN DE BOTONES)
+# HOJA DE ESTILOS CSS PERSONALIZADA (ESTÉTICA DEL CIRCO DIGITAL Y BOTONES DESTACADOS)
 # ------------------------------------------------------------------------------
 st.markdown("""
 <style>
@@ -90,25 +118,25 @@ st.markdown("""
         color: #ffffff !important;
         font-weight: 600 !important;
     }
-    /* Estilo para los botones de sección activos optimizados y perfectamente legibles */
+    /* Estilo para los botones primarios (Siguiente Sección, Revelar Diagnóstico, etc.) en Fucsia Neón Brillante */
     .stButton>button[kind="primary"], div.stButton > button[data-baseweb="button"][kind="primary"] {
-        background: linear-gradient(135deg, #2a1b4e 0%, #3b236b 100%) !important;
-        color: #ff80bf !important;
+        background: linear-gradient(135deg, #ff007f 0%, #cc0066 100%) !important;
+        color: #ffffff !important;
         font-weight: bold !important;
-        border-radius: 10px !important;
-        border: 2px solid #ff007f !important;
-        padding: 12px 22px !important;
+        border-radius: 12px !important;
+        border: 2px solid #ffd700 !important;
+        padding: 12px 24px !important;
         margin-top: 5px !important;
         margin-bottom: 5px !important;
-        box-shadow: 0 0 20px rgba(255, 0, 127, 0.7) !important;
+        box-shadow: 0 0 25px rgba(255, 0, 127, 0.9) !important;
         transition: 0.3s ease;
-        text-align: left !important;
+        text-align: center !important;
     }
     .stButton>button[kind="primary"]:hover, div.stButton > button[data-baseweb="button"][kind="primary"]:hover {
-        background: linear-gradient(135deg, #3b236b 0%, #4a2c8a 100%) !important;
+        background: linear-gradient(135deg, #ff3399 0%, #ff007f 100%) !important;
         color: #ffffff !important;
-        transform: scale(1.01);
-        box-shadow: 0 0 25px rgba(255, 215, 0, 0.9) !important;
+        transform: scale(1.03);
+        box-shadow: 0 0 35px rgba(255, 215, 0, 1) !important;
     }
     .stButton>button {
         background-color: #1f1135 !important;
@@ -351,7 +379,7 @@ TEXTOS = {
         "btn_serie": "Confirmar Producción y Ver Arquetipos 🎭",
         "btn_oops_datos": "😕 Oops, ingresé mal mis datos, quiero regresar",
         "pregunta_personaje": "{nombre}, ¿con qué personaje te identificas más dentro de la pista?",
-        "btn_diagnostico": "✨ Revelar Diagnóstico Cognitivo y Arquetipo ✨",
+        "btn_diagnostico": "✨ Revelar Diagnóstico Cognitivo y Arquetipo ✨ 😊",
         "btn_oops_serie": "😕 Oops, me equivoqué, quiero cambiar de producción",
         "btn_no_conozco": "😕 Oops, no conozco ninguna de estas producciones",
         "msg_no_conozco": "¡No te preocupes! Esta prueba está diseñada exclusivamente para estas cuatro producciones actuales. Sin embargo, nos encantaría tomar tus datos para avisarte en cuanto abramos opciones para más series y películas. ¿Deseas registrar tus datos para futuras convocatorias?",
@@ -359,13 +387,13 @@ TEXTOS = {
         "btn_arrepinti": "😊 ¡Me arrepentí, ahora sí quiero tomar el test!",
         "gracias_cierre": "¡Muchas gracias! Tus datos han sido guardados exitosamente en nuestra base de datos de Jung Tech. Te notificaremos cuando tengamos nuevas series y películas disponibles. ¡Hasta pronto! 🎪✨",
         "btn_reiniciar_test": "🔄 Reiniciar Test",
-        "btn_oops_reconexion": "😕 Oops, no siento que este perfil me describa, quiero volver a empezar",
-        "sec_1": "Please open this Section 1 AND READ MORE ABOUT: If my function is {f_val}, what is my personality like in daily life? pLEASE EAD IT INTO DETAIL AS THIS I PART OF OUR EVALUATION.",
-        "sec_2": "Por favor abre esta Sección 2: ¿Qué es el MBTI y cómo impacta en tu vida profesional?",
-        "sec_3": "Por favor abre esta Sección 3: ¿Cómo afecta esta función tu vida diaria y rendimiento?",
+        "btn_oops_reconexion": "😕 Oops, I would like to change the movie or series",
+        "sec_1": "To continue with the evaluation process, please open Section 1 and read more about: If my function is {f_val}, what is my personality like in daily life? Please read this into detail, as this is part of our evaluation.",
+        "sec_2": "To continue with the evaluation process, please open Section 2 and read more about: What is the MBTI and how does it impact your professional life? Please read this into detail, as this is part of our evaluation.",
+        "sec_3": "To continue with the evaluation process, please open Section 3 and read more about: How does this function affect your daily life and performance? Please read this into detail, as this is part of our evaluation.",
         "btn_siguiente_seccion": "➔ Siguiente Sección",
         "instruccion_requisito": "💡 **Requisito del Circo Digital:** Debes hacer clic y abrir las secciones 1, 2 y 3 (en el orden que prefieras) para poder desbloquear el botón y pasar a la siguiente sección.",
-        "err_falta_clicks": "⚠️ ¡Alto ahí! Te falta abrir alguna(s) de las secciones (Sección 1, 2, or/and 3) antes de continuar. Los botones que te falta presionar tienen un corazón roto (💔) al lado. Recuerda que en Jung Tech valoramos que nuestros empleados usen la IA y hagan preguntas. Si não comprendiste algo, ¡pregúntale a la IA! Este es un test laboral, dale rienda suelta a tu curiosidad. 🚀",
+        "err_falta_clicks": "⚠️ ¡Alto ahí! Te falta abrir alguna(s) de las secciones (Sección 1, 2, or/and 3) antes de continuar. Los botones que te falta presionar tienen un corazón roto (💔) al lado. Recuerda que en Jung Tech valoramos que nuestros empleados usen la IA y hagan preguntas. Si no comprendiste algo, ¡pregúntale a la IA! Este es un test laboral, dale rienda suelta a tu curiosidad. 🚀",
         "lbl_op1_sel": "Sección 1 Abierta",
         "lbl_op2_sel": "Sección 2 Abierta - Equipo de Reclutamiento",
         "lbl_op3_sel": "Sección 3 Abierta - Análisis IA",
@@ -465,7 +493,7 @@ TEXTOS = {
         "btn_serie": "Confirm Show and View Archetypes 🎭",
         "btn_oops_datos": "😕 Oops, I entered my info incorrectly, I want to go back",
         "pregunta_personaje": "{nombre}, which character do you identify with the most under the circus tent?",
-        "btn_diagnostico": "✨ Reveal Cognitive Diagnosis and Archetype ✨",
+        "btn_diagnostico": "✨ Reveal Cognitive Diagnosis and Archetype ✨ 😊",
         "btn_oops_serie": "😕 Oops, my bad, I would like to change production",
         "btn_no_conozco": "😕 Oops, I don't know any of these productions",
         "msg_no_conozco": "Don't worry! This test is exclusively designed for these four current productions. However, we would love to take your details to notify you as soon as we open options for more series and movies. Would you like to register your details for future calls?",
@@ -473,10 +501,10 @@ TEXTOS = {
         "btn_arrepinti": "😊 I changed my mind, now I want to take the test!",
         "gracias_cierre": "Thank you very much! Your data has been successfully saved in our Jung Tech database. We will notify you when new series and movies are available. See you soon! 🎪✨",
         "btn_reiniciar_test": "🔄 Restart Test",
-        "btn_oops_reconexion": "😕 Oops, I don't feel like this profile describes me, I want to start over",
-        "sec_1": "Please open this Section 1 AND READ MORE ABOUT: If my function is {f_val}, what is my personality like in daily life? pLEASE EAD IT INTO DETAIL AS THIS I PART OF OUR EVALUATION.",
-        "sec_2": "Please open this Section 2: What is the MBTI and how does it impact your professional life?",
-        "sec_3": "Please open this Section 3: How does this function affect your daily life and performance?",
+        "btn_oops_reconexion": "😕 Oops, I would like to change the movie or series",
+        "sec_1": "To continue with the evaluation process, please open Section 1 and read more about: If my function is {f_val}, what is my personality like in daily life? Please read this into detail, as this is part of our evaluation.",
+        "sec_2": "To continue with the evaluation process, please open Section 2 and read more about: What is the MBTI and how does it impact your professional life? Please read this into detail, as this is part of our evaluation.",
+        "sec_3": "To continue with the evaluation process, please open Section 3 and read more about: How does this function affect your daily life and performance? Please read this into detail, as this is part of our evaluation.",
         "btn_siguiente_seccion": "➔ Next Section",
         "instruccion_requisito": "💡 **Digital Circus Requirement:** You must open and explore sections 1, 2, and 3 (in any order you prefer) to unlock the button and move to the next section.",
         "err_falta_clicks": "⚠️ Hold on! You still need to explore some of the sections (Section 1, 2, or/and 3) before proceeding. The buttons you still need to press have a broken heart (💔) next to them. At Jung Tech, we value our employees using AI and asking questions. If you didn't understand something, ask the AI! Remember this is a job assessment test, so let your curiosity run wild. 🚀",
@@ -528,8 +556,7 @@ TEXTOS = {
         "btn_si_cambiar_pelicula": "Yes, change movie",
         "btn_no_mantener": "No, keep",
         "pregunta_cambiar_pelicula": "Do you want to change the movie or series selected for your selection process?",
-        "pregunta_regresar_datos": "Do you want to go back to the previous screen to correct your personal registration details?",
-        "lbl_apellidos_titulo": "Last Name"
+        "pregunta_regresar_datos": "Do you want to go back to the previous screen to correct your personal registration details?"
     }
 }
 
@@ -858,8 +885,13 @@ def renderizar_fase_cognitiva(titulo_fase, f_val, f_desc, clave_fase, siguiente_
     c3_ind = " ✅" if "seccion_3" in st.session_state[key_clics] else " 💔"
 
     sec1_titulo = txt["sec_1"].format(f_val=f_val) + c1_ind
-    sec2_titulo = txt["sec_2"] + c2_ind
-    sec3_titulo = txt["sec_3"] + c3_ind
+    
+    if current_idioma == "ESP":
+        sec2_titulo = f"Para continuar con el proceso de evaluación, por favor abra la Sección 2 y lea más sobre: ¿Qué es el MBTI y cómo impacta en su vida profesional? Por favor léalo en detalle, ya que esto forma parte de nuestra evaluación.{c2_ind}"
+        sec3_titulo = f"Para continuar con el proceso de evaluación, por favor abra la Sección 3 y lea más sobre: ¿Cómo afecta esta función su vida diaria y rendimiento? Por favor léalo en detalle, ya que esto forma parte de nuestra evaluación.{c3_ind}"
+    else:
+        sec2_titulo = f"To continue with the evaluation process, please open Section 2 and read more about: What is the MBTI and how does it impact your professional life? Please read this into detail, as this is part of our evaluation.{c2_ind}"
+        sec3_titulo = f"To continue with the evaluation process, please open Section 3 and read more about: How does this function affect your daily life and performance? Please read this into detail, as this is part of our evaluation.{c3_ind}"
 
     key_lang = "ESP" if current_idioma == "ESP" else "ENG"
     pregunta_sugerida_actual = PREGUNTAS_SUGERIDAS[key_lang].get(clave_fase, "What is my selected character?")
@@ -1472,7 +1504,7 @@ elif st.session_state.step == "resultado" and not st.session_state.get("modo_oop
                 correo_usr_val = st.text_input(txt["input_usr_mail"], value=st.session_state.get("verif_mail", "") or usuario_correo_inicial, label_visibility="collapsed")
                 
                 if errs_v.get("prov_msg"):
-                    st.markdown(f"<p class='instruction-error'>{errs_v['prov_msg']}</p>", unsafe_allow_html=True)
+                    st.markdown(f"<p class='instruction-error'>{errs['prov_msg']}</p>", unsafe_allow_html=True)
                 dominio_sel = st.selectbox(txt["lbl_dominio"], [d[0] for d in LISTA_DOMINIOS_EMAIL], index=dominio_guardado_idx, label_visibility="collapsed")
             
             st.markdown(f"<p class='instruction-fucsia'>{txt['lbl_idioma_correo']}</p>", unsafe_allow_html=True)
@@ -1525,10 +1557,10 @@ elif st.session_state.step == "resultado" and not st.session_state.get("modo_oop
                     new_errs_v["prov_msg"] = txt["err_proveedor"]
                     has_error_v = True
 
-                if not num_tel_limpio.strip():
+                if not num_tel_val_limpio.strip():
                     new_errs_v["num_tel"] = txt["err_campo"]
                     has_error_v = True
-                elif not num_tel_limpio.isdigit():
+                elif not num_tel_val_limpio.isdigit():
                     new_errs_v["num_tel"] = txt["err_tel"]
                     has_error_v = True
 
@@ -1550,7 +1582,7 @@ elif st.session_state.step == "resultado" and not st.session_state.get("modo_oop
 
                     st.session_state.pre_envio_resultado_activo = True
                     st.session_state.temp_fin_prefijo = prefix_val
-                    st.session_state.temp_fin_tel = num_tel_val_limpio
+                    st.session_state.temp_fin_tel = num_tel_limpio
                     st.session_state.temp_fin_correo = correo_final_armado
                     st.session_state.temp_fin_fecha = fecha_elegida
                     st.session_state.temp_fin_idioma = idioma_correo_sel

@@ -22,13 +22,17 @@ st.set_page_config(
     layout="wide"
 )
 
-# Script infalible de scroll al tope absoluto en cada renderizado y recarga de página
-st.markdown("""
-    <div id="top-app"></div>
+# Solución definitiva de scroll al tope absoluto inyectada de forma nativa
+st.markdown('<div id="top-app"></div>', unsafe_allow_html=True)
+st.html("""
     <script>
-        function forceScrollTop() {
+        function jumpToTop() {
+            window.parent.scrollTo({ top: 0, behavior: 'instant' });
             window.scrollTo({ top: 0, behavior: 'instant' });
-            parent.window.scrollTo({ top: 0, behavior: 'instant' });
+            const body = window.parent.document.body;
+            if (body) body.scrollTop = 0;
+            const docEl = window.parent.document.documentElement;
+            if (docEl) docEl.scrollTop = 0;
             const mainContainer = window.parent.document.querySelector('.main');
             if (mainContainer) {
                 mainContainer.scrollTop = 0;
@@ -39,14 +43,11 @@ st.markdown("""
             }
         }
         
-        // Forzar scroll inmediatamente y en cada ciclo de renderizado
-        forceScrollTop();
-        window.addEventListener('load', forceScrollTop);
-        setTimeout(forceScrollTop, 0);
-        setTimeout(forceScrollTop, 20);
-        setTimeout(forceScrollTop, 100);
+        jumpToTop();
+        setTimeout(jumpToTop, 10);
+        setTimeout(jumpToTop, 50);
+        setTimeout(jumpToTop, 150);
 
-        // Bloqueo global de múltiples clics mientras aparezca el spinner de carga
         const observer = new MutationObserver(function(mutations) {
             const spinner = window.parent.document.querySelector('[data-testid="stStatusWidget"], .stSpinner');
             const overlay = document.getElementById('click-blocker') || createBlocker();
@@ -75,7 +76,7 @@ st.markdown("""
 
         observer.observe(window.parent.document.body, { childList: true, subtree: true });
     </script>
-""", unsafe_allow_html=True)
+""")
 
 # ------------------------------------------------------------------------------
 # HOJA DE ESTILOS CSS PERSONALIZADA (ESTÉTICA DEL CIRCO DIGITAL Y BOTONES DESTACADOS)
@@ -122,7 +123,6 @@ st.markdown("""
         color: #ffffff !important;
         font-weight: 600 !important;
     }
-    /* Estilo para los botones primarios (Siguiente Sección, Revelar Diagnóstico, etc.) en Fucsia Neón Brillante */
     .stButton>button[kind="primary"], div.stButton > button[data-baseweb="button"][kind="primary"] {
         background: linear-gradient(135deg, #ff007f 0%, #cc0066 100%) !important;
         color: #ffffff !important;
@@ -374,28 +374,28 @@ TEXTOS = {
         "lbl_dominio": "Selecciona tu dominio:",
         "input_num_tel": "Número de teléfono (sin prefijo ni espacios):",
         "input_usr_mail": "Correo electrónico o usuario:",
-        "btn_registrar": "Validar Credenciales y Registrar",
-        "btn_volver_inicio": "🌐 Volver a la Pantalla Inicial",
+        "btn_registrar": "Validar Credenciales y Registrar 😊",
+        "btn_volver_inicio": "🌐 Volver a la Pantalla Inicial 😊",
         "err_vacio_ia": "⚠️ Por favor escribe una pregunta antes de hacer clic en Ask AI.",
         "intro_filtro_series": "Este es el inicio de tu entrevista de trabajo, elige una de estas películas o series para iniciar tu proceso de selección:",
         "lbl_selecciona_prod": "Selecciona una producción audiovisual:",
         "lbl_banco": "Banco de 16 Personalidades:",
-        "btn_serie": "Confirmar Producción y Ver Arquetipos 🎭",
+        "btn_serie": "Confirmar Producción y Ver Arquetipos 🎭 😊",
         "btn_oops_datos": "😕 Oops, ingresé mal mis datos, quiero regresar",
         "pregunta_personaje": "{nombre}, ¿con qué personaje te identificas más dentro de la pista?",
         "btn_diagnostico": "✨ Revelar Diagnóstico Cognitivo y Arquetipo ✨ 😊",
         "btn_oops_serie": "😕 Oops, me equivoqué, quiero cambiar de producción",
         "btn_no_conozco": "😕 Oops, no conozco ninguna de estas producciones",
         "msg_no_conozco": "¡No te preocupes! Esta prueba está diseñada exclusivamente para estas cuatro producciones actuales. Sin embargo, nos encantaría tomar tus datos para avisarte en cuanto abramos opciones para más series y películas. ¿Deseas registrar tus datos para futuras convocatorias?",
-        "btn_aceptar_futuras": "Sí, registrar mis datos y finalizar",
+        "btn_aceptar_futuras": "Sí, registrar mis datos y finalizar 😊",
         "btn_arrepinti": "😊 ¡Me arrepentí, ahora sí quiero tomar el test!",
         "gracias_cierre": "¡Muchas gracias! Tus datos han sido guardados exitosamente en nuestra base de datos de Jung Tech. Te notificaremos cuando tengamos nuevas series y películas disponibles. ¡Hasta pronto! 🎪✨",
-        "btn_reiniciar_test": "🔄 Reiniciar Test",
+        "btn_reiniciar_test": "🔄 Reiniciar Test 😊",
         "btn_oops_reconexion": "😕 Oops, me gustaría cambiar la película o serie",
-        "sec_1": "Para continuar con el proceso de evaluación, por favor abra la Sección 1 y lea más sobre: Si mi función es {f_val}, ¿cómo es mi personalidad en el día a día? Por favor léalo en detalle, ya que esto forma parte de nuestra evaluación.",
-        "sec_2": "Para continuar con el proceso de evaluación, por favor abra la Sección 2 y lea más sobre: ¿Qué es el MBTI y cómo impacta en su vida profesional? Por favor léalo en detalle, ya que esto forma parte de nuestra evaluación.",
-        "sec_3": "Para continuar con el proceso de evaluación, por favor abra la Sección 3 y lea más sobre: ¿Cómo afecta esta función su vida diaria y rendimiento? Por favor léalo en detalle, ya que esto forma parte de nuestra evaluación.",
-        "btn_siguiente_seccion": "➔ Siguiente Sección",
+        "sec_1": "Por favor haga clic aquí y lea más sobre la Sección 1: Si mi función es {f_val}, ¿cómo es mi personalidad en el día a día? Por favor léalo en detalle, ya que esto forma parte de nuestra evaluación.",
+        "sec_2": "Por favor haga clic aquí y lea más sobre la Sección 2: ¿Qué es el MBTI y cómo impacta en su vida profesional? Por favor léalo en detalle, ya que esto forma parte de nuestra evaluación.",
+        "sec_3": "Por favor haga clic aquí y lea más sobre la Sección 3: ¿Cómo afecta esta función su vida diaria y rendimiento? Por favor léalo en detalle, ya que esto forma parte de nuestra evaluación.",
+        "btn_siguiente_seccion": "➔ Siguiente Sección 😊",
         "instruccion_requisito": "💡 **Requisito del Circo Digital:** Debes hacer clic y abrir las secciones 1, 2 y 3 (en el orden que prefieras) para poder desbloquear el botón y pasar a la siguiente sección.",
         "err_falta_clicks": "⚠️ ¡Alto ahí! Te falta abrir alguna(s) de las secciones (Sección 1, 2, or/and 3) antes de continuar. Los botones que te falta presionar tienen un corazón roto (💔) al lado. Recuerda que en Jung Tech valoramos que nuestros empleados usen la IA y hagan preguntas. Si no comprendiste algo, ¡pregúntale a la IA! Este es un test laboral, dale rienda suelta a tu curiosidad. 🚀",
         "lbl_op1_sel": "Sección 1 Abierta",
@@ -420,7 +420,7 @@ TEXTOS = {
         "pregunta_envio_correo": "📩 Si estás de acuerdo con este diagnóstico, selecciona el idioma para el correo, elige una fecha tentativa para tu entrevista de Fase 2, y confirma tus datos:",
         "lbl_idioma_correo": "🌐 ¿En qué idioma deseas que te mandemos el correo?:",
         "lbl_fecha_fase2": "📅 Selecciona una fecha y hora tentativa para tu entrevista (Fase 2):",
-        "btn_confirmar_y_enviar": "📤 Confirmar Datos, Idioma, Fecha y Enviar Email",
+        "btn_confirmar_y_enviar": "📤 Confirmar Datos, Idioma, Fecha y Enviar Email 😊",
         "btn_oops_no_conforme": "😕 Oops, no estoy conforme con mi resultado (Resetear Test)",
         "msg_fin_sin_correo": "🎉 ¡Proceso finalizado con éxito! Gracias por participar en el circo digital de Jung Tech. 🚀🎪",
         "titulo_verificacion_datos": "🔍 Verificación y Confirmación de Datos del Postulante:",
@@ -434,17 +434,17 @@ TEXTOS = {
         "info_ultima_confirmacion": "Por favor revisa que tus datos recopilados sean correctos antes de continuar:",
         "msg_tel_verificado": "📞 Teléfono verificado: Hemos borrado los espacios en blanco. El prefijo de país es <b>{prefijo}</b> y este es tu número de teléfono: <b>{tel}</b>.",
         "msg_correo_verificado": "📩 Correo verificado: Todo lo posterior al arroba ha sido depurado y unificado con el dominio. ¿Deseas que lo mandemos a este correo exacto: <b style='color: #00ffcc;'>{correo}</b>?",
-        "btn_confirma_datos": "🚀 Sí, mis datos recopilados son correctos, enviar correo",
-        "btn_corrige_datos": "✏️ No, quiero corregir algo",
+        "btn_confirma_datos": "These collected data and continue with the test 😊",
+        "btn_corrige_datos": "✏️ No, I want to fix something 😊",
         "titulo_oops": "⚠️ ¡Has presionado un botón Oops!",
         "pref_presion_oops": "Presionaste:",
         "pregunta_reinicio": "⚠️ ¿Estás segura de que deseas reiniciar el test y volver a empezar desde cero?",
-        "btn_si_reiniciar": "Sí, reiniciar todo",
-        "btn_no_cancelar": "No, cancelar",
-        "btn_si_regresar": "Sí, regresar a corregir",
-        "btn_no_continuar": "No, continuar",
-        "btn_si_cambiar_pelicula": "Sí, cambiar producción",
-        "btn_no_mantener": "No, mantener",
+        "btn_si_reiniciar": "Yes, restart all 😕",
+        "btn_no_cancelar": "No, cancel and go back to the evaluation 😊",
+        "btn_si_regresar": "Sí, regresar a corregir 😊",
+        "btn_no_continuar": "No, continuar 😊",
+        "btn_si_cambiar_pelicula": "Sí, cambiar producción 😊",
+        "btn_no_mantener": "No, mantener 😊",
         "pregunta_cambiar_pelicula": "¿Deseas cambiar la producción seleccionada para tu proceso de selección?",
         "pregunta_regresar_datos": "¿Deseas regresar a la pantalla anterior para corregir tus datos personales de registro?"
     },
@@ -464,7 +464,7 @@ TEXTOS = {
             "Our only goal is to help you find the perfect position 🚀.\n"
             "We only ask you to be completely honest. Every single personality type is welcome here! 🌟"
         ),
-        "btn_continuar": "🎪 Enter the Digital Big Top and Continue 🎪",
+        "btn_continuar": "🎪 Enter the Digital Big Top and Continue 😊",
         "confirmar_datos": "Candidate Registration:",
         "input_nombres": "First Name",
         "input_apellidos": "Last Name",
@@ -487,28 +487,28 @@ TEXTOS = {
         "lbl_dominio": "Select your domain:",
         "input_num_tel": "Phone number (without country code or spaces):",
         "input_usr_mail": "Email address or username:",
-        "btn_registrar": "Validate Credentials and Register",
-        "btn_volver_inicio": "🌐 Return to Home Screen",
+        "btn_registrar": "Validate Credentials and Register 😊",
+        "btn_volver_inicio": "🌐 Return to Home Screen 😊",
         "err_vacio_ia": "⚠️ Please type a question before clicking Ask AI.",
         "intro_filtro_series": "This is the beginning of your job interview, choose one of these movies or series to start your selection process:",
         "lbl_selecciona_prod": "Select an audiovisual production:",
         "lbl_banco": "Bank of 16 Personalities:",
-        "btn_serie": "Confirm Show and View Archetypes 🎭",
+        "btn_serie": "Confirm Show and View Archetypes 🎭 😊",
         "btn_oops_datos": "😕 Oops, I entered my info incorrectly, I want to go back",
         "pregunta_personaje": "{nombre}, which character do you identify with the most under the circus tent?",
         "btn_diagnostico": "✨ Reveal Cognitive Diagnosis and Archetype ✨ 😊",
         "btn_oops_serie": "😕 Oops, my bad, I would like to change production",
         "btn_no_conozco": "😕 Oops, I don't know any of these productions",
         "msg_no_conozco": "Don't worry! This test is exclusively designed for these four current productions. However, we would love to take your details to notify you as soon as we open options for more series and movies. Would you like to register your details for future calls?",
-        "btn_aceptar_futuras": "Yes, register my details and finish",
+        "btn_aceptar_futuras": "Yes, register my details and finish 😊",
         "btn_arrepinti": "😊 I changed my mind, now I want to take the test!",
         "gracias_cierre": "Thank you very much! Your data has been successfully saved in our Jung Tech database. We will notify you when new series and movies are available. See you soon! 🎪✨",
-        "btn_reiniciar_test": "🔄 Restart Test",
+        "btn_reiniciar_test": "🔄 Restart Test 😊",
         "btn_oops_reconexion": "😕 Oops, I would like to change the movie or series",
-        "sec_1": "To continue with the evaluation process, please open Section 1 and read more about: If my function is {f_val}, what is my personality like in daily life? Please read this into detail, as this is part of our evaluation.",
-        "sec_2": "To continue with the evaluation process, please open Section 2 and read more about: What is the MBTI and how does it impact your professional life? Please read this into detail, as this is part of our evaluation.",
-        "sec_3": "To continue with the evaluation process, please open Section 3 and read more about: How does this function affect your daily life and performance? Please read this into detail, as this is part of our evaluation.",
-        "btn_siguiente_seccion": "➔ Next Section",
+        "sec_1": "Please click here and read more about Section 1: If my function is {f_val}, what is my personality like in daily life? Please read this into detail, as this is part of our evaluation.",
+        "sec_2": "Please click here and read more about Section 2: What is the MBTI and how does it impact your professional life? Please read this into detail, as this is part of our evaluation.",
+        "sec_3": "Please click here and read more about Section 3: How does this function affect your daily life and performance? Please read this into detail, as this is part of our evaluation.",
+        "btn_siguiente_seccion": "➔ Next Section 😊",
         "instruccion_requisito": "💡 **Digital Circus Requirement:** You must open and explore sections 1, 2, and 3 (in any order you prefer) to unlock the button and move to the next section.",
         "err_falta_clicks": "⚠️ Hold on! You still need to explore some of the sections (Section 1, 2, or/and 3) before proceeding. The buttons you still need to press have a broken heart (💔) next to them. At Jung Tech, we value our employees using AI and asking questions. If you didn't understand something, ask the AI! Remember this is a job assessment test, so let your curiosity run wild. 🚀",
         "lbl_op1_sel": "Section 1 Open",
@@ -533,7 +533,7 @@ TEXTOS = {
         "pregunta_envio_correo": "📩 If you agree with this diagnosis, select your preferred language for the email, choose a tentative date for your Phase 2 interview, and confirm your details:",
         "lbl_idioma_correo": "🌐 In which language would you like us to send the email?:",
         "lbl_fecha_fase2": "📅 Select a tentative date and time for your interview (Phase 2):",
-        "btn_confirmar_y_enviar": "📤 Confirm Details, Language, Date and Send Email",
+        "btn_confirmar_y_enviar": "📤 Confirm Details, Language, Date and Send Email 😊",
         "btn_oops_no_conforme": "😕 Oops, I don't agree with my result (Reset Test)",
         "msg_fin_sin_correo": "🎉 Process completed successfully! Thank you for participating in Jung Tech's digital circus. 🚀🎪",
         "titulo_verificacion_datos": "🔍 Verification and Confirmation of Candidate Details:",
@@ -547,17 +547,17 @@ TEXTOS = {
         "info_ultima_confirmacion": "Please review that your collected data is correct before proceeding:",
         "msg_tel_verificado": "📞 Verified Phone: We have removed blank spaces. The country prefix is <b>{prefijo}</b> and this is your phone number: <b>{tel}</b>.",
         "msg_correo_verificado": "📩 Verified Email: Everything after the @ symbol has been cleared and merged with the domain. Do you wish to send it to this exact email: <b style='color: #00ffcc;'>{correo}</b>?",
-        "btn_confirma_datos": "🚀 Yes, my collected data is correct, send email",
-        "btn_corrige_datos": "✏️ No, I want to fix something",
+        "btn_confirma_datos": "These collected data and continue with the test 😊",
+        "btn_corrige_datos": "✏️ No, I want to fix something 😊",
         "titulo_oops": "⚠️ You have pressed an Oops button!",
         "pref_presion_oops": "You pressed:",
         "pregunta_reinicio": "⚠️ Are you sure you want to restart the test and start over from scratch?",
-        "btn_si_reiniciar": "Yes, restart all",
-        "btn_no_cancelar": "No, cancel",
-        "btn_si_regresar": "Yes, go back to fix",
-        "btn_no_continuar": "No, continue",
-        "btn_si_cambiar_pelicula": "Yes, change movie",
-        "btn_no_mantener": "No, keep",
+        "btn_si_reiniciar": "Yes, restart all 😕",
+        "btn_no_cancelar": "No, cancel and go back to the evaluation 😊",
+        "btn_si_regresar": "Yes, go back to fix 😊",
+        "btn_no_continuar": "No, continue 😊",
+        "btn_si_cambiar_pelicula": "Yes, change movie 😊",
+        "btn_no_mantener": "No, keep 😊",
         "pregunta_cambiar_pelicula": "Do you want to change the movie or series selected for your selection process?",
         "pregunta_regresar_datos": "Do you want to go back to the previous screen to correct your personal registration details?"
     }
@@ -1106,6 +1106,14 @@ elif st.session_state.step == "captura_datos":
             if d[1] == dominio_ingresado:
                 dominio_predeterminado_idx = idx
                 break
+    elif "temp_correo" in st.session_state and "@" in st.session_state.temp_correo:
+        partes_correo = st.session_state.temp_correo.split("@")
+        val_mail = partes_correo[0]
+        dominio_ingresado = "@" + partes_correo[1]
+        for idx, d in enumerate(LISTA_DOMINIOS_EMAIL):
+            if d[1] == dominio_ingresado:
+                dominio_predeterminado_idx = idx
+                break
 
     if st.session_state.get("pre_registro_activo", False):
         st.markdown(f"### {txt['titulo_ultima_confirmacion']}")
@@ -1457,6 +1465,7 @@ elif st.session_state.step == "resultado" and not st.session_state.get("modo_oop
         with col_ec2:
             if st.button(txt["btn_corrige_datos"]):
                 st.session_state.pre_envio_resultado_activo = False
+                st.session_state.val_usr_mail = usuario_correo_inicial
                 st.rerun()
     else:
         with st.form("form_verif_correo_completo"):
@@ -1555,10 +1564,10 @@ elif st.session_state.step == "resultado" and not st.session_state.get("modo_oop
                     new_errs_v["prov_msg"] = txt["err_proveedor"]
                     has_error_v = True
 
-                if not num_tel_val_limpio.strip():
+                if not num_tel_limpio.strip():
                     new_errs_v["num_tel"] = txt["err_campo"]
                     has_error_v = True
-                elif not num_tel_val_limpio.isdigit():
+                elif not num_tel_limpio.isdigit():
                     new_errs_v["num_tel"] = txt["err_tel"]
                     has_error_v = True
 
@@ -1580,7 +1589,7 @@ elif st.session_state.step == "resultado" and not st.session_state.get("modo_oop
 
                     st.session_state.pre_envio_resultado_activo = True
                     st.session_state.temp_fin_prefijo = prefix_val
-                    st.session_state.temp_fin_tel = num_tel_val_limpio
+                    st.session_state.temp_fin_tel = num_tel_limpio
                     st.session_state.temp_fin_correo = correo_final_armado
                     st.session_state.temp_fin_fecha = fecha_elegida
                     st.session_state.temp_fin_idioma = idioma_correo_sel

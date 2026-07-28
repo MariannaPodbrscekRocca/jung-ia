@@ -50,35 +50,31 @@ La interfaz web está construida bajo una arquitectura modular y reactiva en Str
 
 ### 1. Pantalla de Bienvenida, Idioma y Colores Vibrantes
 * **Descripción:** Se muestra la interfaz inicial bajo la carpa del circo digital con el banner de bienvenida de Jung.AI. Los botones cuentan con colores vibrantes y efectos de realce visual al pasar el cursor (*hover effects*). Se incluye también el selector de idioma para cambiar dinámicamente entre español e inglés.
-
-https://github.com/MariannaPodbrscekRocca/jung-ia/raw/main/Video_demos/botones_colores_vibrantes.mp4
-https://github.com/MariannaPodbrscekRocca/jung-ia/raw/main/Video_demos/English_Spanish_Menu%20(1).mp4
+* 🎬 [Ver Demostración en Video: Botones y Colores Vibrantes](https://github.com/MariannaPodbrscekRocca/jung-ia/blob/main/Video_demos/botones_colores_vibrantes.mp4)
+* 🎬 [Ver Demostración en Video: Menú Español / English](https://github.com/MariannaPodbrscekRocca/jung-ia/blob/main/Video_demos/English_Spanish_Menu%20(1).mp4)
 
 ---
 
 ### 2. Registro de Datos del Candidato
 * **Descripción:** Formulario interactivo de validación de credenciales. Aquí el usuario ingresa sus datos personales. Las demostraciones muestran la captura de nombres, apellidos opcionales y género, así como la configuración del número de teléfono y del correo electrónico con selector inteligente de dominios.
-
-https://github.com/MariannaPodbrscekRocca/jung-ia/raw/main/Video_demos/nombre_apellido_opcional_sexo.mp4
-https://github.com/MariannaPodbrscekRocca/jung-ia/raw/main/Video_demos/telefono_mail.mp4
+* 🎬 [Ver Demostración en Video: Nombres, Apellidos y Género](https://github.com/MariannaPodbrscekRocca/jung-ia/blob/main/Video_demos/nombre_apellido_opcional_sexo.mp4)
+* 🎬 [Ver Demostración en Video: Teléfono y Correo Electrónico](https://github.com/MariannaPodbrscekRocca/jung-ia/blob/main/Video_demos/telefono_mail.mp4)
 
 ---
 
 ### 3. Selección de Producción Audiovisual, Personaje y Botones de Retorno ("Oops")
 * **Descripción:** Selección de series y películas (*Harry Potter*, *Breaking Bad*, etc.) con un banco dinámico de 16 arquetipos de personalidad. Se aprecian en acción los botones de retroceso o redirección "Oops" para corregir datos o registrarse ante producciones no disponibles.
-
-https://github.com/MariannaPodbrscekRocca/jung-ia/raw/main/Video_demos/botones_de_regreso.mp4
-https://github.com/MariannaPodbrscekRocca/jung-ia/raw/main/Video_demos/oops_no_me_identifico.mp4
+* 🎬 [Ver Demostración en Video: Botones de Regreso y Oops](https://github.com/MariannaPodbrscekRocca/jung-ia/blob/main/Video_demos/botones_de_regreso.mp4)
+* 🎬 [Ver Demostración en Video: Oops al no identificarse](https://github.com/MariannaPodbrscekRocca/jung-ia/blob/main/Video_demos/oops_no_me_identifico.mp4)
 
 ---
 
 ### 4. Evaluación de Funciones Cognitivas, Loops, Arquetipos y Controles Interactivos
 * **Descripción:** El núcleo de la prueba interactiva. Se detalla el uso de las opciones 1, 2 y 3, cómo la Opción 1 extrae información directamente de la matriz en Excel (`matriz_personalidades.csv`), y cómo las secciones combinan respuestas anteriores de forma controlada y fluida. Asimismo, se evidencia la diferencia visual entre los checks verdes y los corazones rotos con titileo que exigen completar la exploración antes de avanzar.
-
-https://github.com/MariannaPodbrscekRocca/jung-ia/raw/main/Video_demos/opciones_1_2_y_3.mp4
-https://github.com/MariannaPodbrscekRocca/jung-ia/raw/main/Video_demos/opcion_1.mp4
-https://github.com/MariannaPodbrscekRocca/jung-ia/raw/main/Video_demos/check_vs_corazones.mp4
-https://github.com/MariannaPodbrscekRocca/jung-ia/raw/main/Video_demos/Ingles_en_cualquier_momento.mp4
+* 🎬 [Ver Demostración en Video: Opciones 1, 2 y 3](https://github.com/MariannaPodbrscekRocca/jung-ia/blob/main/Video_demos/opciones_1_2_y_3.mp4)
+* 🎬 [Ver Demostración en Video: Detalle Opción 1 y Excel](https://github.com/MariannaPodbrscekRocca/jung-ia/blob/main/Video_demos/opcion_1.mp4)
+* 🎬 [Ver Demostración en Video: Checks Verdes vs Corazones Rotos](https://github.com/MariannaPodbrscekRocca/jung-ia/blob/main/Video_demos/check_vs_corazones.mp4)
+* 🎬 [Ver Demostración en Video: Soporte de Inglés en cualquier momento](https://github.com/MariannaPodbrscekRocca/jung-ia/blob/main/Video_demos/Ingles_en_cualquier_momento.mp4)
 
 ---
 
@@ -89,10 +85,12 @@ https://github.com/MariannaPodbrscekRocca/jung-ia/raw/main/Video_demos/Ingles_en
 <p align="center">
   <img src="https://raw.githubusercontent.com/MariannaPodbrscekRocca/jung-ia/main/banner.png" width="90%" alt="Banner Éxito Correo">
 </p>
+<p align="center">
+  <img src="https://raw.githubusercontent.com/MariannaPodbrscekRocca/jung-ia/main/no_conforme_resultado.png" width="90%" alt="Resultado No Conforme">
+</p>
 
-https://github.com/MariannaPodbrscekRocca/jung-ia/raw/main/Video_demos/explicacion_final.mp4
-https://github.com/MariannaPodbrscekRocca/jung-ia/raw/main/Video_demos/email.mp4
-https://github.com/MariannaPodbrscekRocca/jung-ia/raw/main/Video_demos/no_conforme_resultado.png
+* 🎬 [Ver Demostración en Video: Explicación Final y Resultado](https://github.com/MariannaPodbrscekRocca/jung-ia/blob/main/Video_demos/explicacion_final.mp4)
+* 🎬 [Ver Demostración en Video: Envío Automatizado de Correo (SMTP)](https://github.com/MariannaPodbrscekRocca/jung-ia/blob/main/Video_demos/email.mp4)
 
 ---
 
@@ -102,4 +100,4 @@ https://github.com/MariannaPodbrscekRocca/jung-ia/raw/main/Video_demos/no_confor
 * **OpenAI API (`gpt-4o-mini`):** Motor de inteligencia artificial encargado de generar respuestas reflexivas, equilibrando la luz y la sombra de los perfiles junguianos en un solo párrafo fluido y compasivo.
 * **Pandas:** Procesamiento y lectura de la matriz psicométrica estructurada en `matriz_personalidades.csv`.
 * **SMTP & EmailMime:** Automatización del backend para la distribución multilingüe de correos electrónicos con plantillas HTML personalizadas.
-* **HTML5 / CSS3 / JavaScript:** Estilos personalizados oscuros con temática de circo digital, animaciones fluidas, efectos *hover* en botones y un sistema de anclaje DOM dinámico que garantiza el retorno automático al tope de la página en cada cambio de sección.
+* **HTML5 / CSS3 / JavaScript:** Estilos personalizados oscuros con temática de circo digital, animaciones fluidas, efectos *hover* en botones y anclaje DOM dinámico.

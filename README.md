@@ -7,6 +7,12 @@
 
 ---
 
+<p align="center">
+  <img src="https://media.giphy.com/media/HcFKOOXeJ95fFOkTbP/giphy.gif" width="100%" alt="Banner Animado Jung.AI">
+</p>
+
+---
+
 ## 🌟 Descripción General del Proyecto
 
 **Jung.AI: The Circus of Personalities** es un sistema inteligente, interactivo y bilingüe de reclutamiento y diagnóstico psicométrico impulsado por inteligencia artificial 🤖✨. Ambientado bajo la mágica y vibrante atmósfera de un circo digital 🎪🔮, el sistema transforma el proceso clásico de contratación de la empresa ficticia **Jung Tech Company** en una experiencia totalmente inmersiva y fuera de este mundo. 
@@ -50,8 +56,8 @@ La interfaz web está construida bajo una arquitectura modular y reactiva en Str
 
 ### 1. Pantalla de Bienvenida, Idioma y Colores Vibrantes
 * **Descripción:** Se muestra la interfaz inicial bajo la carpa del circo digital con el banner de bienvenida de Jung.AI. Los botones cuentan con colores vibrantes y efectos de realce visual al pasar el cursor (*hover effects*). Se incluye también el selector de idioma para cambiar dinámicamente entre español e inglés.
-* 👉 [Ver Video: Botones y Colores Vibrantes](https://github.com/MariannaPodbrscekRocca/jung-ia/blob/main/Video_demos/botones_colores_vibrantes.mp4)
-* 👉 [Ver Video: Menú Español / English](https://github.com/MariannaPodbrscekRocca/jung-ia/blob/main/Video_demos/English_Spanish_Menu%20(1).mp4)
+* [🎬 Ver Demostración en Video: Botones y Colores Vibrantes](https://github.com/MariannaPodbrscekRocca/jung-ia/blob/main/Video_demos/botones_colores_vibrantes.mp4)
+* [🎬 Ver Demostración en Video: Menú Español / English](https://github.com/MariannaPodbrscekRocca/jung-ia/blob/main/Video_demos/English_Spanish_Menu%20(1).mp4)
 
 ---
 
@@ -59,24 +65,24 @@ La interfaz web está construida bajo una arquitectura modular y reactiva en Str
 * **Descripción Detallada:** 
   * En `nombre_apellido_opcional_sexo.mp4`, se explica cómo el sistema solicita el nombre y los apellidos obligatorios, un nombre preferido de uso opcional para que el sistema se dirija al postulante de forma personalizada, y la selección de género mediante un menú desplegable adaptado.
   * En `telefono_mail.mp4`, se detalla la validación estricta de credenciales: el usuario selecciona su prefijo telefónico internacional (ej. `+57`, `+1`, etc.) e ingresa su número depurando espacios en blanco de forma automática. Del mismo modo, en el apartado de correo electrónico, el usuario escribe su usuario antes del símbolo `@` y selecciona el dominio corporativo o de proveedor en un menú desplegable (`@gmail.com`, `@outlook.com`, etc.), asegurando un formato unificado y limpio.
-* 👉 [Ver Video: Nombres, Apellidos y Género](https://github.com/MariannaPodbrscekRocca/jung-ia/blob/main/Video_demos/nombre_apellido_opcional_sexo.mp4)
-* 👉 [Ver Video: Teléfono y Correo Electrónico](https://github.com/MariannaPodbrscekRocca/jung-ia/blob/main/Video_demos/telefono_mail.mp4)
+* [🎬 Ver Demostración en Video: Nombres, Apellidos y Género](https://github.com/MariannaPodbrscekRocca/jung-ia/blob/main/Video_demos/nombre_apellido_opcional_sexo.mp4)
+* [🎬 Ver Demostración en Video: Teléfono y Correo Electrónico](https://github.com/MariannaPodbrscekRocca/jung-ia/blob/main/Video_demos/telefono_mail.mp4)
 
 ---
 
 ### 3. Selección de Producción Audiovisual, Personaje y Botones de Retorno ("Oops")
 * **Descripción:** Selección de series y películas (*Harry Potter*, *Breaking Bad*, etc.) con un banco dinámico de 16 arquetipos de personalidad. Se aprecian en acción los botones de retroceso o redirección "Oops" (como `Oops, ingresé mal mis datos, quiero regresar al menú anterior` o `Oops, no conozco ninguna de estas películas o series`), diseñados con emojis específicos para garantizar la máxima intuición en caso de que el usuario necesite corregir algo.
-* 👉 [Ver Video: Botones de Regreso y Oops](https://github.com/MariannaPodbrscekRocca/jung-ia/blob/main/Video_demos/botones_de_regreso.mp4)
-* 👉 [Ver Video: Oops al no identificarse](https://github.com/MariannaPodbrscekRocca/jung-ia/blob/main/Video_demos/oops_no_me_identifico.mp4)
+* [🎬 Ver Demostración en Video: Botones de Regreso y Oops](https://github.com/MariannaPodbrscekRocca/jung-ia/blob/main/Video_demos/botones_de_regreso.mp4)
+* [🎬 Ver Demostración en Video: Oops al no identificarse](https://github.com/MariannaPodbrscekRocca/jung-ia/blob/main/Video_demos/oops_no_me_identifico.mp4)
 
 ---
 
 ### 4. Evaluación de Funciones Cognitivas, Loops, Arquetipos y Controles Interactivos
 * **Descripción:** El núcleo de la prueba interactiva. Se detalla el uso de las opciones 1, 2 y 3. La *Opción 1* extrae y procesa información estática directamente del archivo matriz en Excel (`matriz_personalidades.csv`), mientras que las *Secciones 2 y 3* cruzan dicha matriz con los datos del perfil y respuestas anteriores del usuario para generar un análisis de IA un poco más libre pero estrictamente controlado. Asimismo, se evidencia la diferencia visual entre los checks verdes (`✅`) y los corazones rotos con titileo (`💔`) que exigen completar la exploración de botones antes de avanzar.
-* 👉 [Ver Video: Opciones 1, 2 y 3](https://github.com/MariannaPodbrscekRocca/jung-ia/blob/main/Video_demos/opciones_1_2_y_3.mp4)
-* 👉 [Ver Video: Detalle Opción 1 y Excel](https://github.com/MariannaPodbrscekRocca/jung-ia/blob/main/Video_demos/opcion_1.mp4)
-* 👉 [Ver Video: Checks Verdes vs Corazones Rotos](https://github.com/MariannaPodbrscekRocca/jung-ia/blob/main/Video_demos/check_vs_corazones.mp4)
-* 👉 [Ver Video: Soporte de Inglés en cualquier momento](https://github.com/MariannaPodbrscekRocca/jung-ia/blob/main/Video_demos/Ingles_en_cualquier_momento.mp4)
+* [🎬 Ver Demostración en Video: Opciones 1, 2 y 3](https://github.com/MariannaPodbrscekRocca/jung-ia/blob/main/Video_demos/opciones_1_2_y_3.mp4)
+* [🎬 Ver Demostración en Video: Detalle Opción 1 y Excel](https://github.com/MariannaPodbrscekRocca/jung-ia/blob/main/Video_demos/opcion_1.mp4)
+* [🎬 Ver Demostración en Video: Checks Verdes vs Corazones Rotos](https://github.com/MariannaPodbrscekRocca/jung-ia/blob/main/Video_demos/check_vs_corazones.mp4)
+* [🎬 Ver Demostración en Video: Soporte de Inglés en cualquier momento](https://github.com/MariannaPodbrscekRocca/jung-ia/blob/main/Video_demos/Ingles_en_cualquier_momento.mp4)
 
 ---
 
@@ -91,8 +97,8 @@ La interfaz web está construida bajo una arquitectura modular y reactiva en Str
   <img src="https://raw.githubusercontent.com/MariannaPodbrscekRocca/jung-ia/main/no_conforme_resultado.png" width="90%" alt="Resultado No Conforme">
 </p>
 
-* 👉 [Ver Video: Explicación Final y Resultado](https://github.com/MariannaPodbrscekRocca/jung-ia/blob/main/Video_demos/explicacion_final.mp4)
-* 👉 [Ver Video: Envío Automatizado de Correo (SMTP)](https://github.com/MariannaPodbrscekRocca/jung-ia/blob/main/Video_demos/email.mp4)
+* [🎬 Ver Demostración en Video: Explicación Final y Resultado](https://github.com/MariannaPodbrscekRocca/jung-ia/blob/main/Video_demos/explicacion_final.mp4)
+* [🎬 Ver Demostración en Video: Envío Automatizado de Correo (SMTP)](https://github.com/MariannaPodbrscekRocca/jung-ia/blob/main/Video_demos/email.mp4)
 
 ---
 

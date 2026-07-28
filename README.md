@@ -1,85 +1,90 @@
-🎪 JUNG.IA: Sistema Inteligente de Reclutamiento y Diagnóstico Psicométrico 🧠✨
-Desarrollado para Jung Tech Company en colaboración con el agente de inteligencia artificial Jung.IA. 🤖💼
+🎪 JUNG.AI: THE CIRCUS OF PERSONALITIES 🎪
+Link para testear la aplicación (evidencias del despliegue): https://jungai.streamlit.app/
 
-Link para testear la aplicacion (evidencias del despliegue): https://jungai.streamlit.app/
+Sistema Inteligente de Reclutamiento y Diagnóstico Psicométrico según el modelo de Carl Jung
 
-Alumna: Marianna Podbrscek Rocca
+Diseñado por Marianna Podbrscek Rocca
 
-📋 1. Descripción General y Propósito del Proyecto
-Jung.IA es un software híbrido avanzado de reclutamiento y selección de personal diseñado específicamente para el área tecnológica. Su objetivo principal es automatizar la Etapa 1 del proceso de selección, evaluando a los candidatos a través de un test psicométrico riguroso fundamentado en la tipología de personalidades de Carl Gustav Jung y el marco tipológico MBTI, entrelazado dinámicamente con franquicias de cultura pop seleccionadas (Harry Potter, Arrested Development, South Park y Breaking Bad). El sistema cuenta con una arquitectura de más de 1000 líneas que unifica una consola interactiva robusta y una interfaz visual basada en la estética de un circo retro.
+🌟 Descripción General del Proyecto
+Jung.AI: The Circus of Personalities es un sistema inteligente, interactivo y bilingüe de reclutamiento y diagnóstico psicométrico impulsado por inteligencia artificial 🤖✨. Ambientado bajo la mágica y vibrante atmósfera de un circo digital 🎪🔮, el sistema transforma el proceso clásico de contratación de la empresa ficticia Jung Tech Company en una experiencia totalmente inmersiva y fuera de este mundo.
 
-🌟 2. Resumen Completo de Características y Funciones Técnicas del Código (agente.py)
-El script maestro concentra una lógica backend muy robusta y detallada, estructurada a través de las siguientes funciones y componentes clave:
+La aplicación guía a los postulantes a través de una entrevista de trabajo virtual donde seleccionan una producción audiovisual de culto, se identifican con personajes icónicos 🎭, y exploran paso a paso sus funciones cognitivas (dominante, auxiliar, terciaria, inferior), loops cognitivos y arquetipos digitales de Carl Jung. Todo esto culmina en un análisis de compatibilidad con áreas de tecnología y el agendamiento automatizado de una entrevista de Fase 2 con envío de reportes vía correo electrónico 📩✨.
 
-🌍 Estructura Bilingüe Nativa (Español / Inglés):
+✨ Características y Funciones Innovadoras Principales
+🧠 Diagnóstico Psicométrico Dinámico por IA: Evaluación automatizada de la tipología de Carl Jung y arquetipos cruzados con la personalidad del candidato, combinando un archivo Excel estructural (matriz_personalidades.csv) con generación en tiempo real mediante OpenAI GPT-4o-mini.
 
-Se migró la totalidad de los mensajes del sistema, prompts de entrada y etiquetas de navegación a un diccionario centralizado (TEXTOS).
+🤖 Funcionamiento Inteligente por Secciones y Caja de Texto IA:
 
-Se corrigieron las inconsistencias de idioma en los mensajes de transición de consola (por ejemplo, Press Enter to continue..., Displaying illustrative images..., Data to verify:), asegurando que la experiencia en inglés sea 100% fluida de principio a fin, incluyendo una aclaración amigable sobre las siglas "IA" (Artificial Intelligence).
+Sección 1: El agente de IA responde integrando la descripción estática obtenida del archivo matriz_personalidades.csv y la cruza dinámicamente con la esencia del personaje elegido.
 
-🎨 Integración del Mecanismo de Despliegue Visual:
+Secciones 2 y 3: El sistema utiliza los datos de la matriz junto con el contexto del perfil del postulante para generar análisis profundos sobre luz y sombra profesional.
 
-Se incorporó la función auxiliar desplegar_imagen(), la cual interactúa directamente con el sistema operativo para abrir vistas previas de imágenes e ilustraciones (personajes y arquetipos) en el visor predeterminado o navegador web durante las fases de presentación y selección.
+Caja de Texto Interactiva Personalizada: Cada sección cuenta con una caja de texto con opción de autocompletado inteligente mediante la tecla TAB (utilizando preguntas sugeridas contextuales por fase), permitiendo al usuario plantear cualquier duda libre al agente inteligente y recibir respuestas únicas adaptadas al instante.
 
-📊 Gestión de Personalidades y Matriz Junguiana:
+🌐 Soporte Bilingüe Nativo en Tiempo Real: Selector de idioma interactivo en la barra lateral disponible en cualquier momento de la prueba para alternar de forma fluida entre Español e Inglés.
 
-Se aseguró la lectura estricta y limpia de las 16 filas correspondientes a los tipos de personalidad del MBTI dentro de matriz_personalidades.csv, evitando recortes por celdas vacías y mapeando de forma dinámica las 4 series del sistema sin mostrar números en pantalla para mantener una interfaz elegante.
+🎨 Diseño Visual Dinámico y Hover Effects: Botones estilizados con colores fucsias y dorados vibrantes inspirados en la estética de un circo digital. El botón de "Siguiente Sección" (Next Section) destaca de manera prominente, y cuenta con efectos visuales hover interactivos al pasar el cursor por encima para mejorar la experiencia de usuario.
 
-👥 Reglas de Género, Arquetipos y Tratamiento Inclusivo:
+🔄 Navegabilidad Interactiva Inteligente:
 
-Se programó la lógica de concordancia gramatical según el género seleccionado (Femenino, Masculino o Neutro), aplicando la exclusión del género neutro en el flujo en inglés para respetar la estructura formal del idioma.
+Sistema de validación de exploración mediante iconos de Check Verde (✅) en contraposición a los Corazones Rotos (💔), indicando visualmente qué apartados obligatorios debe abrir el postulante para desbloquear el avance.
 
-Una vez que el candidato ingresa su nombre preferido de trato, la Musa Jung.IA lo utiliza de manera activa y personalizada en todas las pantallas y confirmaciones siguientes.
+Botones de retroceso y opción de reinicio mediante un amigable botón de "Oops" para corregir datos o cambiar de producción en cualquier etapa.
 
-📞 Captura Avanzada y Validación de Datos de Contacto:
+📧 Generación y Envío Automatizado de Reportes SMTP: Sistema de agendamiento de fecha y hora tentativa para la Fase 2 con envío multilingüe de cartas de resultado y temario de entrevista.
 
-Nombres y Apellidos Múltiples: Permite ingresar uno o más nombres y apellidos, formateándolos automáticamente en mayúsculas iniciales (Title Case).
+🏛️ Constitución de la Prueba e Interfaz Web
+La interfaz web está construida bajo una arquitectura modular y reactiva en Streamlit. A continuación, se muestra cómo interactúan los elementos visuales y lógicos dentro de la plataforma:
 
-Selector de Prefijos Telefónicos (inquirer): Menú interactivo con el código de Estados Unidos (+1), República Dominicana dividida en sus 3 prefijos oficiales (+1-809, +1-829, +1-849) y los principales países de Latinoamérica. Incluye una nota aclaratoria sobre la cobertura actual de la convocatoria.
+Encabezado Dinámico y Tarjetas de Identificación: Muestran en tiempo real el nombre del postulante y el personaje de ficción seleccionado.
 
-Dominio de Correo Inteligente (inquirer): El usuario escribe únicamente su nombre de usuario y selecciona su proveedor de una lista desplegable con los 10 dominios más comunes (@gmail.com, @hotmail.com, @outlook.com, @yahoo.com, etc.), o elige "Otro / Other" con un aviso de validación.
+Sistema de Pestañas y Secciones Obligatorias: Para avanzar de sección, el postulante debe interactuar con las opciones de lectura y consulta de IA. Los botones muestran ✅ al ser explorados o 💔 si están pendientes.
 
-🔍 Sistema Modular de Confirmación y Submenú Granular de Edición:
+Caja de Preguntas Libres a la IA: Espacio integrado con autocompletado por la tecla TAB para plantear inquietudes directamente al agente sabio y compasivo al estilo del Ánima/Ánimus.
 
-Al capturar la información, el sistema pregunta: "¿Tus datos están correctos?". Si la respuesta es negativa, despliega un submenú para corregir selectivamente solo nombres, solo teléfono, solo correo o reiniciar todo desde cero.
+🎥 Demostraciones en Video
+A continuación se detallan las demostraciones visuales de los flujos principales del sistema:
 
-🚪 Flujo Optimizado para Postulantes que NO han visto las Series:
+1. Pantalla de Bienvenida y Selección de Idioma
+Descripción: Se muestra la interfaz inicial bajo la carpa del circo digital con el banner de bienvenida de Jung.AI. En la esquina superior izquierda se aprecia el selector de idioma (Español / English) que permite cambiar el idioma en cualquier momento de la prueba. Al hacer clic en el botón principal con efectos hover, se ingresa al sistema.
 
-Si el usuario responde que no ha visto ninguna de las 4 franquicias, se le explican los motivos amablemente, se le solicita su autorización explícita para ser contactado por correo o teléfono para entrevistas alternativas, y se simula el despacho de una confirmación oficial.
+Video Demostrativo:
+https://github.com/MariannaPodbrscekRocca/jung-ia/raw/main/Video_demos/00.mp4
+(Nota: Asegúrate de tener los archivos organizados en tu repositorio bajo la carpeta Video_demos/ para su reproducción directa).
 
-🔄 Mecanismos de Rescate, Canal Abierto y Botones de Retorno:
+2. Registro de Datos del Candidato
+Descripción: Formulario interactivo donde el usuario ingresa sus datos personales (nombres, apellidos, nombre preferido, género, prefijo telefónico internacional y correo electrónico con selector de dominio inteligente). El sistema valida en tiempo real los campos requeridos y muestra avisos de éxito o corrección en colores vibrantes.
 
-Se integró en todas las pantallas la opción permanente de retorno y reinicio para permitir cambiar de serie, reintentar el test o volver al inicio ante cualquier error.
+Video Demostrativo:
+https://github.com/MariannaPodbrscekRocca/jung-ia/raw/main/Video_demos/000.mp4
 
-Al finalizar, se abre un canal de conversación interactivo con la Musa Jung.IA y un módulo de simulación de envío de correos HTML corporativos con fechas tentativas de entrevista.
+3. Selección de Producción Audiovisual y Personaje
+Descripción: El postulante elige entre cuatro producciones de culto (Harry Potter, Arrested Development, South Park, Breaking Bad). Posteriormente, selecciona de un banco dinámico de 16 personalidades al personaje con el que más se identifica. Incluye botones de retroceso ("Oops") en caso de querer corregir la selección o registrarse para futuras convocatorias.
 
-🏛️ 3. Arquitectura del Repositorio y Componentes
-El proyecto está distribuido de manera modular para separar responsabilidades:
+Video Demostrativo:
+https://github.com/MariannaPodbrscekRocca/jung-ia/raw/main/Video_demos/0000.mp4
 
-🐍 agente.py: El motor principal del sistema (núcleo lógico, procesamiento con Pandas, flujos de consola y bloques de interfaz web en Gradio).
+4. Evaluación de Funciones Cognitivas, Loops y Arquetipos
+Descripción: El núcleo de la prueba interactiva. Se despliegan las fases cognitivas del modelo de Carl Jung. El usuario debe explorar las secciones de lectura obligatoria (controladas por los indicadores de check verde y corazones rotos). Cada sección integra tanto la información estática extraída del archivo CSV matriz como respuestas generadas dinámicamente por la IA evaluando la luz y la sombra del arquetipo.
 
-🎨 styles.css: Hoja de estilos personalizada que otorga la identidad visual y el diseño estético de carpa digital / circo retro a la aplicación web.
+Video Demostrativo:
+https://github.com/MariannaPodbrscekRocca/jung-ia/raw/main/Video_demos/00000.mp4
 
-📊 matriz_personalidades.csv: Base de datos estructurada con las 16 filas exactas del MBTI, arquetipos y recomendaciones de tecnología para los perfiles TI.
+5. Resultado Final, Verificación de Datos y Envío de Correo (Fase 2)
+Descripción: Tras completar las fases, el sistema revela el área de tecnología recomendada (Product Management, Desarrollo de Software, etc.). El postulante revisa sus datos de contacto, selecciona el idioma de su preferencia para el reporte y elige una fecha y hora tentativa para su entrevista de Fase 2. Al confirmar, el sistema se conecta mediante SMTP para enviar con éxito el reporte detallado al correo del candidato.
 
-🌐 index.html: Archivo de vista previa visual complementario. (Nota: Se añadió con el propósito específico de permitir una revisión rápida y directa mediante la extensión Live Server de Visual Studio Code, facilitando la visualización del diseño gráfico de forma estática, dado que el script principal en Python supera las 1000 líneas de código y requiere un entorno local específico).
+Banner de Éxito del Envío:
 
-🚀 4. Instrucciones de Ejecución y Visualización
-Para comprobar el correcto funcionamiento y la estética de Jung.IA, dispones de dos alternativas prácticas:
+Video Demostrativo:
+https://github.com/MariannaPodbrscekRocca/jung-ia/raw/main/Video_demos/email.mp4
 
-🌟 Opción A: Vista Previa Visual Rápida (Ideal para revisión gráfica inmediata con Live Server)
-Como el archivo principal en Python (agente.py) contiene una estructura avanzada de más de 1000 líneas que combina consola y servidor web, puedes revisar la interfaz gráfica de forma inmediata sin necesidad de correr scripts masivos:
+🛠️ Explicación Técnica y Tecnologías Utilizadas
+Python & Streamlit: Base de la aplicación web reactiva y gestión de estados de sesión (st.session_state).
 
-Abre la carpeta del proyecto en Visual Studio Code.
+OpenAI API (gpt-4o-mini): Motor de inteligencia artificial encargado de generar respuestas reflexivas, equilibrando la luz y la sombra de los perfiles junguianos en un solo párrafo fluido y compasivo.
 
-Asegúrate de tener instalada la extensión Live Server en tu editor.
+Pandas: Procesamiento y lectura de la matriz psicométrica estructurada en matriz_personalidades.csv.
 
-Haz clic derecho sobre el archivo index.html y selecciona "Open with Live Server". Esto abrirá instantáneamente una pestaña en tu navegador web mostrando la estructura visual y los enlaces al diseño CSS del circo digital.
+SMTP & EmailMime: Automatización del backend para la distribución multilingüe de correos electrónicos con plantillas HTML personalizadas.
 
-<h3>🎥 Demostración en Video de Jung.AI</h3>
-<p>Mira el funcionamiento completo de la aplicación y su agente de IA:</p>
-
-<video width="100%" controls>
-  <source src="video_demos/telefono_mail.mp4" type="video/mp4">
-  Tu navegador no soporta la reproducción de videos.
-</video>
+HTML5 / CSS3 / JavaScript: Estilos personalizados oscuros con temática de circo digital, animaciones fluidas, efectos hover en botones y un sistema de anclaje DOM dinámico que garantiza el retorno automático al tope de la página (#top-circus-anchor) en cada cambio de sección.

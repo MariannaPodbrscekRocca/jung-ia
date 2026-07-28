@@ -46,7 +46,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # ------------------------------------------------------------------------------
-# HOJA DE ESTILOS CSS PERSONALIZADA (ESTÉTICA DEL CIRCO DIGITAL)
+# HOJA DE ESTILOS CSS PERSONALIZADA (ESTÉTICA DEL CIRCO DIGITAL Y CORRECCIÓN DE BOTONES)
 # ------------------------------------------------------------------------------
 st.markdown("""
 <style>
@@ -90,39 +90,43 @@ st.markdown("""
         color: #ffffff !important;
         font-weight: 600 !important;
     }
+    /* Estilo para los botones de sección activos optimizados y perfectamente legibles */
     .stButton>button[kind="primary"], div.stButton > button[data-baseweb="button"][kind="primary"] {
-        background: linear-gradient(45deg, #ff007f, #ff5e00) !important;
-        color: #ffffff !important;
+        background: linear-gradient(135deg, #2a1b4e 0%, #3b236b 100%) !important;
+        color: #ff80bf !important;
         font-weight: bold !important;
         border-radius: 10px !important;
-        border: 2px solid #ffd700 !important;
-        padding: 10px 22px !important;
+        border: 2px solid #ff007f !important;
+        padding: 12px 22px !important;
         margin-top: 5px !important;
         margin-bottom: 5px !important;
         box-shadow: 0 0 20px rgba(255, 0, 127, 0.7) !important;
         transition: 0.3s ease;
+        text-align: left !important;
     }
     .stButton>button[kind="primary"]:hover, div.stButton > button[data-baseweb="button"][kind="primary"]:hover {
-        background: linear-gradient(45deg, #ff5e00, #ff007f) !important;
+        background: linear-gradient(135deg, #3b236b 0%, #4a2c8a 100%) !important;
         color: #ffffff !important;
-        transform: scale(1.03);
+        transform: scale(1.01);
         box-shadow: 0 0 25px rgba(255, 215, 0, 0.9) !important;
     }
     .stButton>button {
-        background-color: #ffffff !important;
-        color: #000000 !important;
+        background-color: #1f1135 !important;
+        color: #fce4ec !important;
         font-weight: bold !important;
         border-radius: 10px !important;
-        border: 2px solid #ffd700 !important;
-        padding: 10px 22px !important;
+        border: 2px solid rgba(255, 0, 127, 0.4) !important;
+        padding: 12px 22px !important;
         margin-top: 5px !important;
         margin-bottom: 5px !important;
-        box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+        box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+        text-align: left !important;
     }
     .stButton>button:hover {
-        background: #f0f0f0 !important;
-        color: #000000 !important;
-        transform: scale(1.02);
+        background: #2a1b4e !important;
+        color: #ff80bf !important;
+        border: 2px solid #ff007f !important;
+        transform: scale(1.01);
     }
     input, textarea, div[data-baseweb="input"] {
         background-color: #ffffff !important;
@@ -356,12 +360,12 @@ TEXTOS = {
         "gracias_cierre": "¡Muchas gracias! Tus datos han sido guardados exitosamente en nuestra base de datos de Jung Tech. Te notificaremos cuando tengamos nuevas series y películas disponibles. ¡Hasta pronto! 🎪✨",
         "btn_reiniciar_test": "🔄 Reiniciar Test",
         "btn_oops_reconexion": "😕 Oops, no siento que este perfil me describa, quiero volver a empezar",
-        "sec_1": "Por favor abre esta Sección 1: Si mi función es {f_val}, ¿cómo es mi personalidad en el día a día?",
+        "sec_1": "Please open this Section 1 AND READ MORE ABOUT: If my function is {f_val}, what is my personality like in daily life? pLEASE EAD IT INTO DETAIL AS THIS I PART OF OUR EVALUATION.",
         "sec_2": "Por favor abre esta Sección 2: ¿Qué es el MBTI y cómo impacta en tu vida profesional?",
         "sec_3": "Por favor abre esta Sección 3: ¿Cómo afecta esta función tu vida diaria y rendimiento?",
         "btn_siguiente_seccion": "➔ Siguiente Sección",
-        "instruccion_requisito": "💡 **Requisito del Circo Digital:** Debes abrir y explorar las secciones 1, 2 y 3 (puedes abrirlas en el orden que prefieras) para poder desbloquear el botón y pasar a la siguiente sección.",
-        "err_falta_clicks": "⚠️ ¡Alto ahí! Te falta explorar alguna(s) de las secciones (Sección 1, 2, or/and 3) antes de continuar. Los acordeones que te falta abrir tienen un corazón roto (💔) al lado. Recuerda que en Jung Tech valoramos que nuestros empleados usen la IA y hagan preguntas. Si no comprendiste algo, ¡pregúntale a la IA! Este es un test laboral, dale rienda suelta a tu curiosidad. 🚀",
+        "instruccion_requisito": "💡 **Requisito del Circo Digital:** Debes hacer clic y abrir las secciones 1, 2 y 3 (en el orden que prefieras) para poder desbloquear el botón y pasar a la siguiente sección.",
+        "err_falta_clicks": "⚠️ ¡Alto ahí! Te falta abrir alguna(s) de las secciones (Sección 1, 2, or/and 3) antes de continuar. Los botones que te falta presionar tienen un corazón roto (💔) al lado. Recuerda que en Jung Tech valoramos que nuestros empleados usen la IA y hagan preguntas. Si não comprendiste algo, ¡pregúntale a la IA! Este es un test laboral, dale rienda suelta a tu curiosidad. 🚀",
         "lbl_op1_sel": "Sección 1 Abierta",
         "lbl_op2_sel": "Sección 2 Abierta - Equipo de Reclutamiento",
         "lbl_op3_sel": "Sección 3 Abierta - Análisis IA",
@@ -470,12 +474,12 @@ TEXTOS = {
         "gracias_cierre": "Thank you very much! Your data has been successfully saved in our Jung Tech database. We will notify you when new series and movies are available. See you soon! 🎪✨",
         "btn_reiniciar_test": "🔄 Restart Test",
         "btn_oops_reconexion": "😕 Oops, I don't feel like this profile describes me, I want to start over",
-        "sec_1": "Please open this Section 1: If my function is {f_val}, what is my personality like in daily life?",
+        "sec_1": "Please open this Section 1 AND READ MORE ABOUT: If my function is {f_val}, what is my personality like in daily life? pLEASE EAD IT INTO DETAIL AS THIS I PART OF OUR EVALUATION.",
         "sec_2": "Please open this Section 2: What is the MBTI and how does it impact your professional life?",
         "sec_3": "Please open this Section 3: How does this function affect your daily life and performance?",
         "btn_siguiente_seccion": "➔ Next Section",
         "instruccion_requisito": "💡 **Digital Circus Requirement:** You must open and explore sections 1, 2, and 3 (in any order you prefer) to unlock the button and move to the next section.",
-        "err_falta_clicks": "⚠️ Hold on! You still need to explore some of the sections (Section 1, 2, or/and 3) before proceeding. The accordions you still need to open have a broken heart (💔) next to them. At Jung Tech, we value our employees using AI and asking questions. If you didn't understand something, ask the AI! Remember this is a job assessment test, so let your curiosity run wild. 🚀",
+        "err_falta_clicks": "⚠️ Hold on! You still need to explore some of the sections (Section 1, 2, or/and 3) before proceeding. The buttons you still need to press have a broken heart (💔) next to them. At Jung Tech, we value our employees using AI and asking questions. If you didn't understand something, ask the AI! Remember this is a job assessment test, so let your curiosity run wild. 🚀",
         "lbl_op1_sel": "Section 1 Open",
         "lbl_op2_sel": "Section 2 Open - Recruitment Team",
         "lbl_op3_sel": "Section 3 Open - AI Analysis",
@@ -816,7 +820,7 @@ def enviar_correo_multilingue(fecha_seleccionada="", idioma_preferido="Español"
         st.session_state.correo_enviado = False
 
 # ==============================================================================
-# 7. RENDERIZADOR DE FASES COGNITIVAS (OPTIMIZADO CON ST.EXPANDER INSTANTÁNEO)
+# 7. RENDERIZADOR DE FASES COGNITIVAS (BOTONES EXCLUSIVOS Y FLUIDOS)
 # ==============================================================================
 def renderizar_fase_cognitiva(titulo_fase, f_val, f_desc, clave_fase, siguiente_paso_tuple):
     ev = st.session_state.eval
@@ -826,6 +830,10 @@ def renderizar_fase_cognitiva(titulo_fase, f_val, f_desc, clave_fase, siguiente_
     key_clics = f"clics_{clave_fase}"
     if key_clics not in st.session_state:
         st.session_state[key_clics] = set()
+
+    key_seccion_activa = f"seccion_activa_{clave_fase}"
+    if key_seccion_activa not in st.session_state:
+        st.session_state[key_seccion_activa] = None
 
     st.markdown(f'<div class="circus-terminal-box">', unsafe_allow_html=True)
     st.subheader(f"🎩✨ {titulo_fase} ✨🎩")
@@ -857,9 +865,17 @@ def renderizar_fase_cognitiva(titulo_fase, f_val, f_desc, clave_fase, siguiente_
     pregunta_sugerida_actual = PREGUNTAS_SUGERIDAS[key_lang].get(clave_fase, "What is my selected character?")
     personaje_actual = ev.get('personaje', 'Character')
 
-    # SECCIÓN 1 (Acordeón exclusivo y ultra rápido)
-    with st.expander(sec1_titulo, expanded=False):
-        st.session_state[key_clics].add("seccion_1")
+    # BOTÓN SECCIÓN 1
+    is_sec1_active = (st.session_state[key_seccion_activa] == 1)
+    if st.button(sec1_titulo, key=f"{clave_fase}_btn_sec1", type="primary" if is_sec1_active else "secondary"):
+        if is_sec1_active:
+            st.session_state[key_seccion_activa] = None
+        else:
+            st.session_state[key_seccion_activa] = 1
+            st.session_state[key_clics].add("seccion_1")
+        st.rerun()
+
+    if is_sec1_active:
         if current_idioma == "ESP":
             muletilla = "déjame adivinar 🔮" if clave_fase == "funcion_dominante" else ("estoy seguro 🧠" if clave_fase == "funcion_auxiliar" else "puedo anticipar 👁️")
             texto_op1 = f"🧠 Tu concepto es **{f_val}**, lo cual significa que *{f_desc}*. Y {muletilla} como **{personaje_actual}** valoras profundamente esta perspectiva en tu día a día como **{ev.get('mbti')}** ⚡."
@@ -882,9 +898,17 @@ def renderizar_fase_cognitiva(titulo_fase, f_val, f_desc, clave_fase, siguiente_
             resp_libre = consultar_ia_orientada(usr, ev.get('mbti'), ev.get('area_ti'), f_val, f_desc, origen="libre", pregunta_usuario=texto_a_enviar)
             st.info(f"**Jung.AI:** {resp_libre}")
 
-    # SECCIÓN 2
-    with st.expander(sec2_titulo, expanded=False):
-        st.session_state[key_clics].add("seccion_2")
+    # BOTÓN SECCIÓN 2
+    is_sec2_active = (st.session_state[key_seccion_activa] == 2)
+    if st.button(sec2_titulo, key=f"{clave_fase}_btn_sec2", type="primary" if is_sec2_active else "secondary"):
+        if is_sec2_active:
+            st.session_state[key_seccion_activa] = None
+        else:
+            st.session_state[key_seccion_activa] = 2
+            st.session_state[key_clics].add("seccion_2")
+        st.rerun()
+
+    if is_sec2_active:
         resp_ia_extra = consultar_ia_orientada(usr, ev.get('mbti'), ev.get('area_ti'), f_val, f_desc, origen="equipo")
         st.markdown(f"<div class='box-opcion-2'><b>[{txt['lbl_op2_sel']}]:</b><br>{resp_ia_extra}</div>", unsafe_allow_html=True)
         
@@ -901,9 +925,17 @@ def renderizar_fase_cognitiva(titulo_fase, f_val, f_desc, clave_fase, siguiente_
             resp_libre = consultar_ia_orientada(usr, ev.get('mbti'), ev.get('area_ti'), f_val, f_desc, origen="libre", pregunta_usuario=texto_a_enviar)
             st.info(f"**Jung.AI:** {resp_libre}")
 
-    # SECCIÓN 3
-    with st.expander(sec3_titulo, expanded=False):
-        st.session_state[key_clics].add("seccion_3")
+    # BOTÓN SECCIÓN 3
+    is_sec3_active = (st.session_state[key_seccion_activa] == 3)
+    if st.button(sec3_titulo, key=f"{clave_fase}_btn_sec3", type="primary" if is_sec3_active else "secondary"):
+        if is_sec3_active:
+            st.session_state[key_seccion_activa] = None
+        else:
+            st.session_state[key_seccion_activa] = 3
+            st.session_state[key_clics].add("seccion_3")
+        st.rerun()
+
+    if is_sec3_active:
         resp_ia_ia = consultar_ia_orientada(usr, ev.get('mbti'), ev.get('area_ti'), f_val, f_desc, origen="ia")
         st.markdown(f"<div class='box-opcion-3'><b>[{txt['lbl_op3_sel']}]:</b><br>{resp_ia_ia}</div>", unsafe_allow_html=True)
         
@@ -1493,10 +1525,10 @@ elif st.session_state.step == "resultado" and not st.session_state.get("modo_oop
                     new_errs_v["prov_msg"] = txt["err_proveedor"]
                     has_error_v = True
 
-                if not num_tel_val_limpio.strip():
+                if not num_tel_limpio.strip():
                     new_errs_v["num_tel"] = txt["err_campo"]
                     has_error_v = True
-                elif not num_tel_val_limpio.isdigit():
+                elif not num_tel_limpio.isdigit():
                     new_errs_v["num_tel"] = txt["err_tel"]
                     has_error_v = True
 

@@ -22,60 +22,8 @@ st.set_page_config(
     layout="wide"
 )
 
-# Solución definitiva de scroll al tope absoluto inyectada de forma nativa
-st.markdown('<div id="top-app"></div>', unsafe_allow_html=True)
-st.html("""
-    <script>
-        function jumpToTop() {
-            try {
-                window.parent.scrollTo(0, 0);
-                window.scrollTo(0, 0);
-                const mainContainer = window.parent.document.querySelector('.main');
-                if (mainContainer) mainContainer.scrollTop = 0;
-                const topAnchor = window.parent.document.getElementById('top-app');
-                if (topAnchor) {
-                    topAnchor.scrollIntoView({ behavior: 'auto', block: 'start' });
-                }
-            } catch(e) {}
-        }
-        
-        jumpToTop();
-        setTimeout(jumpToTop, 10);
-        setTimeout(jumpToTop, 50);
-        setTimeout(jumpToTop, 150);
-
-        const observer = new MutationObserver(function(mutations) {
-            const spinner = window.parent.document.querySelector('[data-testid="stStatusWidget"], .stSpinner');
-            const overlay = document.getElementById('click-blocker') || createBlocker();
-            if (spinner) {
-                overlay.style.display = 'block';
-            } else {
-                overlay.style.display = 'none';
-            }
-        });
-
-        function createBlocker() {
-            const div = document.createElement('div');
-            div.id = 'click-blocker';
-            div.style.position = 'fixed';
-            div.style.top = '0';
-            div.style.left = '0';
-            div.style.width = '100vw';
-            div.style.height = '100vh';
-            div.style.zIndex = '999999';
-            div.style.background = 'rgba(0,0,0,0.15)';
-            div.style.cursor = 'wait';
-            div.style.display = 'none';
-            window.parent.document.body.appendChild(div);
-            return div;
-        }
-
-        observer.observe(window.parent.document.body, { childList: true, subtree: true });
-    </script>
-""")
-
 # ------------------------------------------------------------------------------
-# HOJA DE ESTILOS CSS PERSONALIZADA (ESTÉTICA, TITILEO Y CONTENIDO MÁS ANGOSTO)
+# HOJA DE ESTILOS CSS Y SCRIPT DE SCROLL Y BLOQUEO ANTIFRAUDE ABSOLUTO
 # ------------------------------------------------------------------------------
 st.markdown("""
 <style>
@@ -120,7 +68,6 @@ st.markdown("""
         font-weight: 600 !important;
     }
     
-    /* Animación de titileo intermitente para los botones pendientes con corazón roto */
     @keyframes titileoFucsia {
         0% { border-color: rgba(255, 0, 127, 0.3); box-shadow: 0 0 5px rgba(255, 0, 127, 0.2); }
         50% { border-color: #ff007f; box-shadow: 0 0 25px rgba(255, 0, 127, 0.9); }
@@ -214,8 +161,6 @@ st.markdown("""
         margin-top: 12px;
         margin-bottom: 6px;
     }
-    
-    /* Cajas internas más angostas con márgenes laterales interiores marcados */
     .box-opcion-1, .box-opcion-2, .box-opcion-3 {
         margin-left: 35px !important;
         margin-right: 35px !important;
@@ -237,13 +182,10 @@ st.markdown("""
         border: 2px solid #ff007f;
         box-shadow: 0 0 15px rgba(255, 0, 127, 0.4);
     }
-    
-    /* Contenedor de input IA más angosto y alineado */
     .ai-input-container {
         margin-left: 35px !important;
         margin-right: 35px !important;
     }
-
     .alert-grande-roja {
         background-color: rgba(255, 0, 0, 0.2);
         border: 2px solid #ff0000;
@@ -277,6 +219,57 @@ st.markdown("""
         padding-top: 15px;
     }
 </style>
+
+<script>
+    function forceScrollToCircusTop() {
+        try {
+            const circusTitle = document.getElementById('top-circus-anchor');
+            if (circusTitle) {
+                circusTitle.scrollIntoView({ behavior: 'auto', block: 'start' });
+            } else {
+                window.parent.scrollTo(0, 0);
+                window.scrollTo(0, 0);
+            }
+            const mainContainer = window.parent.document.querySelector('.main');
+            if (mainContainer) mainContainer.scrollTop = 0;
+        } catch(e) {}
+    }
+    
+    forceScrollToCircusTop();
+    setTimeout(forceScrollToCircusTop, 10);
+    setTimeout(forceScrollToCircusTop, 50);
+    setTimeout(forceScrollToCircusTop, 150);
+
+    // Bloqueo total de clics antifraude durante cualquier carga o llamada a IA
+    const observer = new MutationObserver(function(mutations) {
+        const parentDoc = window.parent.document;
+        const spinners = parentDoc.querySelectorAll('[data-testid="stStatusWidget"], .stSpinner, [data-baseweb="spinner"]');
+        
+        let overlay = parentDoc.getElementById('click-blocker');
+        if (!overlay) {
+            overlay = parentDoc.createElement('div');
+            overlay.id = 'click-blocker';
+            overlay.style.position = 'fixed';
+            overlay.style.top = '0';
+            overlay.style.left = '0';
+            overlay.style.width = '100vw';
+            overlay.style.height = '100vh';
+            overlay.style.zIndex = '999999';
+            overlay.style.background = 'rgba(0,0,0,0.2)';
+            overlay.style.cursor = 'wait';
+            overlay.style.display = 'none';
+            parentDoc.body.appendChild(overlay);
+        }
+
+        if (spinners.length > 0) {
+            overlay.style.display = 'block';
+        } else {
+            overlay.style.display = 'none';
+        }
+    });
+
+    observer.observe(window.parent.document.body, { childList: true, subtree: true });
+</script>
 """, unsafe_allow_html=True)
 
 # ==============================================================================
@@ -402,63 +395,63 @@ TEXTOS = {
         "btn_arrepinti": "😊 ¡Me arrepentí, ahora sí quiero tomar el test!",
         "gracias_cierre": "¡Muchas gracias! Tus datos han sido guardados exitosamente en nuestra base de datos de Jung Tech. Te notificaremos cuando tengamos nuevas series y películas disponibles. ¡Hasta pronto! 🎪✨",
         "btn_reiniciar_test": "🔄 Restart Test 😊",
-        "btn_oops_reconexion": "😕 Oops, I would like to change the movie or series",
-        "sec_1": "**Please click here and read more about Section 1:** If my function is {f_val}, what is my personality like in daily life? Please read this into detail, as this is part of our evaluation.",
-        "sec_2": "**Please click here and read more about Section 2:** What is the MBTI and how does it impact your professional life? Please read this into detail, as this is part of our evaluation.",
-        "sec_3": "**Please click here and read more about Section 3:** How does this function affect your daily life and performance? Please read this into detail, as this is part of our evaluation.",
-        "btn_siguiente_seccion": "➔ Next Section 😊",
-        "instruccion_requisito": "💡 **Digital Circus Requirement:** You must open and explore sections 1, 2, and 3 (in any order you prefer) to unlock the button and move to the next section.",
+        "btn_oops_reconexion": "😕 Oops, me gustaría cambiar la película o serie",
+        "sec_1": "**Por favor haga clic aquí y lea más sobre la Sección 1:** Si mi función es {f_val}, ¿cómo es mi personalidad en el día a día? Por favor léalo en detalle, ya que esto forma parte de nuestra evaluación.",
+        "sec_2": "**Por favor haga clic aquí y lea más sobre la Sección 2:** ¿Qué es el MBTI y cómo impacta en su vida profesional? Por favor léalo en detalle, ya que esto forma parte de nuestra evaluación.",
+        "sec_3": "**Por favor haga clic aquí y lea más sobre la Sección 3:** ¿Cómo afecta esta función su vida diaria y rendimiento? Por favor léalo en detalle, ya que esto forma parte de nuestra evaluación.",
+        "btn_siguiente_seccion": "➔ Siguiente Sección 😊",
+        "instruccion_requisito": "💡 **Requisito del Circo Digital:** Debes hacer clic y abrir las secciones 1, 2 y 3 (en el orden que prefieras) para poder desbloquear el botón y pasar a la siguiente sección.",
         "err_falta_clicks": "⚠️ ¡Alto ahí! Te falta abrir alguna(s) de las secciones (Sección 1, 2, or/and 3) antes de continuar. Los botones que te falta presionar tienen un corazón roto (💔) al lado. Recuerda que en Jung Tech valoramos que nuestros empleados usen la IA y hagan preguntas. Si no comprendiste algo, ¡pregúntale a la IA! Este es un test laboral, dale rienda suelta a tu curiosidad. 🚀",
-        "lbl_op1_sel": "Section 1 Open",
-        "lbl_op2_sel": "Section 2 Open - Recruitment Team",
-        "lbl_op3_sel": "Section 3 Open - AI Analysis",
-        "badge_postulante": "Hello",
-        "badge_personaje": "Character",
-        "fase_1": "1. Dominant Function",
-        "fase_2": "2. Auxiliary Function",
-        "fase_3": "3. Tertiary Function",
-        "fase_4": "4. Inferior Function",
-        "fase_5": "5. Cognitive Loop",
-        "fase_6": "6. Digital Archetype",
-        "titulo_resultado": "🎩✨ 7. Final Result and Diagnosis at Jung Tech ✨🎩",
-        "area_ti_lbl": "🎯 Recommended IT Area",
-        "rol_lbl": "allows connecting human needs with our company's vision",
+        "lbl_op1_sel": "Sección 1 Abierta",
+        "lbl_op2_sel": "Sección 2 Abierta - Equipo de Reclutamiento",
+        "lbl_op3_sel": "Sección 3 Abierta - Análisis IA",
+        "badge_postulante": "Hola",
+        "badge_personaje": "Personaje",
+        "fase_1": "1. Función Dominante",
+        "fase_2": "2. Función Auxiliar",
+        "fase_3": "3. Función Terciaria",
+        "fase_4": "4. Función Inferior",
+        "fase_5": "5. Loop Cognitivo",
+        "fase_6": "6. Arquetipo Digital",
+        "titulo_resultado": "🎩✨ 7. Resultado Final y Diagnóstico en Jung Tech ✨🎩",
+        "area_ti_lbl": "🎯 Área TI Recomendada",
+        "rol_lbl": "permite liderar con propósito, conectando las necesidades humanas con la visión del producto.",
         "explicacion_bonita_txt": (
-            "🌟 **Jung Tech Talent Evaluation:**<br>"
-            "In our view and based on your responses, your cognitive profile demonstrates strong analytical and strategic capacity. "
-            "We consider that you would fit perfectly in our <b>{area_ti}</b> area, combining technical problem-solving with an innovative vision 🚀✨."
+            "🌟 **Evaluación de Talento Jung Tech:**<br>"
+            "A nuestro parecer y basándonos en tus respuestas, tu perfil cognitivo demuestra gran capacidad analítica y estratégica. "
+            "Consideramos que encajarías perfectamente en nuestra área de <b>{area_ti}</b>, combinando resolución técnica con una visión humana e innovadora 🚀✨."
         ),
-        "pregunta_envio_correo": "📩 If you agree with this diagnosis, select your preferred language for the email, choose a tentative date for your Phase 2 interview, and confirm your details:",
-        "lbl_idioma_correo": "🌐 In which language would you like us to send the email?:",
-        "lbl_fecha_fase2": "📅 Select a tentative date and time for your interview (Phase 2):",
-        "btn_confirmar_y_enviar": "📤 Confirm Details, Language, Date and Send Email 😊",
-        "btn_oops_no_conforme": "😕 Oops, I don't agree with my result (Reset Test)",
-        "msg_fin_sin_correo": "🎉 Process completed successfully! Thank you for participating in Jung Tech's digital circus. 🚀🎪",
-        "titulo_verificacion_datos": "🔍 Verification and Confirmation of Candidate Details:",
-        "msg_correo_enviado": "REPORT AND PREPARATION GUIDE SUCCESSFULLY SENT TO YOUR EMAIL IN THE REQUESTED LANGUAGE! ⚠️ PLEASE CHECK YOUR SPAM FOLDER! We look forward to seeing you at your Phase 2 interview. End of process. 🚀🎪\n\nTHIS IS THE END OF THIS ASSESSMENT, IF YOU HAVE ALREADY RECEIVED YOUR EMAIL YOU CAN CLOSE THE PAGE, IF YOU HAVE NOT RECEIVED IT PLEASE CHECK THE Email address or username SECTION AT THE TOP TO VERIFY THAT EVERYTHING IS CORRECT AND PRESS THE CONFIRM DETAIL, LANGUAGE, DATE AND SEND EMAIL BUTTON AGAIN",
-        "label_improvisada": "💡 Ask our artificial intelligence agent. Type your question here followed by the Ask AI button / or press the TAB key to ask this default question: {pregunta}. and press Ask AI",
+        "pregunta_envio_correo": "📩 Si estás de acuerdo con este diagnóstico, selecciona el idioma para el correo, elige una fecha tentativa para tu entrevista de Fase 2, y confirma tus datos:",
+        "lbl_idioma_correo": "🌐 ¿En qué idioma deseas que te mandemos el correo?:",
+        "lbl_fecha_fase2": "📅 Selecciona una fecha y hora tentativa para tu entrevista (Fase 2):",
+        "btn_confirmar_y_enviar": "📤 Confirmar Datos, Idioma, Fecha y Enviar Email 😊",
+        "btn_oops_no_conforme": "😕 Oops, no estoy conforme con mi resultado (Resetear Test)",
+        "msg_fin_sin_correo": "🎉 ¡Proceso finalizado con éxito! Gracias por participar en el circo digital de Jung Tech. 🚀🎪",
+        "titulo_verificacion_datos": "🔍 Verificación y Confirmación de Datos del Postulante:",
+        "msg_correo_enviado": "¡REPORTE Y TEMARIO ENVIADOS CON ÉXITO A TU CORREO EN EL IDIOMA SOLICITADO! ⚠️ ¡POR FAVOR REVISA TU CARPETA DE SPAM! Te esperamos en la entrevista de Fase 2. Fin del proceso. 🚀🎪\n\nESTE ES EL FINAL DE ESTA EVALUACIÓN, SI YA RECIBISTE TU CORREO PUEDES CERRAR LA PÁGINA, SI NO LO HAS RECIBIDO POR FAVOR REVISA LA SECCIÓN DE CORREO EN LA PARTE SUPERIOR PARA VERIFICAR QUE TODO ESTÉ BIEN Y VUELVE A PRESIONAR EL BOTÓN DE CONFIRMACIÓN",
+        "label_improvisada": "💡 Pregúntale a nuestro agente de inteligencia artificial. Escribe tu pregunta aquí seguido del botón Ask AI / o presiona la tecla TAB para hacerle esta pregunta predeterminada: {pregunta}. y presiona Ask AI",
         "btn_enviar_improvisada": "Ask AI 🪄",
         "cargando_txt": "⏰ Loading...",
-        "orientacion_proceso": "💡 **Recruitment:** Hello! This is an official Jung Tech hiring process 🏢. Ask questions and explore sections to get to know yourself deeply 🧠✨.",
-        "firma_autor": "Website designed by: <b>Marianna Podbrscek Rocca</b>",
-        "titulo_ultima_confirmacion": "🔍 Final Data Confirmation",
-        "info_ultima_confirmacion": "Please review that your collected data is correct before proceeding:",
-        "msg_tel_verificado": "📞 Verified Phone: We have removed blank spaces. The country prefix is <b>{prefijo}</b> and this is your phone number: <b>{tel}</b>.",
-        "msg_correo_verificado": "📩 Verified Email: Everything after the @ symbol has been cleared and merged with the domain. Do you wish to send it to this exact email: <b style='color: #00ffcc;'>{correo}</b>?",
+        "orientacion_proceso": "💡 **Reclutamiento:** ¡Hola! Este es un proceso oficial de Jung Tech 🏢. Haz preguntas y abre las secciones para conocerte a fondo 🧠✨.",
+        "firma_autor": "Página web diseñada por: <b>Marianna Podbrscek Rocca</b>",
+        "titulo_ultima_confirmacion": "🔍 Última Confirmación de Datos",
+        "info_ultima_confirmacion": "Por favor revisa que tus datos recopilados sean correctos antes de continuar:",
+        "msg_tel_verificado": "📞 Teléfono verificado: Hemos borrado los espacios en blanco. El prefijo de país es <b>{prefijo}</b> y este es tu número de teléfono: <b>{tel}</b>.",
+        "msg_correo_verificado": "📩 Correo verificado: Todo lo posterior al arroba ha sido depurado y unificado con el dominio. ¿Deseas que lo mandemos a este correo exacto: <b style='color: #00ffcc;'>{correo}</b>?",
         "btn_confirma_datos": "These collected data and continue with the test 😊",
         "btn_corrige_datos": "✏️ No, I want to fix something 😊",
-        "titulo_oops": "⚠️ You have pressed an Oops button!",
-        "pref_presion_oops": "You pressed:",
-        "pregunta_reinicio": "⚠️ Are you sure you want to restart the test and start over from scratch?",
+        "titulo_oops": "⚠️ ¡Has presionado un botón Oops!",
+        "pref_presion_oops": "Presionaste:",
+        "pregunta_reinicio": "⚠️ ¿Estás segura de que deseas reiniciar el test y volver a empezar desde cero?",
         "btn_si_reiniciar": "Yes, restart all 😕",
         "btn_no_cancelar": "No, cancel and go back to the evaluation 😊",
-        "btn_si_regresar": "Yes, go back to fix 😊",
-        "btn_no_continuar": "No, continue 😊",
-        "btn_si_cambiar_pelicula": "Yes, change movie 😊",
-        "btn_no_mantener": "No, keep 😊",
-        "pregunta_cambiar_pelicula": "Do you want to change the movie or series selected for your selection process?",
-        "pregunta_regresar_datos": "Do you want to go back to the previous screen to correct your personal registration details?",
-        "lbl_apellidos_titulo": "Last Name"
+        "btn_si_regresar": "Sí, regresar a corregir 😊",
+        "btn_no_continuar": "No, continuar 😊",
+        "btn_si_cambiar_pelicula": "Sí, cambiar producción 😊",
+        "btn_no_mantener": "No, mantener 😊",
+        "pregunta_cambiar_pelicula": "¿Deseas cambiar la producción seleccionada para tu proceso de selección?",
+        "pregunta_regresar_datos": "¿Deseas regresar a la pantalla anterior para corregir tus datos personales de registro?",
+        "lbl_apellidos_titulo": "Apellidos"
     },
     "ENG": {
         "subtitulo": "Intelligent Recruitment and Psychometric Diagnosis System according to Carl Jung's model",
@@ -639,7 +632,7 @@ idioma_choice = st.sidebar.selectbox("🌐 Select Language / Seleccionar Idioma:
 current_idioma = "ESP" if idioma_choice == "Español" else "ENG"
 txt = TEXTOS[current_idioma]
 
-st.markdown('<div id="top-app"></div>', unsafe_allow_html=True)
+st.markdown('<div id="top-circus-anchor"></div>', unsafe_allow_html=True)
 st.title("🎪 JUNG.AI: THE CIRCUS OF PERSONALITIES 🎪")
 st.markdown(f"<p class='subtitle-circus'>{txt['subtitulo']}</p>", unsafe_allow_html=True)
 st.markdown("---")

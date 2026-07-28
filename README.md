@@ -50,40 +50,48 @@ La interfaz web está construida bajo una arquitectura modular y reactiva en Str
 ### 1. Pantalla de Bienvenida y Selección de Idioma
 * **Descripción:** Se muestra la interfaz inicial bajo la carpa del circo digital con el banner de bienvenida de Jung.AI. En la esquina superior izquierda se aprecia el selector de idioma (Español / English) que permite cambiar el idioma en cualquier momento de la prueba. Al hacer clic en el botón principal con efectos hover, se ingresa al sistema.
 
-<video width="100%" controls>
-  <source src="./Video_demos/00.mp4" type="video/mp4">
-  Tu navegador no soporta la reproducción de video.
-</video>
+<p align="center">
+  <video width="100%" autoplay loop muted playsinline>
+    <source src="./Video_demos/00.mp4" type="video/mp4">
+    Tu navegador no soporta la reproducción de video.
+  </video>
+</p>
 
 ---
 
 ### 2. Registro de Datos del Candidato
 * **Descripción:** Formulario interactivo donde el usuario ingresa sus datos personales (nombres, apellidos, nombre preferido, género, prefijo telefónico internacional y correo electrónico con selector de dominio inteligente). El sistema valida en tiempo real los campos requeridos y muestra avisos de éxito o corrección en colores vibrantes.
 
-<video width="100%" controls>
-  <source src="./Video_demos/000.mp4" type="video/mp4">
-  Tu navegador no soporta la reproducción de video.
-</video>
+<p align="center">
+  <video width="100%" autoplay loop muted playsinline>
+    <source src="./Video_demos/000.mp4" type="video/mp4">
+    Tu navegador no soporta la reproducción de video.
+  </video>
+</p>
 
 ---
 
 ### 3. Selección de Producción Audiovisual y Personaje
 * **Descripción:** El postulante elige entre cuatro producciones de culto (*Harry Potter*, *Arrested Development*, *South Park*, *Breaking Bad*). Posteriormente, selecciona de un banco dinámico de 16 personalidades al personaje con el que más se identifica. Incluye botones de retroceso ("Oops") en caso de querer corregir la selección o registrarse para futuras convocatorias.
 
-<video width="100%" controls>
-  <source src="./Video_demos/0000.mp4" type="video/mp4">
-  Tu navegador no soporta la reproducción de video.
-</video>
+<p align="center">
+  <video width="100%" autoplay loop muted playsinline>
+    <source src="./Video_demos/0000.mp4" type="video/mp4">
+    Tu navegador no soporta la reproducción de video.
+  </video>
+</p>
 
 ---
 
 ### 4. Evaluación de Funciones Cognitivas, Loops y Arquetipos
 * **Descripción:** El núcleo de la prueba interactiva. Se despliegan las fases cognitivas del modelo de Carl Jung. El usuario debe explorar las secciones de lectura obligatoria (controladas por los indicadores de check verde y corazones rotos). Cada sección integra tanto la información estática extraída del archivo CSV matriz como respuestas generadas dinámicamente por la IA evaluando la luz y la sombra del arquetipo.
 
-<video width="100%" controls>
-  <source src="./Video_demos/00000.mp4" type="video/mp4">
-  Tu navegador no soporta la reproducción de video.
-</video>
+<p align="center">
+  <video width="100%" autoplay loop muted playsinline>
+    <source src="./Video_demos/00000.mp4" type="video/mp4">
+    Tu navegador no soporta la reproducción de video.
+  </video>
+</p>
 
 ---
 
@@ -96,10 +104,12 @@ La interfaz web está construida bajo una arquitectura modular y reactiva en Str
 </p>
 
 * **Video Demostrativo:**
-<video width="100%" controls>
-  <source src="./Video_demos/email.mp4" type="video/mp4">
-  Tu navegador no soporta la reproducción de video.
-</video>
+<p align="center">
+  <video width="100%" autoplay loop muted playsinline>
+    <source src="./Video_demos/email.mp4" type="video/mp4">
+    Tu navegador no soporta la reproducción de video.
+  </video>
+</p>
 
 ---
 

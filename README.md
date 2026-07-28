@@ -1,6 +1,8 @@
 # 🎪 JUNG.AI: THE CIRCUS OF PERSONALITIES 🎪
 
 > **Link para testear la aplicación (evidencias del despliegue):** [https://jungai.streamlit.app/](https://jungai.streamlit.app/)
+>
+> ![Demostración de la aplicación](https://ezgif.com/tmp/ezgif-3fd1393888b32640.gif)
 
 > **Sistema Inteligente de Reclutamiento y Diagnóstico Psicométrico según el modelo de Carl Jung**  
 > *Diseñado por Marianna Podbrscek Rocca* 
